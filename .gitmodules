@@ -1,0 +1,4 @@
+[submodule "binance-java-api"]
+	path = binance-java-api
+	url = https://github.com/KillerInk/binance-java-api.git
+	branch = master
