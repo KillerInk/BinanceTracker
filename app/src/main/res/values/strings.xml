@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BinanceTracker</string>
+    <string name="element_text">Element</string>
 </resources>

@@ -1,56 +1,51 @@
 package com.binancetracker.ui.main;
 
+import android.os.Handler;
+import android.os.Looper;
+
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-
-import com.binance.api.client.BinanceApiClientFactory;
-import com.binance.api.client.BinanceApiRestClient;
-import com.binance.api.client.domain.account.Account;
 import com.binance.api.client.domain.account.AssetBalance;
+import com.binancetracker.api.AccountBalance;
+import com.binancetracker.api.BinanceApi;
 
-import java.util.Map;
-import java.util.TreeMap;
 
-public class MainViewModel extends ViewModel {
-    // TODO: Implement the ViewModel
+public class MainViewModel extends ViewModel implements AccountBalance.AccountBalanceEvent {
 
-    private BinanceApiClientFactory clientFactory;
+    public MutableLiveData<AssetModel[]> balances = new MutableLiveData<>();
+    private Handler handler = new Handler(Looper.getMainLooper());
 
-    /**
-     * Key is the symbol, and the value is the balance of that symbol on the account.
-     */
-    private Map<String, AssetBalance> accountBalanceCache;
-
-    /**
-     * Listen key used to interact with the user data streaming API.
-     */
-    private String listenKey;
-
-    public void onResume(String apiKey, String secret) {
-        this.clientFactory = BinanceApiClientFactory.newInstance(apiKey, secret);
-        this.listenKey = initializeAssetBalanceCacheAndStreamSession();
-        //startAccountBalanceEventStreaming(listenKey);
-    }
-
-    /**
-     * Initializes the asset balance cache by using the REST API and starts a new user data streaming session.
-     *
-     * @return a listenKey that can be used with the user data streaming API.
-     */
-    private String initializeAssetBalanceCacheAndStreamSession() {
-        BinanceApiRestClient client = clientFactory.newRestClient();
-        Account account = client.getAccount();
-
-        this.accountBalanceCache = new TreeMap<>();
-        for (AssetBalance assetBalance : account.getBalances()) {
-            accountBalanceCache.put(assetBalance.getAsset(), assetBalance);
-        }
-
-        return client.startUserDataStream();
-    }
-
-    public void getPortofolio()
+    public void onResume()
     {
+        BinanceApi.getInstance().getAccountBalance().setAccountBalanceEventListner(this::onBalanceChanged);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                BinanceApi.getInstance().getAccountBalance().startListenToAssetBalance();
+            }
+        }).start();
 
+    }
+
+    public void onPause()
+    {
+        BinanceApi.getInstance().getAccountBalance().setAccountBalanceEventListner(null);
+        BinanceApi.getInstance().getAccountBalance().stopListenToAssetBalance();
+    }
+
+    @Override
+    public void onBalanceChanged() {
+        AssetBalance[] assets = BinanceApi.getInstance().getAccountBalance().getAccountBalanceCache().values().toArray(new AssetBalance[BinanceApi.getInstance().getAccountBalance().getAccountBalanceCache().values().size()]);
+        int i = 0;
+        AssetModel[] ret = new AssetModel[assets.length];
+        for (AssetBalance assetBalance : assets)
+            ret[i++] = new AssetModel(assetBalance);
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                balances.setValue(ret);
+            }
+        });
     }
 }
