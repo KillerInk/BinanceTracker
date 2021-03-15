@@ -10,6 +10,7 @@ public class BinanceApi {
 
     private BinanceApiClientFactory clientFactory;
     private AccountBalance accountBalance;
+    private Ticker ticker;
 
 
 
@@ -22,10 +23,15 @@ public class BinanceApi {
     public void setKeys(String key, String secretKey) {
         clientFactory = BinanceApiClientFactory.newInstance(key, secretKey);
         accountBalance = new AccountBalance(clientFactory);
+        ticker = new Ticker(clientFactory);
     }
 
     public AccountBalance getAccountBalance() {
         return accountBalance;
+    }
+
+    public Ticker getTicker() {
+        return ticker;
     }
 
     private Account account = null;

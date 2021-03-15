@@ -57,9 +57,10 @@ public class AccountBalance {
         if (userdataStream != null)
             try {
                 userdataStream.close();
-            } catch (IOException e) {
+            } catch (IOException | NullPointerException e) {
                 e.printStackTrace();
             }
+        userdataStream = null;
     }
 
     public Map<String, AssetBalance> getAccountBalanceCache() {

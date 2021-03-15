@@ -5,13 +5,16 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.binance.api.client.domain.account.AssetBalance;
-import com.binancetracker.api.AccountBalance;
+import com.binancetracker.BR;
+import com.binancetracker.utils.ConvertingUtil;
+
 
 public class AssetModel extends BaseObservable {
 
     private String assetName;
     private double freeValue;
     private double lockedValue;
+    private double price;
 
     public AssetModel()
     {}
@@ -60,4 +63,20 @@ public class AssetModel extends BaseObservable {
     {
         notifyChange();
     }
+
+    public void setPrice(double price) {
+        this.price = price;
+        notifyPropertyChanged(BR.price);
+        notifyPropertyChanged(BR.totalValuePrice);
+    }
+
+    @Bindable
+    public double getPrice() {
+        return price;
+    }
+
+    @Bindable
+    public double getTotalValuePrice(){ return ConvertingUtil.trimDoubleToPlaces((freeValue + lockedValue) * price,2); }
+
+    public void setTotalValuePrice(double val){}
 }
