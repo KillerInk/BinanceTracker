@@ -3,10 +3,13 @@ package com.binancetracker.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.binancetracker.R;
+
 public class Settings {
-    SharedPreferences sharedPreferences;
+
     private static final String SECRETKEY = "secretkey";
     private static final String KEY = "key";
+    private static final String defaultAsset = "defaultAsset";
 
     private static Settings settings;
 
@@ -15,8 +18,13 @@ public class Settings {
         return settings;
     }
 
+
+    private SharedPreferences sharedPreferences;
+    private Context context;
+
     public Settings(Context context)
     {
+        this.context = context;
         sharedPreferences = context.getSharedPreferences("keys",Context.MODE_PRIVATE);
         settings = this;
     }
@@ -38,5 +46,15 @@ public class Settings {
     {
         sharedPreferences.edit().putString(KEY,key).apply();
     }
+
+    public String getDefaultAsset() {
+        return sharedPreferences.getString(defaultAsset,context.getString(R.string.usdt));
+    }
+
+    public void setDefaultAsset(String asset)
+    {
+        sharedPreferences.edit().putString(defaultAsset,asset).apply();
+    }
+
 
 }

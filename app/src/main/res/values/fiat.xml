@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string translatable="false" name="usdt">USDT</string>
+    <string translatable="false" name="busd">BUSD</string>
+    <string translatable="false" name="aud">AUD</string>
+    <string translatable="false" name="brl">BRL</string>
+    <string translatable="false" name="eur">EUR</string>
+    <string translatable="false" name="gbp">GBP</string>
+    <string translatable="false" name="try_asset">TRY</string>
+    <string translatable="false" name="tusd">TUSD</string>
+    <string translatable="false" name="usdc">USDC</string>
+    <string translatable="false" name="pax">PAX</string>
+    <string translatable="false" name="bidr">BIDR</string>
+    <string translatable="false" name="dai">DAI</string>
+    <string translatable="false" name="idrt">IDRT</string>
+    <string translatable="false" name="Rub">RUB</string>
+    <string translatable="false" name="zar">ZAR</string>
+    <string translatable="false" name="ngn">NGN</string>
+    <string translatable="false" name="uah">UAH</string>
+    <string translatable="false" name="vai">VAI</string>
+    <string translatable="false" name="bvnd">BVND</string>
+
+    <string-array name="fiats">
+        <item>@string/usdt</item>
+        <item>@string/busd</item>
+        <item>@string/aud</item>
+        <item>@string/brl</item>
+        <item>@string/eur</item>
+        <item>@string/gbp</item>
+        <item>@string/tusd</item>
+        <item>@string/try_asset</item>
+        <item>@string/usdc</item>
+        <item>@string/pax</item>
+        <item>@string/bidr</item>
+        <item>@string/dai</item>
+        <item>@string/idrt</item>
+        <item>@string/Rub</item>
+        <item>@string/zar</item>
+        <item>@string/ngn</item>
+        <item>@string/uah</item>
+        <item>@string/vai</item>
+        <item>@string/bvnd</item>
+    </string-array>
+
+</resources>

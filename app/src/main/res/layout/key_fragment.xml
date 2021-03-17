@@ -48,6 +48,19 @@
             android:singleLine="false"
             android:text="@={keyviemodel.secret}" />
 
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fiat" />
+
+        <Spinner
+            android:id="@+id/spinner_fiat"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_large"
+            android:entries="@array/fiats"
+            android:selectedItemPosition="@={keyviemodel.fiatspinner}"/>
+
         <Button
             android:id="@+id/button_testkey"
             android:layout_width="match_parent"

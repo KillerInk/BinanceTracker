@@ -16,8 +16,10 @@ public class AssetModel extends BaseObservable {
     private String assetName;
     private double freeValue;
     private double lockedValue;
-    private double price;
+    private double price = 0;
     private int priceColor = Color.WHITE;
+    private double choosenAssetPrice = 0;
+    private String choosenAsset;
 
     public AssetModel()
     {}
@@ -80,6 +82,19 @@ public class AssetModel extends BaseObservable {
         notifyPropertyChanged(BR.priceColor);
     }
 
+    public void setChoosenAssetPrice(double choosenAssetPrice) {
+        this.choosenAssetPrice = choosenAssetPrice;
+        notifyPropertyChanged(BR.choosenAssetPrice);
+        notifyPropertyChanged(BR.totalValueChoosenPrice);
+    }
+
+    @Bindable
+    public double getChoosenAssetPrice() {
+        if (price > 0)
+            return ConvertingUtil.trimDoubleToPlaces(price/choosenAssetPrice,2);
+        return 0;
+    }
+
     @Bindable
     public double getPrice() {
         return price;
@@ -89,6 +104,25 @@ public class AssetModel extends BaseObservable {
     public double getTotalValuePrice(){ return ConvertingUtil.trimDoubleToPlaces((freeValue + lockedValue) * price,2); }
 
     public void setTotalValuePrice(double val){}
+
+    @Bindable
+    public double getTotalValueChoosenPrice(){
+        if (price > 0)
+            return ConvertingUtil.trimDoubleToPlaces(((freeValue + lockedValue) * (price/choosenAssetPrice)),2);
+        else  return 0;
+    }
+
+    public void setTotalValueChoosenPrice(double val){}
+
+    @Bindable
+    public String getChoosenAsset() {
+        return choosenAsset;
+    }
+
+    public void setChoosenAsset(String choosenAsset) {
+        this.choosenAsset = choosenAsset;
+        notifyPropertyChanged(BR.choosenAsset);
+    }
 
     @Bindable
     public int getPriceColor() {
