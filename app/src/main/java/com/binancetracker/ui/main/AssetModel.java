@@ -1,6 +1,8 @@
 package com.binancetracker.ui.main;
 
 
+import android.graphics.Color;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -15,6 +17,7 @@ public class AssetModel extends BaseObservable {
     private double freeValue;
     private double lockedValue;
     private double price;
+    private int priceColor = Color.WHITE;
 
     public AssetModel()
     {}
@@ -65,9 +68,16 @@ public class AssetModel extends BaseObservable {
     }
 
     public void setPrice(double price) {
+        if (price > this.price)
+            priceColor = Color.GREEN;
+        else if (price < this.price)
+            priceColor = Color.RED;
+        else
+            priceColor = Color.WHITE;
         this.price = price;
         notifyPropertyChanged(BR.price);
         notifyPropertyChanged(BR.totalValuePrice);
+        notifyPropertyChanged(BR.priceColor);
     }
 
     @Bindable
@@ -79,4 +89,13 @@ public class AssetModel extends BaseObservable {
     public double getTotalValuePrice(){ return ConvertingUtil.trimDoubleToPlaces((freeValue + lockedValue) * price,2); }
 
     public void setTotalValuePrice(double val){}
+
+    @Bindable
+    public int getPriceColor() {
+        return priceColor;
+    }
+
+    public void setPriceColor(int priceColor) {
+        this.priceColor = priceColor;
+    }
 }
