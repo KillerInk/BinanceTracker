@@ -59,16 +59,18 @@
 
                     <TextView
                         android:id="@+id/textView4"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="@dimen/textrowitem_weight"
                         android:text="Total:"
                         android:textSize="@dimen/text_header" />
 
                     <TextView
                         android:id="@+id/textView_total"
                         setDoubleToTextview="@{assetmodel.totalValue}"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:textSize="@dimen/text_normal" />
                 </LinearLayout>
 
@@ -79,16 +81,18 @@
 
                     <TextView
                         android:id="@+id/textView5"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="@dimen/textrowitem_weight"
                         android:text="Free:"
                         android:textSize="@dimen/text_header" />
 
                     <TextView
                         android:id="@+id/textView_free"
                         setDoubleToTextview="@{assetmodel.freeValue}"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:textSize="@dimen/text_normal" />
                 </LinearLayout>
 
@@ -99,16 +103,18 @@
 
                     <TextView
                         android:id="@+id/textView6"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="@dimen/textrowitem_weight"
                         android:text="Locked:"
                         android:textSize="@dimen/text_header" />
 
                     <TextView
                         android:id="@+id/textView_locked"
                         setDoubleToTextview="@{assetmodel.lockedValue}"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:textSize="@dimen/text_normal" />
                 </LinearLayout>
             </LinearLayout>
@@ -116,7 +122,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.1"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -126,8 +132,9 @@
 
                     <TextView
                         android:id="@+id/textView8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="@dimen/textrowitem_weight"
                         android:text="@string/usdt"
                         android:textSize="@dimen/text_normal" />
 
@@ -135,13 +142,14 @@
                         android:id="@+id/textView_price"
                         setDoubleToTextview="@{assetmodel.price}"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:textColor="@{assetmodel.priceColor}"
                         android:textSize="@dimen/text_normal" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
@@ -149,15 +157,16 @@
                         android:id="@+id/textView9"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-
+                        android:layout_weight="@dimen/textrowitem_weight"
                         android:text="Total:"
-                        android:textSize="@dimen/text_normal"/>
+                        android:textSize="@dimen/text_normal" />
 
                     <TextView
                         android:id="@+id/textView_totalprice"
                         setDoubleToTextview="@{assetmodel.totalValuePrice}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:textColor="@{assetmodel.priceColor}"
                         android:textSize="@dimen/text_normal" />
                 </LinearLayout>
@@ -167,7 +176,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.1"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -177,8 +186,9 @@
 
                     <TextView
                         android:id="@+id/textView10"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="@dimen/textrowitem_weight"
                         android:text="@{assetmodel.choosenAsset}"
                         android:textSize="@dimen/text_normal" />
 
@@ -187,12 +197,13 @@
                         setDoubleToTextview="@{assetmodel.choosenAssetPrice}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:textColor="@{assetmodel.priceColor}"
                         android:textSize="@dimen/text_normal" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
@@ -200,15 +211,16 @@
                         android:id="@+id/textView11"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-
+                        android:layout_weight="@dimen/textrowitem_weight"
                         android:text="Total:"
-                        android:textSize="@dimen/text_normal"/>
+                        android:textSize="@dimen/text_normal" />
 
                     <TextView
                         android:id="@+id/textView_totalpricechossenasset"
                         setDoubleToTextview="@{assetmodel.totalValueChoosenPrice}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:textColor="@{assetmodel.priceColor}"
                         android:textSize="@dimen/text_normal" />
                 </LinearLayout>

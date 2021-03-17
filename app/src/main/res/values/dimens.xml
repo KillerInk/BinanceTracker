@@ -9,4 +9,5 @@
     <dimen name="text_normal">10sp</dimen>
     <dimen name="text_header">12sp</dimen>
 
+    <item name="textrowitem_weight" type="dimen" format="float">1.7</item>
 </resources>

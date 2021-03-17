@@ -43,7 +43,7 @@ public class AssetModel extends BaseObservable {
 
     @Bindable
     public double getFreeValue() {
-        return freeValue;
+        return trim(freeValue);
     }
 
     public void setFreeValue(double freeValue) {
@@ -52,7 +52,7 @@ public class AssetModel extends BaseObservable {
 
     @Bindable
     public double getLockedValue() {
-        return lockedValue;
+        return trim(lockedValue);
     }
 
     public void setLockedValue(double lockedValue) {
@@ -60,7 +60,7 @@ public class AssetModel extends BaseObservable {
     }
 
     @Bindable
-    public double getTotalValue(){ return freeValue + lockedValue; }
+    public double getTotalValue(){ return trim(freeValue + lockedValue); }
 
     public void setTotalValue(double val){}
 
@@ -90,8 +90,15 @@ public class AssetModel extends BaseObservable {
 
     @Bindable
     public double getChoosenAssetPrice() {
-        if (price > 0)
-            return ConvertingUtil.trimDoubleToPlaces(price/choosenAssetPrice,2);
+        return trim(price/choosenAssetPrice);
+    }
+
+    private double trim(double val)
+    {
+        if (val > 0 && val > 10)
+            return ConvertingUtil.trimDoubleToPlaces(val,2);
+        else if (val > 0 && val<= 10)
+            return ConvertingUtil.trimDoubleToPlaces(val,8);
         return 0;
     }
 
@@ -101,14 +108,14 @@ public class AssetModel extends BaseObservable {
     }
 
     @Bindable
-    public double getTotalValuePrice(){ return ConvertingUtil.trimDoubleToPlaces((freeValue + lockedValue) * price,2); }
+    public double getTotalValuePrice(){ return trim((freeValue + lockedValue) * price); }
 
     public void setTotalValuePrice(double val){}
 
     @Bindable
     public double getTotalValueChoosenPrice(){
         if (price > 0)
-            return ConvertingUtil.trimDoubleToPlaces(((freeValue + lockedValue) * (price/choosenAssetPrice)),2);
+            return trim(((freeValue + lockedValue) * (price/choosenAssetPrice)));
         else  return 0;
     }
 
