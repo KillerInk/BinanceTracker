@@ -27,6 +27,8 @@ public class MainViewModel extends ViewModel implements AccountBalance.AccountBa
 
     public void onResume()
     {
+        if (Settings.getInstance().getSECRETKEY().equals("") || Settings.getInstance().getKEY().equals(""))
+            return;
         choosenAsset = Settings.getInstance().getDefaultAsset();
         BinanceApi.getInstance().getAccountBalance().setAccountBalanceEventListner(this::onBalanceChanged);
         new Thread(new Runnable() {

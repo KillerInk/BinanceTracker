@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.binancetracker.databinding.MainActivityBinding;
 import com.binancetracker.api.BinanceApi;
+import com.binancetracker.room.SingletonDataBase;
 import com.binancetracker.utils.Settings;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,8 +35,29 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mainActivityBinding.imageButtonDb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment);
+                if (navController.getCurrentDestination().getId() != R.id.dataBaseFragment) {
+                    //navController.popBackStack();
+                    navController.navigate(R.id.dataBaseFragment);
+                }
+                else {
+                    navController.popBackStack();
+                    navController.navigate(R.id.mainFragment);
+                }
+            }
+        });
         new Settings(getApplicationContext());
+        SingletonDataBase.init(getApplicationContext());
         BinanceApi.getInstance().setKeys(Settings.getInstance().getKEY(),Settings.getInstance().getSECRETKEY());
     }
 
+    @Override
+    protected void onDestroy() {
+        SingletonDataBase.close();
+        super.onDestroy();
+    }
 }

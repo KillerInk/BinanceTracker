@@ -8,7 +8,16 @@ public class ConvertingUtil
 {
     public static double trimDoubleToPlaces(double in, int places)
     {
-        return new BigDecimal(in).setScale(places, RoundingMode.HALF_EVEN).doubleValue();
+        if (in == 0)
+            return 0;
+        try {
+            return new BigDecimal(in).setScale(places, RoundingMode.HALF_EVEN).doubleValue();
+        }
+        catch (java.lang.NumberFormatException ex)
+        {
+
+        }
+        return 0;
     }
 
     private static DecimalFormat decimalFormat = new DecimalFormat("0");

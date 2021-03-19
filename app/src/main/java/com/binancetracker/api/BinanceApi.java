@@ -11,6 +11,7 @@ public class BinanceApi {
     private BinanceApiClientFactory clientFactory;
     private AccountBalance accountBalance;
     private Ticker ticker;
+    private TradeHistory tradeHistory;
 
 
 
@@ -24,6 +25,7 @@ public class BinanceApi {
         clientFactory = BinanceApiClientFactory.newInstance(key, secretKey);
         accountBalance = new AccountBalance(clientFactory);
         ticker = new Ticker(clientFactory);
+        tradeHistory = new TradeHistory(clientFactory);
     }
 
     public AccountBalance getAccountBalance() {
@@ -32,6 +34,10 @@ public class BinanceApi {
 
     public Ticker getTicker() {
         return ticker;
+    }
+
+    public TradeHistory getTradeHistory() {
+        return tradeHistory;
     }
 
     private Account account = null;
