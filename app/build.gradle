@@ -3,6 +3,21 @@ plugins {
 }
 
 android {
+
+    signingConfigs {
+        config {
+            keyAlias 'binancetracker'
+            keyPassword 'binancetracker'
+            storeFile file('../key/BinanceTrackerKey.jks')
+            storePassword 'binancetracker'
+        }
+        debug {
+            storeFile file('..\\key\\BinanceTrackerKey.jks')
+            storePassword 'binancetracker'
+            keyAlias = 'binancetracker'
+            keyPassword 'binancetracker'
+        }
+    }
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
