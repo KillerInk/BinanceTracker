@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 <data>
     <variable
         name="viewmodel"
         type="com.binancetracker.ui.db.DataBaseViewModel" />
 </data>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -22,5 +22,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@{viewmodel.dbstatus}" />
+
+    <Button
+        android:id="@+id/button_calctrades"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="calc trades" />
 </LinearLayout>
 </layout>

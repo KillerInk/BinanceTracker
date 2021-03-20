@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.binancetracker.api.BinanceApi;
 import com.binancetracker.api.TradeHistory;
+import com.binancetracker.utils.CalcProfits;
 
 
 public class DataBaseViewModel extends ViewModel
@@ -61,6 +62,12 @@ public class DataBaseViewModel extends ViewModel
                 BinanceApi.getInstance().getTradeHistory().getFullHistory();
             }
         }).start();
+    }
+
+    public void calcTrades()
+    {
+        CalcProfits profits = new CalcProfits();
+        profits.calcProfits();
     }
 
 }

@@ -32,6 +32,13 @@ public class DataBaseFragment extends Fragment {
                 dataBaseViewModel.startSyncTradeHistory();
             }
         });
+
+        databaseFragmentBinding.buttonCalctrades.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataBaseViewModel.calcTrades();
+            }
+        });
         return databaseFragmentBinding.getRoot();
     }
 }

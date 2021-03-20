@@ -20,11 +20,14 @@ public interface HistoryTradeDao {
     List<HistoryTrade> loadAllByIds(int[] historyIds);
 
     @Query("SELECT * FROM historytrade WHERE symbol LIKE :first")
-    HistoryTrade findByName(String first);
+    List<HistoryTrade> findByName(String first);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(HistoryTrade market);
 
     @Delete
     void delete(HistoryTrade market);
+
+    @Query("SELECT DISTINCT symbol FROM historytrade")
+    List<String> getTradedPairs();
 }
