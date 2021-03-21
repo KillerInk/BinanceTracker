@@ -55,4 +55,10 @@ public class HistoryTrade {
      */
     @ColumnInfo(name = "symbol")
     public String symbol;
+
+    @ColumnInfo(name = "isBuyer")
+    public boolean buyer;
+
+    @ColumnInfo(name = "isMaker")
+    public boolean maker;
 }

@@ -3,13 +3,11 @@ package com.binancetracker.ui.db;
 import android.os.Handler;
 import android.os.Looper;
 
-import androidx.databinding.BaseObservable;
 import androidx.databinding.ObservableField;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.binancetracker.api.BinanceApi;
-import com.binancetracker.api.TradeHistory;
+import com.binancetracker.api.DownloadTradeHistory;
 import com.binancetracker.utils.CalcProfits;
 
 
@@ -26,7 +24,7 @@ public class DataBaseViewModel extends ViewModel
             private Handler handler = new Handler(Looper.getMainLooper());
             @Override
             public void run() {
-                BinanceApi.getInstance().getTradeHistory().setHistoryEvent(new TradeHistory.TradeHistoryEvent() {
+                BinanceApi.getInstance().getDownloadTradeHistory().setHistoryEvent(new DownloadTradeHistory.TradeHistoryEvent() {
                     @Override
                     public void onSyncStart(int max_markets) {
                         max = max_markets;
@@ -59,7 +57,8 @@ public class DataBaseViewModel extends ViewModel
                         });
                     }
                 });
-                BinanceApi.getInstance().getTradeHistory().getFullHistory();
+                //start downloading the trade history
+                BinanceApi.getInstance().getDownloadTradeHistory().getFullHistory();
             }
         }).start();
     }

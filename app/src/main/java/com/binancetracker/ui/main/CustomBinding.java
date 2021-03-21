@@ -9,6 +9,11 @@ public class CustomBinding {
     @BindingAdapter("setDoubleToTextview")
     public static void setDoubleToTextview(TextView view, double val)
     {
-        view.setText(String.valueOf(val) /*ConvertingUtil.trimDecimalFormatToString(val,20)*/);
+        String sval ="";
+        if (val < 10.0d)
+            sval = String.format("%.8f",val);
+        else
+            sval = String.format("%.2f",val);
+        view.setText(sval);
     }
 }

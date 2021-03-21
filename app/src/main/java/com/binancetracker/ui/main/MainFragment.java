@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import com.binancetracker.R;
 import com.binancetracker.databinding.MainFragmentBinding;
 
+import java.util.Collection;
+
 public class MainFragment extends Fragment {
 
     private MainViewModel mViewModel;
@@ -37,9 +39,9 @@ public class MainFragment extends Fragment {
         customAdapter = new CustomAdapter();
         mainFragmentBinding.recyclerViewBalance.setAdapter(customAdapter);
         mainFragmentBinding.recyclerViewBalance.setLayoutManager(new LinearLayoutManager(getContext()));
-        mViewModel.balances.observe(getViewLifecycleOwner(), new Observer<AssetModel[]>() {
+        mViewModel.balances.observe(getViewLifecycleOwner(), new Observer<Collection<AssetModel>>() {
             @Override
-            public void onChanged(AssetModel[] strings) {
+            public void onChanged(Collection<AssetModel> strings) {
                 customAdapter.setLocalDataSet(strings);
             }
         });

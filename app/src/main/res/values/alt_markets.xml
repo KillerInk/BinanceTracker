@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="btc">BTC</string>
+    <string name="eth">ETH</string>
+    <string name="bnb">BNB</string>
+    <string name="trx">TRX</string>
+    <string name="xrp">XRP</string>
+
+    <string-array name="altmarkets">
+        <item>@string/btc</item>
+        <item>@string/eth</item>
+        <item>@string/bnb</item>
+        <item>@string/trx</item>
+        <item>@string/xrp</item>
+    </string-array>
+</resources>

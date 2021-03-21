@@ -12,31 +12,57 @@ import com.binance.api.client.domain.general.Asset;
 import com.binancetracker.api.AccountBalance;
 import com.binancetracker.api.BinanceApi;
 import com.binancetracker.api.Ticker;
+import com.binancetracker.room.SingletonDataBase;
+import com.binancetracker.room.entity.Profit;
+import com.binancetracker.utils.MarketPair;
 import com.binancetracker.utils.Settings;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
 
 public class MainViewModel extends ViewModel implements AccountBalance.AccountBalanceEvent {
 
     private static final String TAG = MainViewModel.class.getSimpleName();
-    public MutableLiveData<AssetModel[]> balances = new MutableLiveData<>();
-    private Handler handler = new Handler(Looper.getMainLooper());
+    public MutableLiveData<Collection<AssetModel>> balances;
+    private Handler handler;
     private final String base = "USDT";
     private String choosenAsset;
+    private HashMap<String,AssetModel> assetModelHashMap;
+
+    public MainViewModel()
+    {
+        assetModelHashMap = new HashMap<>();
+        handler = new Handler(Looper.getMainLooper());
+        balances = new MutableLiveData<>();
+    }
 
     public void onResume()
     {
         if (Settings.getInstance().getSECRETKEY().equals("") || Settings.getInstance().getKEY().equals(""))
             return;
         choosenAsset = Settings.getInstance().getDefaultAsset();
+
         BinanceApi.getInstance().getAccountBalance().setAccountBalanceEventListner(this::onBalanceChanged);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
+                getProfitsFromDb();
+                applyHasmapToLiveData();
                 BinanceApi.getInstance().getAccountBalance().startListenToAssetBalance();
+                applyHasmapToLiveData();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updatedPrices();
+                    }
+                }).start();
             }
         }).start();
+
     }
 
     public void onPause()
@@ -49,34 +75,58 @@ public class MainViewModel extends ViewModel implements AccountBalance.AccountBa
 
     @Override
     public void onBalanceChanged() {
-        AssetBalance[] assets = BinanceApi.getInstance().getAccountBalance().getAccountBalanceCache().values().toArray(new AssetBalance[BinanceApi.getInstance().getAccountBalance().getAccountBalanceCache().values().size()]);
-        int i = 0;
-        AssetModel[] ret = new AssetModel[assets.length];
-        for (AssetBalance assetBalance : assets) {
-            AssetModel a =new AssetModel(assetBalance);
+        for (AssetBalance assetBalance : BinanceApi.getInstance().getAccountBalance().getAccountBalanceCache().values()) {
+            AssetModel a = getAssetModel(assetBalance.getAsset());
+            a.setAccountBalance(assetBalance);
             a.setChoosenAsset(choosenAsset);
-            ret[i++] = a;
         }
+    }
+
+    private void getProfitsFromDb()
+    {
+        List<Profit> profitList = SingletonDataBase.appDatabase.profitDao().getAll();
+        if (profitList != null)
+        {
+            for (Profit profit : profitList)
+            {
+                AssetModel assetModel = getAssetModel(profit.asset);
+                assetModel.setProfit(profit.profit);
+                assetModel.setTradescount(profit.tradescount);
+            }
+            //applyHasmapToLiveData();
+
+        }
+    }
+
+    private void applyHasmapToLiveData() {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                balances.setValue(ret);
-                updatedPrices();
+                balances.setValue(assetModelHashMap.values());
             }
         });
     }
 
-
+    private AssetModel getAssetModel(String symbol)
+    {
+        AssetModel assetModel = assetModelHashMap.get(symbol);
+        if (assetModel == null) {
+            Log.d(TAG, "add new Asset:" + symbol);
+            assetModel = new AssetModel();
+            assetModel.setAssetName(symbol);
+            assetModel.setChoosenAsset(Settings.getInstance().getDefaultAsset());
+            assetModelHashMap.put(symbol,assetModel);
+        }
+        return assetModel;
+    }
 
     private void updatedPrices()
     {
         Log.d(TAG,"updatedPrices");
-        AssetModel[] assetModels = balances.getValue();
-        if (assetModels != null && assetModels.length > 0)
+        if (assetModelHashMap.values().size() > 0)
         {
             String markets ="";
-            for (AssetModel assetModel:assetModels) {
-
+            for (AssetModel assetModel:assetModelHashMap.values()) {
                 if (!assetModel.getAssetName().equals(base))
                     markets += assetModel.getAssetName()+base+",";
             }
@@ -90,18 +140,14 @@ public class MainViewModel extends ViewModel implements AccountBalance.AccountBa
                 @Override
                 public void onPriceChanged(String symbol,final double price) {
                     //Log.d(TAG,"onPriceChanged:" + symbol + " " + price);
-                    AssetModel[] assetModels = balances.getValue();
-                    if (assetModels != null && assetModels.length > 0)
-                    {
-                        for (AssetModel assetModel:assetModels) {
-                            //set usdt price
-                            if (symbol.contains(assetModel.getAssetName()) && !assetModel.getAssetName().equals(base)) {
-                                assetModel.setPrice(price);
-                            }
-                            //set choosen asset price like eur
-                            if (symbol.equals(choosenAsset+base) && !assetModel.getAssetName().equals(choosenAsset))
-                                assetModel.setChoosenAssetPrice(price);
-                        }
+                    AssetModel assetModel = getAssetModel(new MarketPair(symbol).getQuoteAsset());
+                    if (symbol.contains(assetModel.getAssetName())) {
+                        assetModel.setPrice(price);
+                    }
+                    //set choosen asset price like eur
+                    if (symbol.equals(choosenAsset+base) && assetModel.getAssetName().equals(choosenAsset)) {
+                        for (AssetModel a : assetModelHashMap.values())
+                            a.setChoosenAssetPrice(price);
                     }
                 }
             });

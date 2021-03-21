@@ -21,10 +21,21 @@ public class AssetModel extends BaseObservable {
     private double choosenAssetPrice = 0;
     private String choosenAsset;
 
+    private double profit;
+    private long tradescount;
+
     public AssetModel()
     {}
 
     public AssetModel(AssetBalance accountBalance)
+    {
+        setAssetName(accountBalance.getAsset());
+        setFreeValue(Double.parseDouble(accountBalance.getFree()));
+        setLockedValue(Double.parseDouble(accountBalance.getLocked()));
+        notifyAssetChanged();
+    }
+
+    public void setAccountBalance(AssetBalance accountBalance)
     {
         setAssetName(accountBalance.getAsset());
         setFreeValue(Double.parseDouble(accountBalance.getFree()));
@@ -138,5 +149,25 @@ public class AssetModel extends BaseObservable {
 
     public void setPriceColor(int priceColor) {
         this.priceColor = priceColor;
+    }
+
+    @Bindable
+    public double getProfit() {
+        return profit;
+    }
+
+    public void setProfit(double profit) {
+        this.profit = profit;
+        notifyPropertyChanged(BR.profit);
+    }
+
+    @Bindable
+    public long getTradescount() {
+        return tradescount;
+    }
+
+    public void setTradescount(long tradescount) {
+        this.tradescount = tradescount;
+        notifyPropertyChanged(BR.tradescount);
     }
 }

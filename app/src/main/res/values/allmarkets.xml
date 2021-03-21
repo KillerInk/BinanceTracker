@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="allmarkets">
+        <item>@string/usdt</item>
+        <item>@string/busd</item>
+        <item>@string/aud</item>
+        <item>@string/brl</item>
+        <item>@string/eur</item>
+        <item>@string/gbp</item>
+        <item>@string/tusd</item>
+        <item>@string/try_asset</item>
+        <item>@string/usdc</item>
+        <item>@string/pax</item>
+        <item>@string/bidr</item>
+        <item>@string/dai</item>
+        <item>@string/idrt</item>
+        <item>@string/Rub</item>
+        <item>@string/zar</item>
+        <item>@string/ngn</item>
+        <item>@string/uah</item>
+        <item>@string/vai</item>
+        <item>@string/bvnd</item>
+
+        <item>@string/btc</item>
+        <item>@string/eth</item>
+        <item>@string/bnb</item>
+        <item>@string/trx</item>
+        <item>@string/xrp</item>
+    </string-array>
+</resources>

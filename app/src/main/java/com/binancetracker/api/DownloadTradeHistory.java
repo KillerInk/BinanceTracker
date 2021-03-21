@@ -1,6 +1,7 @@
 package com.binancetracker.api;
 
 import android.icu.text.UFormat;
+import android.util.Log;
 
 import com.binance.api.client.BinanceApiClientFactory;
 import com.binance.api.client.BinanceApiRestClient;
@@ -17,7 +18,7 @@ import com.binancetracker.room.entity.Market;
 
 import java.util.List;
 
-public class TradeHistory {
+public class DownloadTradeHistory {
 
     public interface TradeHistoryEvent
     {
@@ -29,7 +30,7 @@ public class TradeHistory {
     private BinanceApiClientFactory clientFactory;
     private TradeHistoryEvent historyEvent;
 
-    public TradeHistory(BinanceApiClientFactory clientFactory)
+    public DownloadTradeHistory(BinanceApiClientFactory clientFactory)
     {
         this.clientFactory = clientFactory;
     }
@@ -40,11 +41,12 @@ public class TradeHistory {
 
     public void getFullHistory()
     {
+        Log.d(this.getClass().getSimpleName(),"getFullHistory");
         BinanceApiRestClient client = clientFactory.newRestClient();
         List<SymbolInfo> info = client.getExchangeInfo().getSymbols();
         MarketDao marketDao = SingletonDataBase.appDatabase.marketDao();
         List<Market> markets = marketDao.getAll();
-
+        Log.d(this.getClass().getSimpleName(),"clear Market DB");
         for (Market market : markets) {
             marketDao.delete(market);
         }
@@ -62,6 +64,7 @@ public class TradeHistory {
             market.quoteOrderQtyMarketAllowed = i.isQuoteOrderQtyMarketAllowed();
             //market.status = i.getStatus();
             market.symbol = i.getSymbol();
+            Log.d(this.getClass().getSimpleName(),"add Market to DB " + market.symbol);
             marketDao.insert(market);
         }
         markets = marketDao.getAll();
@@ -69,15 +72,19 @@ public class TradeHistory {
             historyEvent.onSyncStart(markets.size());
         HistoryTradeDao historyTradeDao = SingletonDataBase.appDatabase.historyTradeDao();
         int i = 0;
+        Log.d(this.getClass().getSimpleName(),"startParsing markets");
         for (Market m: markets) {
             String pair = m.baseAsset+m.quoteAsset;
+            Log.d(this.getClass().getSimpleName(),"download Trades for: " + pair);
             if (historyEvent != null)
                 historyEvent.onSyncUpdate(i++);
             getAllHistoryforPair(client,historyTradeDao,pair,0);
+            Log.d(this.getClass().getSimpleName(),"download done for: " + pair);
         }
+        Log.d(this.getClass().getSimpleName(),"finished download fullHistory");
         if (historyEvent != null)
             historyEvent.onSyncEnd();
-        List<HistoryTrade> historyTrades = historyTradeDao.getAll();
+        //List<HistoryTrade> historyTrades = historyTradeDao.getAll();
     }
 
     private void getAllHistoryforPair(BinanceApiRestClient client,HistoryTradeDao historyTradeDao,String pair, long id)
@@ -101,6 +108,8 @@ public class TradeHistory {
         historyTrade.quoteQty = t.getQuoteQty();
         historyTrade.time = t.getTime();
         historyTrade.symbol = t.getSymbol();
+        historyTrade.buyer = t.isBuyer();
+        historyTrade.maker = t.isMaker();
         historyTradeDao.insert(historyTrade);
     }
 }
