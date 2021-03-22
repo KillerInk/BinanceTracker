@@ -3,6 +3,8 @@ package com.binancetracker;
 import android.app.Application;
 import android.content.Context;
 
+import java.io.File;
+
 public class MyApplication extends Application {
     private static Context context;
 
@@ -26,5 +28,10 @@ public class MyApplication extends Application {
     public static String[] getStringArrayFromRes(int id)
     {
         return context.getResources().getStringArray(id);
+    }
+
+    public static File getAppCacheDir()
+    {
+        return context.getCacheDir();
     }
 }
