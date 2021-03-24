@@ -32,12 +32,14 @@ public class CalcProfits
                         if (ht.buyer)
                         {
                             quoteass.profit += Double.parseDouble(ht.qty);
+                            quoteass.tradescount++;
                             baseass.profit -= Double.parseDouble(ht.quoteQty);
                         }
                         else
                         {
                             quoteass.profit -= Double.parseDouble(ht.qty);
                             baseass.profit += Double.parseDouble(ht.quoteQty);
+                            baseass.tradescount++;
                         }
                     }
                     Log.d(this.getClass().getSimpleName(),"Pair:" + pair + " count:" + trades.size() + " " +quoteass.asset + ":" + quoteass.profit + " " + baseass.asset +":" +baseass.profit);
