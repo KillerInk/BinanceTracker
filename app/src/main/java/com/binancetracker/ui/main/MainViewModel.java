@@ -31,12 +31,14 @@ public class MainViewModel extends ViewModel implements AccountBalance.AccountBa
     private final String base = "USDT";
     private String choosenAsset;
     private HashMap<String,AssetModel> assetModelHashMap;
+    public final PieChartModel pieChartModel;
 
     public MainViewModel()
     {
         assetModelHashMap = new HashMap<>();
         handler = new Handler(Looper.getMainLooper());
         balances = new MutableLiveData<>();
+        pieChartModel = new PieChartModel();
     }
 
     public void onResume()
@@ -120,6 +122,7 @@ public class MainViewModel extends ViewModel implements AccountBalance.AccountBa
         return assetModel;
     }
 
+    private int updatePieChartcounter = 0;
     private void updatedPrices()
     {
         Log.d(TAG,"updatedPrices");
@@ -148,6 +151,11 @@ public class MainViewModel extends ViewModel implements AccountBalance.AccountBa
                     if (symbol.equals(choosenAsset+base) && assetModel.getAssetName().equals(choosenAsset)) {
                         for (AssetModel a : assetModelHashMap.values())
                             a.setChoosenAssetPrice(price);
+                        //
+                    }
+                    if (updatePieChartcounter++ == 100) {
+                        updatePieChartcounter = 0;
+                        pieChartModel.setPieChartData(assetModelHashMap);
                     }
                 }
             });

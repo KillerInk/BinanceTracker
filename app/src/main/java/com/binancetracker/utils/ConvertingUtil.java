@@ -27,4 +27,9 @@ public class ConvertingUtil
         decimalFormat.setMaximumFractionDigits(places);
         return decimalFormat.format(in);
     }
+
+    public static String getDoubleString2F(double in)
+    {
+        return String.format(String.format("%.2f", in));
+    }
 }

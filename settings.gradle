@@ -1,3 +1,5 @@
+include ':MPChartLib'
 include ':binance-java-api'
 include ':app'
+project(':MPChartLib').projectDir = new File(rootDir, 'MPAndroidChart/MPChartLib/')
 rootProject.name = "BinanceTracker"

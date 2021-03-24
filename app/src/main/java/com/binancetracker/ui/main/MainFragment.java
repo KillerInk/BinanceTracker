@@ -1,9 +1,11 @@
 package com.binancetracker.ui.main;
 
 import androidx.databinding.DataBindingUtil;
+import androidx.databinding.Observable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,16 +17,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.binancetracker.BR;
 import com.binancetracker.R;
 import com.binancetracker.databinding.MainFragmentBinding;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.MPPointF;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 
 public class MainFragment extends Fragment {
 
     private MainViewModel mViewModel;
     private CustomAdapter customAdapter;
-    MainFragmentBinding mainFragmentBinding;
+    private MainFragmentBinding mainFragmentBinding;
+
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -45,6 +58,52 @@ public class MainFragment extends Fragment {
                 customAdapter.setLocalDataSet(strings);
             }
         });
+
+        mainFragmentBinding.chart1.setUsePercentValues(true);
+
+        mainFragmentBinding.chart1.setDrawHoleEnabled(true);
+        mainFragmentBinding.chart1.setHoleColor(Color.BLACK);
+        mainFragmentBinding.chart1.setHoleRadius(58f);
+
+        mainFragmentBinding.chart1.setTransparentCircleColor(Color.GRAY);
+        mainFragmentBinding.chart1.setTransparentCircleAlpha(110);
+        mainFragmentBinding.chart1.setTransparentCircleRadius(61f);
+
+        mainFragmentBinding.chart1.setCenterTextColor(Color.WHITE);
+        mainFragmentBinding.chart1.setCenterTextSize(11f);
+        mainFragmentBinding.chart1.setCenterText("Asset");
+        mainFragmentBinding.chart1.setDrawCenterText(true);
+
+        mainFragmentBinding.chart1.setRotationAngle(0);
+        // enable rotation of the chart by touch
+        mainFragmentBinding.chart1.setRotationEnabled(true);
+        mainFragmentBinding.chart1.setHighlightPerTapEnabled(false);
+        // undo all highlights
+        mainFragmentBinding.chart1.highlightValues(null);
+        mainFragmentBinding.chart1.setEntryLabelTextSize(10f);
+        mainFragmentBinding.chart1.setEntryLabelColor(Color.WHITE);
+        mainFragmentBinding.chart1.setExtraOffsets(10, 15, 10, 15);
+
+
+        Legend l = mainFragmentBinding.chart1.getLegend();
+        l.setEnabled(false);
+
+        mViewModel.pieChartModel.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                if (propertyId == BR.pieData) {
+                    mainFragmentBinding.chart1.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mainFragmentBinding.chart1.setData(mViewModel.pieChartModel.getPieData());
+                            mainFragmentBinding.chart1.setCenterText(mViewModel.pieChartModel.getPiechartMidString());
+                            mainFragmentBinding.chart1.invalidate();
+                        }
+                    });
+                }
+            }
+        });
+
         return mainFragmentBinding.getRoot();
     }
 
@@ -66,5 +125,7 @@ public class MainFragment extends Fragment {
 
         // TODO: Use the ViewModel
     }
+
+
 
 }

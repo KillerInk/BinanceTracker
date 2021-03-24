@@ -2,3 +2,7 @@
 	path = binance-java-api
 	url = https://github.com/KillerInk/binance-java-api.git
 	branch = master
+[submodule "MPAndroidChart"]
+	path = MPAndroidChart
+	url = https://github.com/KillerInk/MPAndroidChart.git
+	branch = master
