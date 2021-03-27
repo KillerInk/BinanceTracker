@@ -16,33 +16,40 @@
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="50dp"
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteX="1dp">
 
         <ImageButton
             android:id="@+id/imageButton_settings"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:scaleType="fitCenter"
             android:src="@mipmap/settings"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
             tools:srcCompat="@mipmap/settings" />
 
         <ImageButton
             android:id="@+id/imageButton_db"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:scaleType="fitCenter"
             android:src="@mipmap/database"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageButton_settings"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
             tools:srcCompat="@mipmap/database" />
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </FrameLayout>
 </layout>
