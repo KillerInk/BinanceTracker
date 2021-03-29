@@ -1,15 +1,11 @@
 package com.binancetracker.ui.main;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
 
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.binance.api.client.domain.general.Asset;
 import com.binancetracker.R;
 import com.binancetracker.databinding.TextRowItemBinding;
 
@@ -45,10 +41,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     public synchronized void setLocalDataSet(Collection<AssetModel> dataSet)
     {
+        assetModels.clear();
         for (AssetModel a : dataSet)
         {
-            if (!assetModels.contains(a))
-                assetModels.add(a);
+            assetModels.add(a);
         }
         assetModels.sort(new ListSorter());
         notifyDataSetChanged();

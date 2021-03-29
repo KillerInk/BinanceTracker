@@ -1,15 +1,15 @@
 package com.binancetracker;
 
+import android.os.Bundle;
+import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.os.Bundle;
-import android.view.View;
-
-import com.binancetracker.databinding.MainActivityBinding;
 import com.binancetracker.api.BinanceApi;
+import com.binancetracker.databinding.MainActivityBinding;
 import com.binancetracker.room.SingletonDataBase;
 import com.binancetracker.utils.Settings;
 

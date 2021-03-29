@@ -115,6 +115,24 @@
                     android:textStyle="bold"
                     tools:text="0.12345678" />
 
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="@dimen/textrowitem_weight"
+                    android:text="Saving:"
+                    android:textSize="@dimen/text_normal" />
+
+                <TextView
+                    android:id="@+id/textView_saved"
+                    setDoubleToTextview="@{assetmodel.savedValue}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/text_normal"
+                    android:textStyle="bold"
+                    tools:text="0.12345678" />
+
             </LinearLayout>
 
             <LinearLayout

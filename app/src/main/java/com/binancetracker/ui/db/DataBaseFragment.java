@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.binancetracker.R;
 import com.binancetracker.databinding.DatabaseFragmentBinding;
-import com.binancetracker.ui.key.KeyViewModel;
 
 public class DataBaseFragment extends Fragment {
     private DatabaseFragmentBinding databaseFragmentBinding;

@@ -1,36 +1,26 @@
 package com.binancetracker.ui.main;
 
-import androidx.databinding.DataBindingUtil;
-import androidx.databinding.Observable;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.Observable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.binancetracker.BR;
 import com.binancetracker.R;
 import com.binancetracker.databinding.MainFragmentBinding;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.MPPointF;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 
 public class MainFragment extends Fragment {
 
@@ -92,13 +82,10 @@ public class MainFragment extends Fragment {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 if (propertyId == BR.pieData) {
-                    mainFragmentBinding.chart1.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mainFragmentBinding.chart1.setData(mViewModel.pieChartModel.getPieData());
-                            mainFragmentBinding.chart1.setCenterText(mViewModel.pieChartModel.getPiechartMidString());
-                            mainFragmentBinding.chart1.invalidate();
-                        }
+                    mainFragmentBinding.chart1.post(() -> {
+                        mainFragmentBinding.chart1.setData(mViewModel.pieChartModel.getPieData());
+                        mainFragmentBinding.chart1.setCenterText(mViewModel.pieChartModel.getPiechartMidString());
+                        mainFragmentBinding.chart1.invalidate();
                     });
                 }
             }

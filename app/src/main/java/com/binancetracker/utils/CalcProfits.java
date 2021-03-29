@@ -11,18 +11,19 @@ import java.util.List;
 
 public class CalcProfits
 {
-
+    private final String TAG = CalcProfits.class.getSimpleName();
     public void calcProfits()
     {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 List<String> tradedPairs = SingletonDataBase.appDatabase.historyTradeDao().getTradedPairs();
-                Log.d(this.getClass().getSimpleName(),"Pairs:" + tradedPairs.toString());
+                Log.d(TAG,"Pairs:" + tradedPairs.toString());
                 HashMap<String, Profit> assets = new HashMap<>();
 
                 for (String pair : tradedPairs)
                 {
+                    Log.d(TAG,"Pair:" + pair);
                     MarketPair mpair = new MarketPair(pair);
                     List<HistoryTrade> trades = SingletonDataBase.appDatabase.historyTradeDao().findByName(pair);
                     Profit quoteass = getQuoteAsset(mpair,assets);
@@ -42,11 +43,11 @@ public class CalcProfits
                             baseass.tradescount++;
                         }
                     }
-                    Log.d(this.getClass().getSimpleName(),"Pair:" + pair + " count:" + trades.size() + " " +quoteass.asset + ":" + quoteass.profit + " " + baseass.asset +":" +baseass.profit);
+                    Log.d(TAG,"Pair:" + pair + " count:" + trades.size() + " " +quoteass.asset + ":" + quoteass.profit + " " + baseass.asset +":" +baseass.profit);
                 }
                 for (Profit profit : assets.values())
                     SingletonDataBase.appDatabase.profitDao().insert(profit);
-                Log.d(this.getClass().getSimpleName(),"Profit calc done");
+                Log.d(TAG,"Profit calc done");
             }
         }).start();
     }

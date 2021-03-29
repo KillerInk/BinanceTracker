@@ -4,9 +4,7 @@ import android.graphics.Color;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
-import androidx.lifecycle.MutableLiveData;
 
-import com.binance.api.client.domain.general.Asset;
 import com.binancetracker.BR;
 import com.binancetracker.utils.ConvertingUtil;
 import com.binancetracker.utils.Settings;
@@ -17,7 +15,6 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
 public class PieChartModel extends BaseObservable {

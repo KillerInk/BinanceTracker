@@ -2,6 +2,7 @@ package com.binancetracker.image;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.binancetracker.MyApplication;
@@ -16,7 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ImageCache {
-
+    private final String TAG = ImageCache.class.getSimpleName();
     private final String imagesdownloadPath = "https://raw.githubusercontent.com/KillerInk/cryptocurrency-icons/master/32/icon/";
     private WeakReference<ImageView> weakReference;
     private String name;
@@ -72,7 +73,7 @@ public class ImageCache {
             }
             return bitmap;
         }catch(IOException e){
-            e.printStackTrace();
+            Log.e(TAG,"No Image to Download:" + uri);
         }
         return null;
     }

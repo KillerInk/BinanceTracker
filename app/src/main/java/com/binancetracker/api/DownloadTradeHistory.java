@@ -1,15 +1,11 @@
 package com.binancetracker.api;
 
-import android.icu.text.UFormat;
 import android.util.Log;
 
 import com.binance.api.client.BinanceApiClientFactory;
 import com.binance.api.client.BinanceApiRestClient;
-import com.binance.api.client.domain.account.Account;
 import com.binance.api.client.domain.account.Trade;
-import com.binance.api.client.domain.account.TradeHistoryItem;
 import com.binance.api.client.domain.general.SymbolInfo;
-import com.binancetracker.room.AppDatabase;
 import com.binancetracker.room.SingletonDataBase;
 import com.binancetracker.room.dao.HistoryTradeDao;
 import com.binancetracker.room.dao.MarketDao;

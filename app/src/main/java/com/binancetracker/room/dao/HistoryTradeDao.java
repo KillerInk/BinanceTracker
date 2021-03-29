@@ -8,7 +8,6 @@ import androidx.room.Query;
 
 import com.binancetracker.room.entity.HistoryTrade;
 
-
 import java.util.List;
 
 @Dao
@@ -30,4 +29,9 @@ public interface HistoryTradeDao {
 
     @Query("SELECT DISTINCT symbol FROM historytrade")
     List<String> getTradedPairs();
+
+    @Query("SELECT * FROM historytrade WHERE time = (SELECT MAX(time) FROM historytrade)")
+    HistoryTrade getLastTrade();
+
+
 }

@@ -5,21 +5,34 @@ import android.graphics.Color;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import com.binance.api.client.domain.account.AssetBalance;
 import com.binancetracker.BR;
 import com.binancetracker.utils.ConvertingUtil;
 
-
+@Entity
 public class AssetModel extends BaseObservable {
+    @PrimaryKey(autoGenerate = true)
+    public Long id;
 
-    private String assetName;
-    private double freeValue;
-    private double lockedValue;
-    private double price = 0;
+    @ColumnInfo(name = "asset")
+    public String assetName;
+    @ColumnInfo(name = "freeValue")
+    public double freeValue;
+    @ColumnInfo(name = "lockedValue")
+    public double lockedValue;
+    @ColumnInfo(name = "savedValue")
+    public double savedValue;
+    @ColumnInfo(name = "price")
+    public double price = 0;
     private int priceColor = Color.WHITE;
-    private double choosenAssetPrice = 0;
-    private String choosenAsset;
+    @ColumnInfo(name = "choosenAssetPrice")
+    public double choosenAssetPrice = 0;
+    @ColumnInfo(name = "choosenAsset")
+    public String choosenAsset;
 
     private double profit;
     private long tradescount;
@@ -71,7 +84,7 @@ public class AssetModel extends BaseObservable {
     }
 
     @Bindable
-    public double getTotalValue(){ return trim(freeValue + lockedValue); }
+    public double getTotalValue(){ return trim(freeValue + lockedValue + savedValue); }
 
     public void setTotalValue(double val){}
 
@@ -119,14 +132,14 @@ public class AssetModel extends BaseObservable {
     }
 
     @Bindable
-    public double getTotalValuePrice(){ return trim((freeValue + lockedValue) * price); }
+    public double getTotalValuePrice(){ return trim((freeValue + lockedValue + savedValue) * price); }
 
     public void setTotalValuePrice(double val){}
 
     @Bindable
     public double getTotalValueChoosenPrice(){
         if (price > 0)
-            return trim(((freeValue + lockedValue) * (price/choosenAssetPrice)));
+            return trim(((freeValue + lockedValue + savedValue) * (price/choosenAssetPrice)));
         else  return 0;
     }
 
@@ -169,5 +182,16 @@ public class AssetModel extends BaseObservable {
     public void setTradescount(long tradescount) {
         this.tradescount = tradescount;
         notifyPropertyChanged(BR.tradescount);
+    }
+
+    @Bindable
+    public double getSavedValue() {
+        return savedValue;
+    }
+
+    public void setSavedValue(double savedValue) {
+        this.savedValue = savedValue;
+        notifyPropertyChanged(BR.savedValue);
+        notifyPropertyChanged(BR.totalValue);
     }
 }

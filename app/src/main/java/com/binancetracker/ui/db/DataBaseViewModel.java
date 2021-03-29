@@ -69,4 +69,6 @@ public class DataBaseViewModel extends ViewModel
         profits.calcProfits();
     }
 
+
+
 }
