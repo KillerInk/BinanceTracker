@@ -53,8 +53,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public class ListSorter implements Comparator<AssetModel> {
         @Override
         public int compare(AssetModel lhs, AssetModel rhs) {
-            Double distance = lhs.getTotalValue();
-            Double distance1 = rhs.getTotalValue();
+            Double distance = lhs.getTotalValuePrice();
+            Double distance1 = rhs.getTotalValuePrice();
             if (distance.compareTo(distance1) > 0) {
                 return -1;
             } else if (distance.compareTo(distance1) < 0) {

@@ -9,6 +9,7 @@ import com.binancetracker.api.Ticker;
 import com.binancetracker.room.SingletonDataBase;
 import com.binancetracker.room.entity.Profit;
 import com.binancetracker.ui.main.AssetModel;
+import com.binancetracker.utils.CalcProfits;
 import com.binancetracker.utils.MarketPair;
 import com.binancetracker.utils.Settings;
 
@@ -58,11 +59,20 @@ public class AssetRepo implements AccountBalance.AccountBalanceEvent {
                 getProfitsFromDb();
                 fireAssetChangedEvent();
                 BinanceApi.getInstance().getAccountBalance().startListenToAssetBalance();
+
                 fireAssetChangedEvent();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         updatedPrices();
+                    }
+                }).start();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        BinanceApi.getInstance().getDownloadTradeHistory().updateHistoryTrades();
+                        new CalcProfits().calcProfits();
+                        getProfitsFromDb();
                     }
                 }).start();
             }

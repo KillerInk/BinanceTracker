@@ -86,12 +86,33 @@ public class DownloadTradeHistory {
     private void getAllHistoryforPair(BinanceApiRestClient client,HistoryTradeDao historyTradeDao,String pair, long id)
     {
         List<Trade> histtrades = client.getMyTrades(pair, id);
+        insertHistory(client, historyTradeDao, pair, histtrades);
+    }
+
+    private void insertHistory(BinanceApiRestClient client, HistoryTradeDao historyTradeDao, String pair, List<Trade> histtrades) {
         for (Trade t : histtrades)
         {
             insertHistotrade(historyTradeDao, t);
         }
         if (histtrades.size() > 1 && histtrades.size() == 500)
             getAllHistoryforPair(client,historyTradeDao,pair,histtrades.get(histtrades.size()-1).getId());
+    }
+
+    public void updateHistoryTrades()
+    {
+        List<String> tradedPairs = SingletonDataBase.appDatabase.historyTradeDao().getTradedPairs();
+        if (tradedPairs != null && tradedPairs.size() >0)
+        {
+            BinanceApiRestClient client = clientFactory.newRestClient();
+            for (String pair : tradedPairs)
+            {
+                HistoryTrade trade = SingletonDataBase.appDatabase.historyTradeDao().getLastTradeBySymbol(pair);
+                if (trade != null) {
+                    List<Trade> histtrades = client.getMyTrades(pair, trade.id);
+                    insertHistory(client, SingletonDataBase.appDatabase.historyTradeDao(), pair, histtrades);
+                }
+            }
+        }
     }
 
     private void insertHistotrade(HistoryTradeDao historyTradeDao, Trade t) {

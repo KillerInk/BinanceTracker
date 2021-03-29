@@ -30,8 +30,8 @@ public interface HistoryTradeDao {
     @Query("SELECT DISTINCT symbol FROM historytrade")
     List<String> getTradedPairs();
 
-    @Query("SELECT * FROM historytrade WHERE time = (SELECT MAX(time) FROM historytrade)")
-    HistoryTrade getLastTrade();
+    @Query("SELECT * FROM historytrade WHERE time = (SELECT MAX(time) FROM historytrade) AND symbol LIKE :name")
+    HistoryTrade getLastTradeBySymbol(String name);
 
 
 }
