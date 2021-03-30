@@ -36,7 +36,7 @@ public class AssetModel extends BaseObservable {
 
     private double profit;
     private long tradescount;
-    private long deposits;
+    private double deposits;
 
     public AssetModel()
     {}
@@ -197,11 +197,11 @@ public class AssetModel extends BaseObservable {
     }
 
     @Bindable
-    public long getDeposits() {
+    public double getDeposits() {
         return deposits;
     }
 
-    public void setDeposits(long deposits) {
+    public void setDeposits(double deposits) {
         this.deposits = deposits;
         notifyPropertyChanged(BR.deposits);
     }

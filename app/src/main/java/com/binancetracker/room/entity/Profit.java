@@ -23,7 +23,7 @@ public class Profit {
     public long tradescount;
 
     @ColumnInfo(name = "deposits")
-    public long deposits;
+    public double deposits;
 
 
 }

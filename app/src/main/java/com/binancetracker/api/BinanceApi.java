@@ -6,15 +6,11 @@ import com.binance.api.client.domain.account.Account;
 
 public class BinanceApi {
 
-
-
     private BinanceApiClientFactory clientFactory;
     private AccountBalance accountBalance;
     private Ticker ticker;
     private DownloadTradeHistory downloadTradeHistory;
     private DownloadDepositHistory downloadDespositHistory;
-
-
 
     private static BinanceApi binanceApi = new BinanceApi();
 
