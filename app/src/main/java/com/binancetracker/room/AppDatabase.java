@@ -14,7 +14,7 @@ import com.binancetracker.room.entity.Market;
 import com.binancetracker.room.entity.Profit;
 import com.binancetracker.ui.main.AssetModel;
 
-@Database(entities = {Market.class, HistoryTrade.class, Profit.class, AssetModel.class, DepositHistoryEntity.class}, version = 8)
+@Database(entities = {Market.class, HistoryTrade.class, Profit.class, AssetModel.class, DepositHistoryEntity.class}, version = 9)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract MarketDao marketDao();
     public abstract HistoryTradeDao historyTradeDao();

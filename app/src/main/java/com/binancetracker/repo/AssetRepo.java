@@ -76,7 +76,8 @@ public class AssetRepo implements AccountBalance.AccountBalanceEvent {
     private Runnable updateHistoryRunner = new Runnable() {
         @Override
         public void run() {
-            BinanceApi.getInstance().getDownloadTradeHistory().updateHistoryTrades();
+            BinanceApi.getInstance().getDownloadTradeHistory().updateHistoryTrades(false);
+            BinanceApi.getInstance().getDownloadDespositHistory().downloadLast30days(false);
             new CalcProfits().calcProfits();
             getProfitsFromDb();
         }
