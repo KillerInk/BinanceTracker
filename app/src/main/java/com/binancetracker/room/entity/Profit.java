@@ -22,5 +22,8 @@ public class Profit {
     @ColumnInfo(name = "tradescount")
     public long tradescount;
 
+    @ColumnInfo(name = "deposits")
+    public long deposits;
+
 
 }

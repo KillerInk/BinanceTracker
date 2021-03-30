@@ -63,6 +63,16 @@ public class DataBaseViewModel extends ViewModel
         }).start();
     }
 
+    public void startSyncDeposits()
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                BinanceApi.getInstance().getDownloadDespositHistory().downloadFullHistory();
+            }
+        }).start();
+    }
+
     public void calcTrades()
     {
         CalcProfits profits = new CalcProfits();

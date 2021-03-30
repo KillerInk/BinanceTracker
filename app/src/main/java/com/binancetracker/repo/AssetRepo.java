@@ -8,6 +8,7 @@ import com.binancetracker.api.BinanceApi;
 import com.binancetracker.api.Ticker;
 import com.binancetracker.room.SingletonDataBase;
 import com.binancetracker.room.entity.Profit;
+import com.binancetracker.thread.RestExecuter;
 import com.binancetracker.ui.main.AssetModel;
 import com.binancetracker.utils.CalcProfits;
 import com.binancetracker.utils.MarketPair;
@@ -50,34 +51,36 @@ public class AssetRepo implements AccountBalance.AccountBalanceEvent {
         choosenAsset = Settings.getInstance().getDefaultAsset();
 
         BinanceApi.getInstance().getAccountBalance().setAccountBalanceEventListner(this::onBalanceChanged);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                getAssetModelsFromDB();
-                fireAssetChangedEvent();
-                getProfitsFromDb();
-                fireAssetChangedEvent();
-                BinanceApi.getInstance().getAccountBalance().startListenToAssetBalance();
-
-                fireAssetChangedEvent();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        updatedPrices();
-                    }
-                }).start();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        BinanceApi.getInstance().getDownloadTradeHistory().updateHistoryTrades();
-                        new CalcProfits().calcProfits();
-                        getProfitsFromDb();
-                    }
-                }).start();
-            }
-        }).start();
+        RestExecuter.addTask(onResumeRunner);
     }
+
+    private Runnable onResumeRunner = new Runnable() {
+        @Override
+        public void run() {
+            getAssetModelsFromDB();
+            fireAssetChangedEvent();
+            getProfitsFromDb();
+            fireAssetChangedEvent();
+            BinanceApi.getInstance().getAccountBalance().startListenToAssetBalance();
+            fireAssetChangedEvent();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    updatedPrices();
+                }
+            }).start();
+            RestExecuter.addTask(updateHistoryRunner);
+        }
+    };
+
+    private Runnable updateHistoryRunner = new Runnable() {
+        @Override
+        public void run() {
+            BinanceApi.getInstance().getDownloadTradeHistory().updateHistoryTrades();
+            new CalcProfits().calcProfits();
+            getProfitsFromDb();
+        }
+    };
 
     public void onPause()
     {
@@ -122,6 +125,7 @@ public class AssetRepo implements AccountBalance.AccountBalanceEvent {
                 AssetModel assetModel = getAssetModel(profit.asset);
                 assetModel.setProfit(profit.profit);
                 assetModel.setTradescount(profit.tradescount);
+                assetModel.setDeposits(profit.deposits);
             }
             Log.d(TAG,"loaded profits: " + profitList.size());
             //applyHasmapToLiveData();

@@ -11,6 +11,7 @@ import com.binancetracker.room.dao.HistoryTradeDao;
 import com.binancetracker.room.dao.MarketDao;
 import com.binancetracker.room.entity.HistoryTrade;
 import com.binancetracker.room.entity.Market;
+import com.binancetracker.thread.RestExecuter;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class DownloadTradeHistory {
         this.historyEvent = historyEvent;
     }
 
+    private int i = 0;
     public void getFullHistory()
     {
         Log.d(this.getClass().getSimpleName(),"getFullHistory");
@@ -67,15 +69,20 @@ public class DownloadTradeHistory {
         if (historyEvent != null)
             historyEvent.onSyncStart(markets.size());
         HistoryTradeDao historyTradeDao = SingletonDataBase.appDatabase.historyTradeDao();
-        int i = 0;
+        i = 0;
         Log.d(this.getClass().getSimpleName(),"startParsing markets");
         for (Market m: markets) {
-            String pair = m.baseAsset+m.quoteAsset;
-            Log.d(this.getClass().getSimpleName(),"download Trades for: " + pair);
-            if (historyEvent != null)
-                historyEvent.onSyncUpdate(i++);
-            getAllHistoryforPair(client,historyTradeDao,pair,0);
-            Log.d(this.getClass().getSimpleName(),"download done for: " + pair);
+            RestExecuter.addTask(new Runnable() {
+                @Override
+                public void run() {
+                    String pair = m.baseAsset+m.quoteAsset;
+                    Log.d(this.getClass().getSimpleName(),"download Trades for: " + pair);
+                    if (historyEvent != null)
+                        historyEvent.onSyncUpdate(i++);
+                    getAllHistoryforPair(client,historyTradeDao,pair,0);
+                    Log.d(this.getClass().getSimpleName(),"download done for: " + pair);
+                }
+            });
         }
         Log.d(this.getClass().getSimpleName(),"finished download fullHistory");
         if (historyEvent != null)

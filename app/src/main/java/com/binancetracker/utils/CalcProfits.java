@@ -3,6 +3,7 @@ package com.binancetracker.utils;
 import android.util.Log;
 
 import com.binancetracker.room.SingletonDataBase;
+import com.binancetracker.room.entity.DespositHistoryEntity;
 import com.binancetracker.room.entity.HistoryTrade;
 import com.binancetracker.room.entity.Profit;
 
@@ -28,6 +29,7 @@ public class CalcProfits
                     List<HistoryTrade> trades = SingletonDataBase.appDatabase.historyTradeDao().findByName(pair);
                     Profit quoteass = getQuoteAsset(mpair,assets);
                     Profit baseass = getBaseAsset(mpair,assets);
+
                     for (HistoryTrade ht : trades)
                     {
                         if (ht.buyer)
@@ -44,6 +46,18 @@ public class CalcProfits
                         }
                     }
                     Log.d(TAG,"Pair:" + pair + " count:" + trades.size() + " " +quoteass.asset + ":" + quoteass.profit + " " + baseass.asset +":" +baseass.profit);
+                }
+
+                for (String s : assets.keySet()) {
+
+                    List<DespositHistoryEntity> deposits = SingletonDataBase.appDatabase.despositHistoryDao().findByName(s);
+                    Profit profit = assets.get(s);
+                    if (deposits != null && deposits.size() > 0) {
+                        for (DespositHistoryEntity d : deposits) {
+                            profit.profit += d.amount;
+                            profit.deposits += d.amount;
+                        }
+                    }
                 }
                 for (Profit profit : assets.values())
                     SingletonDataBase.appDatabase.profitDao().insert(profit);

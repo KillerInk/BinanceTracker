@@ -17,6 +17,8 @@ public interface AssetModelDao {
 
     @Query("SELECT * FROM assetmodel")
     List<AssetModel> getAll();
+    @Query("SELECT asset FROM assetmodel")
+    List<String> getAllAssets();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(AssetModel assetModel);

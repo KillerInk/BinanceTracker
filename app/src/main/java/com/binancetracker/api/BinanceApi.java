@@ -12,6 +12,7 @@ public class BinanceApi {
     private AccountBalance accountBalance;
     private Ticker ticker;
     private DownloadTradeHistory downloadTradeHistory;
+    private DownloadDepositHistory downloadDespositHistory;
 
 
 
@@ -26,6 +27,7 @@ public class BinanceApi {
         accountBalance = new AccountBalance(clientFactory);
         ticker = new Ticker(clientFactory);
         downloadTradeHistory = new DownloadTradeHistory(clientFactory);
+        downloadDespositHistory = new DownloadDepositHistory(clientFactory);
     }
 
     public AccountBalance getAccountBalance() {
@@ -38,6 +40,10 @@ public class BinanceApi {
 
     public DownloadTradeHistory getDownloadTradeHistory() {
         return downloadTradeHistory;
+    }
+
+    public DownloadDepositHistory getDownloadDespositHistory() {
+        return downloadDespositHistory;
     }
 
     private Account account = null;

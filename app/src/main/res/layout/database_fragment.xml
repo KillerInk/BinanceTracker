@@ -17,6 +17,12 @@
         android:layout_height="wrap_content"
         android:text="Sync History Orders" />
 
+    <Button
+        android:id="@+id/button_startSyncDeposit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sync Deposit History" />
+
     <TextView
         android:id="@+id/textView_syncstate"
         android:layout_width="match_parent"

@@ -32,6 +32,13 @@ public class DataBaseFragment extends Fragment {
             }
         });
 
+        databaseFragmentBinding.buttonStartSyncDeposit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataBaseViewModel.startSyncDeposits();
+            }
+        });
+
         databaseFragmentBinding.buttonCalctrades.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
