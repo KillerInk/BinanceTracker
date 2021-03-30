@@ -6,7 +6,7 @@ import com.binance.api.client.BinanceApiClientFactory;
 import com.binance.api.client.BinanceApiRestClient;
 import com.binance.api.client.domain.account.Deposit;
 import com.binancetracker.room.SingletonDataBase;
-import com.binancetracker.room.entity.DespositHistoryEntity;
+import com.binancetracker.room.entity.DepositHistoryEntity;
 import com.binancetracker.thread.RestExecuter;
 
 import java.text.DateFormat;
@@ -54,12 +54,12 @@ public class DownloadDepositHistory
             List<Deposit> deposits = depositHistory;
             if (deposits != null) {
                 for (Deposit deposit : deposits) {
-                    DespositHistoryEntity dhe = new DespositHistoryEntity();
+                    DepositHistoryEntity dhe = new DepositHistoryEntity();
                     dhe.asset = deposit.getAsset();
                     dhe.amount = Double.parseDouble(deposit.getAmount());
                     dhe.insertTime = Long.parseLong(deposit.getInsertTime());
                     dhe.txId = deposit.getTxId();
-                    SingletonDataBase.appDatabase.despositHistoryDao().insert(dhe);
+                    SingletonDataBase.appDatabase.depositHistoryDao().insert(dhe);
                 }
             }
         }

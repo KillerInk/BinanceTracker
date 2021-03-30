@@ -3,7 +3,7 @@ package com.binancetracker.utils;
 import android.util.Log;
 
 import com.binancetracker.room.SingletonDataBase;
-import com.binancetracker.room.entity.DespositHistoryEntity;
+import com.binancetracker.room.entity.DepositHistoryEntity;
 import com.binancetracker.room.entity.HistoryTrade;
 import com.binancetracker.room.entity.Profit;
 
@@ -50,10 +50,10 @@ public class CalcProfits
 
                 for (String s : assets.keySet()) {
 
-                    List<DespositHistoryEntity> deposits = SingletonDataBase.appDatabase.despositHistoryDao().findByName(s);
+                    List<DepositHistoryEntity> deposits = SingletonDataBase.appDatabase.depositHistoryDao().findByName(s);
                     Profit profit = assets.get(s);
                     if (deposits != null && deposits.size() > 0) {
-                        for (DespositHistoryEntity d : deposits) {
+                        for (DepositHistoryEntity d : deposits) {
                             profit.profit += d.amount;
                             profit.deposits += d.amount;
                         }
