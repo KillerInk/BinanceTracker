@@ -10,7 +10,7 @@ public class DepositHistoryEntity {
     /**
      * Trade id.
      */
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     public Long id;
 
     /**

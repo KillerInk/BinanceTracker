@@ -43,6 +43,7 @@ public class DownloadDepositFullHistoryRunner extends ClientFactoryRunner {
             if (deposits != null) {
                 for (Deposit deposit : deposits) {
                     DepositHistoryEntity dhe = new DepositHistoryEntity();
+                    dhe.id = Long.parseLong(deposit.getInsertTime());
                     dhe.asset = deposit.getAsset();
                     dhe.amount = Double.parseDouble(deposit.getAmount());
                     dhe.insertTime = Long.parseLong(deposit.getInsertTime());
@@ -51,5 +52,6 @@ public class DownloadDepositFullHistoryRunner extends ClientFactoryRunner {
                 }
             }
         }
+        Log.d(TAG,"download Deposit list done");
     }
 }

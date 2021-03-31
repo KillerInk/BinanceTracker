@@ -25,5 +25,8 @@ public class Profit {
     @ColumnInfo(name = "deposits")
     public double deposits;
 
+    @ColumnInfo(name = "withdraws")
+    public double withdraws;
+
 
 }

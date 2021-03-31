@@ -6,6 +6,7 @@ import com.binancetracker.room.SingletonDataBase;
 import com.binancetracker.room.entity.DepositHistoryEntity;
 import com.binancetracker.room.entity.HistoryTrade;
 import com.binancetracker.room.entity.Profit;
+import com.binancetracker.room.entity.WithdrawHistoryEntity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ public class CalcProfits
         new Thread(new Runnable() {
             @Override
             public void run() {
+                SingletonDataBase.appDatabase.profitDao().delete();
                 List<String> tradedPairs = SingletonDataBase.appDatabase.historyTradeDao().getTradedPairs();
                 Log.d(TAG,"Pairs:" + tradedPairs.toString());
                 HashMap<String, Profit> assets = new HashMap<>();
@@ -50,12 +52,21 @@ public class CalcProfits
 
                 for (String s : assets.keySet()) {
 
-                    List<DepositHistoryEntity> deposits = SingletonDataBase.appDatabase.depositHistoryDao().findByName(s);
                     Profit profit = assets.get(s);
+
+                    List<DepositHistoryEntity> deposits = SingletonDataBase.appDatabase.depositHistoryDao().findByName(s);
                     if (deposits != null && deposits.size() > 0) {
                         for (DepositHistoryEntity d : deposits) {
                             profit.profit += d.amount;
                             profit.deposits += d.amount;
+                        }
+                    }
+
+                    List<WithdrawHistoryEntity> withdraws = SingletonDataBase.appDatabase.withdrawHistoryDao().findByName(s);
+                    if (withdraws != null && withdraws.size() > 0) {
+                        for (WithdrawHistoryEntity d : withdraws) {
+                            profit.profit -= d.amount;
+                            profit.withdraws += d.amount;
                         }
                     }
                 }

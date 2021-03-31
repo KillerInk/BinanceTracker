@@ -12,7 +12,6 @@ import com.binancetracker.room.dao.HistoryTradeDao;
 import com.binancetracker.room.dao.MarketDao;
 import com.binancetracker.room.entity.HistoryTrade;
 import com.binancetracker.room.entity.Market;
-import com.binancetracker.thread.RestExecuter;
 
 import java.util.List;
 
@@ -81,7 +80,7 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner {
 
     private void getAllHistoryforPair(BinanceApiRestClient client,HistoryTradeDao historyTradeDao,String pair, long id)
     {
-        List<Trade> histtrades = client.getMyTrades(pair, id);
+        List<Trade> histtrades = client.getMyTrades(pair, id,1000);
         insertHistory(client, historyTradeDao, pair, histtrades);
     }
 

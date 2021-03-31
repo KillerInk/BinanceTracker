@@ -42,10 +42,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public synchronized void setLocalDataSet(Collection<AssetModel> dataSet)
     {
         assetModels.clear();
-        for (AssetModel a : dataSet)
-        {
-            assetModels.add(a);
-        }
+        assetModels.addAll(dataSet);
         assetModels.sort(new ListSorter());
         notifyDataSetChanged();
     }

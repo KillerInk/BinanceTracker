@@ -23,6 +23,12 @@
         android:layout_height="wrap_content"
         android:text="Sync Deposit History" />
 
+    <Button
+        android:id="@+id/button_startSyncWithdraw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sync Withdraw History" />
+
     <TextView
         android:id="@+id/textView_syncstate"
         android:layout_width="match_parent"

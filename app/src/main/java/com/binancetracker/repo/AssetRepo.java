@@ -78,6 +78,7 @@ public class AssetRepo implements AccountBalance.AccountBalanceEvent {
         public void run() {
             BinanceApi.getInstance().getDownloadTradeHistory().updateHistoryTrades(false);
             BinanceApi.getInstance().getDownloadDespositHistory().downloadLast30days(false);
+            BinanceApi.getInstance().getDownloadWithdrawHistory().downloadLast30days(false);
             new CalcProfits().calcProfits();
             getProfitsFromDb();
         }
@@ -127,6 +128,7 @@ public class AssetRepo implements AccountBalance.AccountBalanceEvent {
                 assetModel.setProfit(profit.profit);
                 assetModel.setTradescount(profit.tradescount);
                 assetModel.setDeposits(profit.deposits);
+                assetModel.setWithdraws(profit.withdraws);
             }
             Log.d(TAG,"loaded profits: " + profitList.size());
             //applyHasmapToLiveData();

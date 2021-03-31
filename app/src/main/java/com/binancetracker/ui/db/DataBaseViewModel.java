@@ -14,7 +14,6 @@ import com.binancetracker.utils.CalcProfits;
 public class DataBaseViewModel extends ViewModel
 {
     public ObservableField<String> dbstatus = new ObservableField<>();
-    //public MutableLiveData<String> dbstatus = new MutableLiveData<>();
     private int max;
 
     public void startSyncTradeHistory()
@@ -65,12 +64,12 @@ public class DataBaseViewModel extends ViewModel
 
     public void startSyncDeposits()
     {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                BinanceApi.getInstance().getDownloadDespositHistory().downloadFullHistory();
-            }
-        }).start();
+        BinanceApi.getInstance().getDownloadDespositHistory().downloadFullHistory();
+    }
+
+    public void startSyncWithdraws()
+    {
+        BinanceApi.getInstance().getDownloadWithdrawHistory().downloadFullHistory();
     }
 
     public void calcTrades()

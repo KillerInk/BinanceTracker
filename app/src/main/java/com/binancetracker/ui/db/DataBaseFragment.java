@@ -45,6 +45,13 @@ public class DataBaseFragment extends Fragment {
                 dataBaseViewModel.calcTrades();
             }
         });
+
+        databaseFragmentBinding.buttonStartSyncWithdraw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataBaseViewModel.startSyncWithdraws();
+            }
+        });
         return databaseFragmentBinding.getRoot();
     }
 }

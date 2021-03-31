@@ -1,7 +1,5 @@
 package com.binancetracker.thread;
 
-import android.util.Log;
-
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -36,13 +34,13 @@ public class RestExecuter {
 
             requestExecutor = new ThreadPoolExecutor(
                     1,       // Initial pool size
-                    4,       // Max pool size
+                    3,       // Max pool size
                     KEEP_ALIVE_TIME,
                     TimeUnit.MILLISECONDS,
                     requestqueue);
             //handel case that queue is full, and wait till its free
             requestExecutor.setRejectedExecutionHandler((r, executor) -> {
-                Log.d(TAG, "imageSave Queue full");
+                //Log.d(TAG, "imageSave Queue full");
                 try {
                     executor.getQueue().put(r);
                 } catch (InterruptedException e) {

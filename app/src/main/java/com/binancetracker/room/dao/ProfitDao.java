@@ -15,10 +15,12 @@ public interface ProfitDao {
     @Query("SELECT * FROM profit")
     List<Profit> getAll();
 
-
     @Insert
     void insert(Profit profit);
 
     @Delete
     void delete(Profit profit);
+
+    @Query("DELETE FROM profit")
+    void delete();
 }

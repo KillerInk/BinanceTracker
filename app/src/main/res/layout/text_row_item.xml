@@ -13,16 +13,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_medium"
-        android:layout_marginRight="@dimen/margin_medium">
+        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginBottom="1dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:paddingLeft="1dp"
-            android:paddingTop="1dp"
-            android:paddingRight="1dp"
-            android:paddingBottom="1dp">
+            android:layout_marginBottom="3dp"
+            android:gravity="center_vertical">
 
 
             <LinearLayout
@@ -75,6 +73,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
                     android:textStyle="bold"
                     tools:text="0.12345678" />
@@ -93,6 +92,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
                     android:textStyle="bold"
                     tools:text="0.12345678" />
@@ -111,6 +111,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
                     android:textStyle="bold"
                     tools:text="0.12345678" />
@@ -129,6 +130,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
                     android:textStyle="bold"
                     tools:text="0.12345678" />
@@ -174,7 +176,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@{assetmodel.priceColor}"
+
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
                     android:textStyle="bold"
                     tools:text="0.12345678" />
@@ -221,7 +224,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@{assetmodel.priceColor}"
+
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
                     android:textStyle="bold"
                     tools:text="300" />
@@ -247,6 +251,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
                     android:textStyle="bold"
                     tools:text="300" />
@@ -255,7 +260,7 @@
                     android:id="@+id/textView13"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Trades Completed"
+                    android:text="Traded"
                     android:textSize="@dimen/text_normal" />
 
                 <TextView
@@ -264,6 +269,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
                     android:textStyle="bold"
                     tools:text="300" />
@@ -281,6 +287,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_normal"
+                    android:textStyle="bold"
+                    tools:text="300" />
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Withdraw:"
+                    android:textSize="@dimen/text_normal" />
+
+                <TextView
+                    android:id="@+id/textView_withdraw"
+                    setDoubleToTextview="@{assetmodel.withdraws}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
                     android:textStyle="bold"
                     tools:text="300" />
