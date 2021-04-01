@@ -111,7 +111,13 @@ public class AssetModel extends BaseObservable {
     public void setChoosenAssetPrice(double choosenAssetPrice) {
         this.choosenAssetPrice = choosenAssetPrice;
         notifyPropertyChanged(BR.choosenAssetPrice);
-        notifyPropertyChanged(BR.totalValueChoosenPrice);
+        notifyPropertyChanged(BR.freeValueUsdtPrice);
+        notifyPropertyChanged(BR.lockedValueUsdtPrice);
+        notifyPropertyChanged(BR.savingValueUsdtPrice);
+        notifyPropertyChanged(BR.totalValueChoosenAssetPrice);
+        notifyPropertyChanged(BR.lockedValueChoosenAssetPrice);
+        notifyPropertyChanged(BR.savingValueChoosenAssetPrice);
+        notifyPropertyChanged(BR.freeValueChoosenAssetPrice);
     }
 
     @Bindable
@@ -138,14 +144,69 @@ public class AssetModel extends BaseObservable {
 
     public void setTotalValuePrice(double val){}
 
+    public void setTotalValueChoosenAssetPrice(double val){}
     @Bindable
-    public double getTotalValueChoosenPrice(){
+    public double getTotalValueChoosenAssetPrice(){
         if (price > 0)
             return trim(((freeValue + lockedValue + savedValue) * (price/choosenAssetPrice)));
         else  return 0;
     }
 
-    public void setTotalValueChoosenPrice(double val){}
+    public void setFreeValueChoosenAssetPrice(double val){}
+
+    @Bindable
+    public double getFreeValueChoosenAssetPrice(){
+        if (price > 0)
+            return trim(((freeValue) * (price/choosenAssetPrice)));
+        else  return 0;
+    }
+
+    public void setLockedValueChoosenAssetPrice(double val){}
+
+    @Bindable
+    public double getLockedValueChoosenAssetPrice(){
+        if (price > 0)
+            return trim(((lockedValue) * (price/choosenAssetPrice)));
+        else  return 0;
+    }
+
+    public void setSavingValueChoosenAssetPrice(double val){}
+
+    @Bindable
+    public double getSavingValueChoosenAssetPrice(){
+        if (price > 0)
+            return trim(((savedValue) * (price/choosenAssetPrice)));
+        else  return 0;
+    }
+
+    public void setFreeValueUsdtPrice(double val){}
+
+    @Bindable
+    public double getFreeValueUsdtPrice(){
+        if (price > 0)
+            return trim(((freeValue) * (price)));
+        else  return 0;
+    }
+
+    public void setLockedValueUsdtPrice(double val){}
+
+    @Bindable
+    public double getLockedValueUsdtPrice(){
+        if (price > 0)
+            return trim(((lockedValue) * (price)));
+        else  return 0;
+    }
+
+    public void setSavingValueUsdtPrice(double val){}
+
+    @Bindable
+    public double getSavingValueUsdtPrice(){
+        if (price > 0)
+            return trim(((savedValue) * (price)));
+        else  return 0;
+    }
+
+
 
     @Bindable
     public String getChoosenAsset() {

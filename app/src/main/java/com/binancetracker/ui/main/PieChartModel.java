@@ -73,7 +73,7 @@ public class PieChartModel extends BaseObservable {
                         try {
                             totalval = a.getTotalValuePrice();
                             usdt += a.getTotalValuePrice();
-                            choosenCurency += a.getTotalValueChoosenPrice();
+                            choosenCurency += a.getTotalValueChoosenAssetPrice();
                         }catch (NullPointerException ex)
                         {
                             ex.printStackTrace();
@@ -103,7 +103,7 @@ public class PieChartModel extends BaseObservable {
                             try {
                                 totalval = asset.getTotalValuePrice();
                                 usdt += asset.getTotalValuePrice();
-                                choosenCurency += asset.getTotalValueChoosenPrice();
+                                choosenCurency += asset.getTotalValueChoosenAssetPrice();
                             }catch (NullPointerException ex)
                             {
                                 ex.printStackTrace();
