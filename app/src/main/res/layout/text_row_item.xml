@@ -105,7 +105,7 @@
                     tools:text="0.12345678" />
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:layout_gravity="bottom"
                     android:background="@color/teal_700"/>
 
@@ -124,11 +124,10 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
-                    android:textStyle="bold"
                     tools:text="0.12345678" />
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:layout_gravity="bottom"
                     android:background="@color/teal_700"/>
 
@@ -147,11 +146,11 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
-                    android:textStyle="bold"
+
                     tools:text="0.12345678" />
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:layout_gravity="bottom"
                     android:background="@color/teal_700"/>
 
@@ -170,7 +169,6 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
-                    android:textStyle="bold"
                     tools:text="0.12345678" />
 
             </LinearLayout>
@@ -201,7 +199,7 @@
                     tools:text="0.12345678" />
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:layout_gravity="bottom"
                     android:background="@color/teal_700"/>
 
@@ -217,14 +215,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="1540"
-                    android:textStyle="bold"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
                     setDoubleToTextview="@{assetmodel.freeValueUsdtPrice}"/>
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:layout_gravity="bottom"
                     android:background="@color/teal_700"/>
 
@@ -237,13 +234,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="340"
-                    android:textStyle="bold"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
                     setDoubleToTextview="@{assetmodel.lockedValueUsdtPrice}"/>
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:layout_gravity="bottom"
                     android:background="@color/teal_700"/>
 
@@ -256,7 +252,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="1000"
-                    android:textStyle="bold"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
                     setDoubleToTextview="@{assetmodel.savingValueUsdtPrice}"/>
@@ -289,7 +284,7 @@
                     tools:text="300" />
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:layout_gravity="bottom"
                     android:background="@color/teal_700"/>
 
@@ -304,14 +299,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="1540"
-                    android:textStyle="bold"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
                     setDoubleToTextview="@{assetmodel.freeValueChoosenAssetPrice}"/>
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:layout_gravity="bottom"
                     android:background="@color/teal_700"/>
 
@@ -324,16 +318,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="340"
-                    android:textStyle="bold"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
                     setDoubleToTextview="@{assetmodel.lockedValueChoosenAssetPrice}"/>
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:layout_gravity="bottom"
-                    android:background="@color/teal_700"/>
+                    android:background="@color/teal_700" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -344,7 +337,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="1000"
-                    android:textStyle="bold"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
                     setDoubleToTextview="@{assetmodel.savingValueChoosenAssetPrice}"/>
@@ -371,7 +363,6 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
-                    android:textStyle="bold"
                     tools:text="300" />
 
 
@@ -389,7 +380,6 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
-                    android:textStyle="bold"
                     tools:text="300" />
 
                 <TextView
@@ -406,7 +396,6 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
-                    android:textStyle="bold"
                     tools:text="300" />
 
                 <TextView
@@ -423,14 +412,13 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
-                    android:textStyle="bold"
                     tools:text="300" />
             </LinearLayout>
         </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
             android:layout_gravity="bottom"
             android:background="@color/teal_700"/>
 
