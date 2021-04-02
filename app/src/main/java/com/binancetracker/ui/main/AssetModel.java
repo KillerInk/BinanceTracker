@@ -38,6 +38,7 @@ public class AssetModel extends BaseObservable {
     private long tradescount;
     private double deposits;
     private double withdraws;
+    private String changed24hpercentage = "";
 
     public AssetModel()
     {}
@@ -276,5 +277,15 @@ public class AssetModel extends BaseObservable {
     public void setWithdraws(double withdraws) {
         this.withdraws = withdraws;
         notifyPropertyChanged(BR.withdraws);
+    }
+
+    @Bindable
+    public String getChanged24hpercentage() {
+        return changed24hpercentage;
+    }
+
+    public void setChanged24hpercentage(String changed24hpercentage) {
+        this.changed24hpercentage = changed24hpercentage;
+        notifyPropertyChanged(BR.changed24hpercentage);
     }
 }

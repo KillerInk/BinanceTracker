@@ -1,5 +1,6 @@
 package com.binancetracker.ui.main;
 
+import android.graphics.Color;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +19,16 @@ public class CustomBinding {
         else
             sval = String.format("%.2f",val);
         view.setText(sval);
+    }
+
+    @BindingAdapter("setPercentStringToTextView")
+    public static void setPercentStringToTextView(TextView view, String val)
+    {
+        if (val.startsWith("-"))
+            view.setTextColor(Color.RED);
+        else
+            view.setTextColor(Color.GREEN);
+        view.setText(val+"%");
     }
 
     @BindingAdapter("loadImage")

@@ -194,11 +194,12 @@ public class AssetRepo implements AccountBalance.AccountBalanceEvent {
             BinanceApi.getInstance().getTicker().setMarketsToListen(markets);
             BinanceApi.getInstance().getTicker().setPriceChangedEvent(new Ticker.PriceChangedEvent() {
                 @Override
-                public void onPriceChanged(String symbol,final double price) {
+                public void onPriceChanged(String symbol,final double price,String priceChang) {
                     //Log.d(TAG,"onPriceChanged:" + symbol + " " + price);
                     AssetModel assetModel = getAssetModel(new MarketPair(symbol).getQuoteAsset());
                     if (symbol.contains(assetModel.getAssetName())) {
                         assetModel.setPrice(price);
+                        assetModel.setChanged24hpercentage(priceChang);
                     }
                     //set choosen asset price like eur
                     if (symbol.equals(choosenAsset+base) && assetModel.getAssetName().equals(choosenAsset)) {

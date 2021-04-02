@@ -25,7 +25,7 @@ import com.binancetracker.ui.main.AssetModel;
                 DepositHistoryEntity.class,
                 WithdrawHistoryEntity.class
         },
-        version = 14)
+        version = 15)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract MarketDao marketDao();
     public abstract HistoryTradeDao historyTradeDao();

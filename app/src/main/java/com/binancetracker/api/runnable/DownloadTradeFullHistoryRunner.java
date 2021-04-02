@@ -22,6 +22,9 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner {
 
     private DownloadTradeHistory.TradeHistoryEvent tradeHistoryEventListner;
     private int i;
+    private int tradescounter = 0;
+
+    private final int LIMIT = 1000;
 
     public DownloadTradeFullHistoryRunner(BinanceApiClientFactory clientFactory) {
         super(clientFactory);
@@ -67,11 +70,12 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner {
         Log.d(this.getClass().getSimpleName(),"startParsing markets");
         for (Market m: markets) {
             String pair = m.baseAsset+m.quoteAsset;
+            tradescounter = 0;
             Log.d(this.getClass().getSimpleName(),"download Trades for: " + pair);
             if (tradeHistoryEventListner != null)
                 tradeHistoryEventListner.onSyncUpdate(i++);
             getAllHistoryforPair(client,historyTradeDao,pair,0);
-            Log.d(this.getClass().getSimpleName(),"download done for: " + pair);
+            Log.d(this.getClass().getSimpleName(),"download done for: " + pair + " found trades:" + tradescounter);
         }
         Log.d(this.getClass().getSimpleName(),"finished download fullHistory");
         if (tradeHistoryEventListner != null)
@@ -80,7 +84,8 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner {
 
     private void getAllHistoryforPair(BinanceApiRestClient client,HistoryTradeDao historyTradeDao,String pair, long id)
     {
-        List<Trade> histtrades = client.getMyTrades(pair, id,1000);
+        List<Trade> histtrades = client.getMyTrades(pair, id,LIMIT);
+        tradescounter += histtrades.size();
         insertHistory(client, historyTradeDao, pair, histtrades);
     }
 
@@ -89,7 +94,7 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner {
         {
             insertHistotrade(historyTradeDao, t);
         }
-        if (histtrades.size() > 1 && histtrades.size() == 500)
+        if (histtrades.size() > 1 && histtrades.size() == LIMIT)
             getAllHistoryforPair(client,historyTradeDao,pair,histtrades.get(histtrades.size()-1).getId());
     }
 

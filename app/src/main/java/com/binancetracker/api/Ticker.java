@@ -12,7 +12,7 @@ public class Ticker {
 
     public interface PriceChangedEvent
     {
-        void onPriceChanged(String symbol, double price);
+        void onPriceChanged(String symbol, double price, String percentChange);
     }
 
     private BinanceApiClientFactory clientFactory;
@@ -43,9 +43,9 @@ public class Ticker {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    dataStream = client.onMiniTickerEvent(marketsToListen,event -> {
+                    dataStream = client.onTickerEvent(marketsToListen,event -> {
                         if (priceChangedEvent != null)
-                            priceChangedEvent.onPriceChanged(event.getSymbol(),event.getClose());
+                            priceChangedEvent.onPriceChanged(event.getSymbol(),Double.parseDouble(event.getCurrentDaysClosePrice()),event.getPriceChangePercent());
                     });
                 }
             }).start();
