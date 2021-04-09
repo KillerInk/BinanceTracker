@@ -17,10 +17,12 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_mainFragment_to_keyFragment2"
-            app:destination="@id/keyFragment" />
+            app:destination="@id/keyFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_mainFragment_to_dataBaseFragment"
-            app:destination="@id/dataBaseFragment" />
+            app:destination="@id/dataBaseFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/keyFragment"
@@ -38,6 +40,7 @@
         android:label="DataBaseFragment" >
         <action
             android:id="@+id/action_dataBaseFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 </navigation>

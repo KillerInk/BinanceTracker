@@ -11,6 +11,7 @@ import com.binancetracker.databinding.TextRowItemBinding;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -43,25 +44,15 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     {
         assetModels.clear();
         assetModels.addAll(dataSet);
-        assetModels.sort(new ListSorter());
-        notifyDataSetChanged();
-    }
-
-    public class ListSorter implements Comparator<AssetModel> {
-        @Override
-        public int compare(AssetModel lhs, AssetModel rhs) {
-            Double distance = lhs.getTotalValuePrice();
-            Double distance1 = rhs.getTotalValuePrice();
-            if (distance.compareTo(distance1) > 0) {
-                return -1;
-            } else if (distance.compareTo(distance1) < 0) {
-                return 1;
-            } else {
-                return 0;
+        Collections.sort(assetModels, new Comparator<AssetModel>() {
+            @Override
+            public int compare(AssetModel lhs, AssetModel rhs) {
+                return lhs.getTotalValuePrice() > rhs.getTotalValuePrice() ? -1 : (lhs.getTotalValuePrice() < rhs.getTotalValuePrice() ) ? 1 : 0;
             }
-        }
+        });
+        notifyItemRangeChanged(0, assetModels.size());
+        //notifyDataSetChanged();
     }
-
 
     // Create new views (invoked by the layout manager)
     @Override

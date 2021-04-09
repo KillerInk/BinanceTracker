@@ -13,9 +13,12 @@ import androidx.databinding.Observable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.binancetracker.BR;
+import com.binancetracker.MainActivity;
 import com.binancetracker.R;
 import com.binancetracker.databinding.MainFragmentBinding;
 import com.github.mikephil.charting.components.Legend;
@@ -39,6 +42,28 @@ public class MainFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         mainFragmentBinding =  DataBindingUtil.inflate(inflater, R.layout.main_fragment, container, false);
+
+
+        mainFragmentBinding.imageButtonSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                if (navController.getCurrentDestination().getId() != R.id.keyFragment) {
+                    navController.navigate(R.id.action_mainFragment_to_keyFragment);
+                }
+            }
+        });
+
+        mainFragmentBinding.imageButtonDb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                if (navController.getCurrentDestination().getId() != R.id.dataBaseFragment) {
+                    navController.navigate(R.id.action_mainFragment_to_dataBaseFragment);
+                }
+            }
+        });
+
         customAdapter = new CustomAdapter();
         mainFragmentBinding.recyclerViewBalance.setAdapter(customAdapter);
         mainFragmentBinding.recyclerViewBalance.setLayoutManager(new LinearLayoutManager(getContext()));
