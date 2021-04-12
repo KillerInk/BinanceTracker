@@ -15,16 +15,16 @@ public class DownloadLastTradeHistoryRunner extends DownloadTradeFullHistoryRunn
 
     @Override
     public void run() {
-        List<String> tradedPairs = SingletonDataBase.appDatabase.historyTradeDao().getTradedPairs();
+        List<String> tradedPairs = SingletonDataBase.binanceDatabase.historyTradeDao().getTradedPairs();
         if (tradedPairs != null && tradedPairs.size() >0)
         {
             BinanceApiRestClient client = clientFactory.newRestClient();
             for (String pair : tradedPairs)
             {
-                HistoryTrade trade = SingletonDataBase.appDatabase.historyTradeDao().getLastTradeBySymbol(pair);
+                HistoryTrade trade = SingletonDataBase.binanceDatabase.historyTradeDao().getLastTradeBySymbol(pair);
                 if (trade != null) {
                     List<Trade> histtrades = client.getMyTrades(pair, trade.id);
-                    insertHistory(client, SingletonDataBase.appDatabase.historyTradeDao(), pair, histtrades);
+                    insertHistory(client, SingletonDataBase.binanceDatabase.historyTradeDao(), pair, histtrades);
                 }
             }
         }

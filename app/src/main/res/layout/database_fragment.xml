@@ -29,6 +29,8 @@
         android:layout_height="wrap_content"
         android:text="Sync Withdraw History" />
 
+
+
     <TextView
         android:id="@+id/textView_syncstate"
         android:layout_width="match_parent"
@@ -40,5 +42,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="calc trades" />
+
+    <Button
+        android:id="@+id/button_startSyncPairFullHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sync traded Pairs Price History" />
 </LinearLayout>
 </layout>

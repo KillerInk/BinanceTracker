@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DownloadDepositFullHistoryRunner extends ClientFactoryRunner {
     private final String TAG = DownloadDepositFullHistoryRunner.class.getSimpleName();
-    protected final static long days90 = 2592000000L; // 30days
+    protected final static long days30 = 2592000000L; // 30days
     protected final static int checkyears = 3*365/30; //3years split into 30days
     public DownloadDepositFullHistoryRunner(BinanceApiClientFactory clientFactory) {
         super(clientFactory);
@@ -24,7 +24,7 @@ public class DownloadDepositFullHistoryRunner extends ClientFactoryRunner {
     public void run() {
         BinanceApiRestClient client = clientFactory.newRestClient();
         long endtime = System.currentTimeMillis();
-        long starttime = endtime - days90;
+        long starttime = endtime - days30;
         Log.d(TAG, "startTime:" + DateFormat.getDateTimeInstance().format(new Date(starttime)) + " endTime:" + DateFormat.getDateTimeInstance().format(new Date(endtime)));
         for (int i = 0; i < checkyears; i++) {
             com.binance.api.client.domain.account.DepositHistory depositHistory = client.getDepositHistory(starttime,endtime);
@@ -32,8 +32,9 @@ public class DownloadDepositFullHistoryRunner extends ClientFactoryRunner {
             {
                 addItemToDB(depositHistory.getDepositList());
             }
-            endtime = endtime - days90;
-            starttime = starttime - days90;
+            endtime = endtime - days30;
+            starttime = starttime - days30;
+            Log.d(TAG, "startTime:" + DateFormat.getDateTimeInstance().format(new Date(starttime)) + " endTime:" + DateFormat.getDateTimeInstance().format(new Date(endtime)));
         }
     }
 
@@ -48,7 +49,7 @@ public class DownloadDepositFullHistoryRunner extends ClientFactoryRunner {
                     dhe.amount = Double.parseDouble(deposit.getAmount());
                     dhe.insertTime = Long.parseLong(deposit.getInsertTime());
                     dhe.txId = deposit.getTxId();
-                    SingletonDataBase.appDatabase.depositHistoryDao().insert(dhe);
+                    SingletonDataBase.binanceDatabase.depositHistoryDao().insert(dhe);
                 }
             }
         }

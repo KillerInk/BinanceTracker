@@ -39,7 +39,7 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner {
         Log.d(TAG,"getFullHistory");
         BinanceApiRestClient client = clientFactory.newRestClient();
         List<SymbolInfo> info = client.getExchangeInfo().getSymbols();
-        MarketDao marketDao = SingletonDataBase.appDatabase.marketDao();
+        MarketDao marketDao = SingletonDataBase.binanceDatabase.marketDao();
         List<Market> markets = marketDao.getAll();
         Log.d(TAG,"clear Market DB");
         for (Market market : markets) {
@@ -65,7 +65,7 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner {
         markets = marketDao.getAll();
         if (tradeHistoryEventListner != null)
             tradeHistoryEventListner.onSyncStart(markets.size());
-        HistoryTradeDao historyTradeDao = SingletonDataBase.appDatabase.historyTradeDao();
+        HistoryTradeDao historyTradeDao = SingletonDataBase.binanceDatabase.historyTradeDao();
         i = 0;
         Log.d(this.getClass().getSimpleName(),"startParsing markets");
         for (Market m: markets) {

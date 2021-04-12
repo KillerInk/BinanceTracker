@@ -24,7 +24,7 @@ public class DownloadWithdrawFullHistory extends DownloadDepositFullHistoryRunne
     public void run() {
         BinanceApiRestClient client = clientFactory.newRestClient();
         long endtime = System.currentTimeMillis();
-        long starttime = endtime - days90;
+        long starttime = endtime - days30;
         Log.d(TAG, "startTime:" + DateFormat.getDateTimeInstance().format(new Date(starttime)) + " endTime:" + DateFormat.getDateTimeInstance().format(new Date(endtime)));
         for (int i = 0; i < checkyears; i++) {
             com.binance.api.client.domain.account.WithdrawHistory depositHistory = client.getWithdrawHistory(starttime,endtime);
@@ -32,8 +32,8 @@ public class DownloadWithdrawFullHistory extends DownloadDepositFullHistoryRunne
             {
                 addWithdrawItemToDB(depositHistory.getWithdrawList());
             }
-            endtime = endtime - days90;
-            starttime = starttime - days90;
+            endtime = endtime - days30;
+            starttime = starttime - days30;
         }
         Log.d(TAG, "DownloadWithdrawFullHistory done");
     }
@@ -54,7 +54,7 @@ public class DownloadWithdrawFullHistory extends DownloadDepositFullHistoryRunne
                         dhe.address = deposit.getAddress();
                     if (deposit.getTxId() != null)
                         dhe.txId = deposit.getTxId();
-                    SingletonDataBase.appDatabase.withdrawHistoryDao().insert(dhe);
+                    SingletonDataBase.binanceDatabase.withdrawHistoryDao().insert(dhe);
                 }
             }
         }

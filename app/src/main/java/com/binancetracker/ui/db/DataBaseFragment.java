@@ -52,6 +52,13 @@ public class DataBaseFragment extends Fragment {
                 dataBaseViewModel.startSyncWithdraws();
             }
         });
+
+        databaseFragmentBinding.buttonStartSyncPairFullHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataBaseViewModel.startDownloadPriceHistoryDayFull();
+            }
+        });
         return databaseFragmentBinding.getRoot();
     }
 }

@@ -15,6 +15,9 @@ public interface ProfitDao {
     @Query("SELECT * FROM profit")
     List<Profit> getAll();
 
+    @Query("SELECT asset FROM profit")
+    List<String> getAllAssets();
+
     @Insert
     void insert(Profit profit);
 

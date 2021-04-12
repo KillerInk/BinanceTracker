@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.binancetracker.api.BinanceApi;
 import com.binancetracker.api.DownloadTradeHistory;
+import com.binancetracker.thread.RestExecuter;
 import com.binancetracker.utils.CalcProfits;
 
 
@@ -70,6 +71,11 @@ public class DataBaseViewModel extends ViewModel
     public void startSyncWithdraws()
     {
         BinanceApi.getInstance().getDownloadWithdrawHistory().downloadFullHistory();
+    }
+
+    public void startDownloadPriceHistoryDayFull()
+    {
+        RestExecuter.addTask(BinanceApi.getInstance().getDownloadFullDayHistoryForAllPairsRunner());
     }
 
     public void calcTrades()

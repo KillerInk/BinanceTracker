@@ -19,7 +19,7 @@ public class Download30DaysDepositHistoryRunner extends DownloadDepositFullHisto
     public void run() {
         BinanceApiRestClient client = clientFactory.newRestClient();
         long endtime = System.currentTimeMillis();
-        long starttime = endtime - days90;
+        long starttime = endtime - days30;
         Log.d(TAG, "startTime:" + DateFormat.getDateTimeInstance().format(new Date(starttime)) + " endTime:" + DateFormat.getDateTimeInstance().format(new Date(endtime)));
         com.binance.api.client.domain.account.DepositHistory depositHistory = client.getDepositHistory(starttime,endtime);
         if (depositHistory != null && depositHistory.getDepositList() != null)

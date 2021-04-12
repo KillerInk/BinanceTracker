@@ -6,17 +6,21 @@ import androidx.room.Room;
 
 public class SingletonDataBase {
 
+    public static BinanceDatabase binanceDatabase;
     public static AppDatabase appDatabase;
 
     public static void init(Context context)
     {
+        binanceDatabase = Room.databaseBuilder(context,
+                BinanceDatabase.class, "binanceDB").fallbackToDestructiveMigration().build();
+
         appDatabase = Room.databaseBuilder(context,
-                AppDatabase.class, "markets").fallbackToDestructiveMigration().build();
+                AppDatabase.class, "appDB").fallbackToDestructiveMigration().build();
     }
 
     public static void close()
     {
-        appDatabase.close();
-        appDatabase = null;
+        binanceDatabase.close();
+        binanceDatabase = null;
     }
 }

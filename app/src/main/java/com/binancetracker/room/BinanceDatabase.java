@@ -20,11 +20,18 @@ import com.binancetracker.ui.main.AssetModel;
 
 @Database(entities =
         {
-                Profit.class,
-                AssetModel.class
+                Market.class,
+                HistoryTrade.class,
+                DepositHistoryEntity.class,
+                WithdrawHistoryEntity.class,
+                CandleStickEntity.class
         },
         version = 1)
-public abstract class AppDatabase extends RoomDatabase {
-    public abstract ProfitDao profitDao();
-    public abstract AssetModelDao assetModelDao();
+public abstract class BinanceDatabase extends RoomDatabase {
+    public abstract MarketDao marketDao();
+    public abstract HistoryTradeDao historyTradeDao();
+    public abstract DepositHistoryDao depositHistoryDao();
+    public abstract WithdrawHistoryDao withdrawHistoryDao();
+    public abstract CandelStickDayDao candelStickDayDao();
 }
+

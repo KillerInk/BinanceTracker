@@ -3,6 +3,7 @@ package com.binancetracker.api;
 import com.binance.api.client.BinanceApiClientFactory;
 import com.binance.api.client.BinanceApiRestClient;
 import com.binance.api.client.domain.account.Account;
+import com.binancetracker.api.runnable.DownloadFullDayHistoryForAllPairsRunner;
 
 public class BinanceApi {
 
@@ -12,6 +13,7 @@ public class BinanceApi {
     private DownloadTradeHistory downloadTradeHistory;
     private DownloadDepositHistory downloadDespositHistory;
     private DownloadWithdrawHistory downloadWithdrawHistory;
+    private DownloadFullDayHistoryForAllPairsRunner downloadFullDayHistoryForAllPairsRunner;
 
     private static BinanceApi binanceApi = new BinanceApi();
 
@@ -26,6 +28,7 @@ public class BinanceApi {
         downloadTradeHistory = new DownloadTradeHistory(clientFactory);
         downloadDespositHistory = new DownloadDepositHistory(clientFactory);
         downloadWithdrawHistory = new DownloadWithdrawHistory(clientFactory);
+        downloadFullDayHistoryForAllPairsRunner = new DownloadFullDayHistoryForAllPairsRunner(clientFactory);
     }
 
     public AccountBalance getAccountBalance() {
@@ -46,6 +49,10 @@ public class BinanceApi {
 
     public DownloadWithdrawHistory getDownloadWithdrawHistory() {
         return downloadWithdrawHistory;
+    }
+
+    public DownloadFullDayHistoryForAllPairsRunner getDownloadFullDayHistoryForAllPairsRunner() {
+        return downloadFullDayHistoryForAllPairsRunner;
     }
 
     private Account account = null;

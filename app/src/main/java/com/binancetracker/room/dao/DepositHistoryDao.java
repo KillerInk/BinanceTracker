@@ -15,6 +15,9 @@ public interface DepositHistoryDao {
     @Query("SELECT * FROM DepositHistoryEntity")
     List<DepositHistoryEntity> getAll();
 
+    @Query("SELECT insertTime FROM DepositHistoryEntity ORDER BY insertTime ASC LIMIT 1")
+    long getFirstDepositTime();
+
     @Query("SELECT * FROM DepositHistoryEntity WHERE asset LIKE :first")
     List<DepositHistoryEntity> findByName(String first);
 

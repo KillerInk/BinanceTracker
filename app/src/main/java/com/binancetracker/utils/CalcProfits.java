@@ -20,7 +20,7 @@ public class CalcProfits
             @Override
             public void run() {
                 SingletonDataBase.appDatabase.profitDao().delete();
-                List<String> tradedPairs = SingletonDataBase.appDatabase.historyTradeDao().getTradedPairs();
+                List<String> tradedPairs = SingletonDataBase.binanceDatabase.historyTradeDao().getTradedPairs();
                 Log.d(TAG,"Pairs:" + tradedPairs.toString());
                 HashMap<String, Profit> assets = new HashMap<>();
 
@@ -28,7 +28,7 @@ public class CalcProfits
                 {
                     Log.d(TAG,"Pair:" + pair);
                     MarketPair mpair = new MarketPair(pair);
-                    List<HistoryTrade> trades = SingletonDataBase.appDatabase.historyTradeDao().findByName(pair);
+                    List<HistoryTrade> trades = SingletonDataBase.binanceDatabase.historyTradeDao().findByName(pair);
                     Profit quoteass = getQuoteAsset(mpair,assets);
                     Profit baseass = getBaseAsset(mpair,assets);
 
@@ -54,7 +54,7 @@ public class CalcProfits
 
                     Profit profit = assets.get(s);
 
-                    List<DepositHistoryEntity> deposits = SingletonDataBase.appDatabase.depositHistoryDao().findByName(s);
+                    List<DepositHistoryEntity> deposits = SingletonDataBase.binanceDatabase.depositHistoryDao().findByName(s);
                     if (deposits != null && deposits.size() > 0) {
                         for (DepositHistoryEntity d : deposits) {
                             profit.profit += d.amount;
@@ -62,7 +62,7 @@ public class CalcProfits
                         }
                     }
 
-                    List<WithdrawHistoryEntity> withdraws = SingletonDataBase.appDatabase.withdrawHistoryDao().findByName(s);
+                    List<WithdrawHistoryEntity> withdraws = SingletonDataBase.binanceDatabase.withdrawHistoryDao().findByName(s);
                     if (withdraws != null && withdraws.size() > 0) {
                         for (WithdrawHistoryEntity d : withdraws) {
                             profit.profit -= d.amount;
@@ -97,5 +97,20 @@ public class CalcProfits
             assets.put(quoteass.asset,quoteass);
         }
         return quoteass;
+    }
+
+    public void calcAssetLifeTimeHistory()
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                calcAssetLifeTime();
+            }
+        }).start();
+    }
+
+    private void calcAssetLifeTime()
+    {
+
     }
 }
