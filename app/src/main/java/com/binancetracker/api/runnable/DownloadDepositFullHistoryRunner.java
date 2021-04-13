@@ -27,10 +27,10 @@ public class DownloadDepositFullHistoryRunner extends ClientFactoryRunner {
         long starttime = endtime - days30;
         Log.d(TAG, "startTime:" + DateFormat.getDateTimeInstance().format(new Date(starttime)) + " endTime:" + DateFormat.getDateTimeInstance().format(new Date(endtime)));
         for (int i = 0; i < checkyears; i++) {
-            com.binance.api.client.domain.account.DepositHistory depositHistory = client.getDepositHistory(starttime,endtime);
-            if (depositHistory != null && depositHistory.getDepositList() != null)
+            List<Deposit> deposits = client.getDepositHistory(starttime,endtime);
+            if (deposits != null)
             {
-                addItemToDB(depositHistory.getDepositList());
+                addItemToDB(deposits);
             }
             endtime = endtime - days30;
             starttime = starttime - days30;
