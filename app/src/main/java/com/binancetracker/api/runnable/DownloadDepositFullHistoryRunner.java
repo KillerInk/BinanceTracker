@@ -27,7 +27,7 @@ public class DownloadDepositFullHistoryRunner extends ClientFactoryRunner {
         long starttime = endtime - days30;
         Log.d(TAG, "startTime:" + DateFormat.getDateTimeInstance().format(new Date(starttime)) + " endTime:" + DateFormat.getDateTimeInstance().format(new Date(endtime)));
         for (int i = 0; i < checkyears; i++) {
-            List<Deposit> deposits = client.getDepositHistory(starttime,endtime);
+            List<Deposit> deposits = client.getWalletEndPoint().getDepositHistory(starttime,endtime);
             if (deposits != null)
             {
                 addItemToDB(deposits);

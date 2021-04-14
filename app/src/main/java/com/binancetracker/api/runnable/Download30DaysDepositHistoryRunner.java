@@ -23,7 +23,7 @@ public class Download30DaysDepositHistoryRunner extends DownloadDepositFullHisto
         long endtime = System.currentTimeMillis();
         long starttime = endtime - days30;
         Log.d(TAG, "startTime:" + DateFormat.getDateTimeInstance().format(new Date(starttime)) + " endTime:" + DateFormat.getDateTimeInstance().format(new Date(endtime)));
-        List<Deposit> depositHistory = client.getDepositHistory(starttime,endtime);
+        List<Deposit> depositHistory = client.getWalletEndPoint().getDepositHistory(starttime,endtime);
         if (depositHistory != null)
         {
             addItemToDB(depositHistory);

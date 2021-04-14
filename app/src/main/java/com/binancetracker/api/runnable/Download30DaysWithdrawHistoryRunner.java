@@ -24,7 +24,7 @@ public class Download30DaysWithdrawHistoryRunner extends DownloadWithdrawFullHis
         long endtime = System.currentTimeMillis();
         long starttime = endtime - days30;
         Log.d(TAG, "startTime:" + DateFormat.getDateTimeInstance().format(new Date(starttime)) + " endTime:" + DateFormat.getDateTimeInstance().format(new Date(endtime)));
-        List<Withdraw> withdraws = client.getWithdrawHistory(starttime,endtime);
+        List<Withdraw> withdraws = client.getWalletEndPoint().getWithdrawHistory(starttime,endtime);
         if (withdraws != null)
         {
             addWithdrawItemToDB(withdraws);
