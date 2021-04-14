@@ -22,6 +22,7 @@ public class DownloadDepositFullHistoryRunner extends ClientFactoryRunner {
 
     @Override
     public void run() {
+        SingletonDataBase.binanceDatabase.depositHistoryDao().deleteAll();
         BinanceApiRestClient client = clientFactory.newRestClient();
         long endtime = System.currentTimeMillis();
         long starttime = endtime - days30;

@@ -10,20 +10,9 @@ import com.binancetracker.room.entity.Profit;
 import java.util.List;
 
 @Dao
-public interface ProfitDao {
-
-    @Query("SELECT * FROM profit")
-    List<Profit> getAll();
+public abstract class ProfitDao extends BaseDao<Profit>{
 
     @Query("SELECT asset FROM profit")
-    List<String> getAllAssets();
+    public abstract List<String> getAllAssets();
 
-    @Insert
-    void insert(Profit profit);
-
-    @Delete
-    void delete(Profit profit);
-
-    @Query("DELETE FROM profit")
-    void delete();
 }

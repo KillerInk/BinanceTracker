@@ -8,28 +8,18 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.binancetracker.room.entity.CandleStickEntity;
+import com.binancetracker.room.entity.DepositHistoryEntity;
 import com.binancetracker.ui.main.AssetModel;
 
 import java.util.Collection;
 import java.util.List;
 
 @Dao
-public interface CandelStickDayDao {
-    @Query("SELECT * FROM candlestickentity")
-    List<CandleStickEntity> getAll();
+public abstract class CandelStickDayDao extends BaseDao<CandleStickEntity> {
 
     @Query("SELECT symbol FROM candlestickentity")
-    List<String> getAllAssets();
+    public abstract List<String> getAllAssets();
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(CandleStickEntity assetModel);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(Collection<CandleStickEntity> users);
-
-    @Delete
-    void delete(CandleStickEntity assetModel);
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    void update(CandleStickEntity assetModel);
+    @Query("SELECT * FROM DepositHistoryEntity WHERE insertTime BETWEEN :startDate AND :endDate AND asset LIKE :assetn LIMIT 1")
+    public abstract CandleStickEntity getByTimeAndAsset(Long startDate, Long endDate,String assetn);
 }

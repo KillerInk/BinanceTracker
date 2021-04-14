@@ -37,6 +37,7 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner {
     @Override
     public void run() {
         Log.d(TAG,"getFullHistory");
+        SingletonDataBase.binanceDatabase.historyTradeDao().deleteAll();
         BinanceApiRestClient client = clientFactory.newRestClient();
         List<SymbolInfo> info = client.getExchangeInfo().getSymbols();
         MarketDao marketDao = SingletonDataBase.binanceDatabase.marketDao();

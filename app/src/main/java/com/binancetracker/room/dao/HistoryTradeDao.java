@@ -11,27 +11,25 @@ import com.binancetracker.room.entity.HistoryTrade;
 import java.util.List;
 
 @Dao
-public interface HistoryTradeDao {
-    @Query("SELECT * FROM historytrade")
-    List<HistoryTrade> getAll();
+public abstract class HistoryTradeDao extends BaseDao<HistoryTrade> {
 
     @Query("SELECT * FROM historytrade WHERE id IN (:historyIds)")
-    List<HistoryTrade> loadAllByIds(int[] historyIds);
+    public abstract List<HistoryTrade> loadAllByIds(int[] historyIds);
 
     @Query("SELECT * FROM historytrade WHERE symbol LIKE :first")
-    List<HistoryTrade> findByName(String first);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(HistoryTrade market);
-
-    @Delete
-    void delete(HistoryTrade market);
+    public abstract List<HistoryTrade> findByName(String first);
 
     @Query("SELECT DISTINCT symbol FROM historytrade")
-    List<String> getTradedPairs();
+    public abstract List<String> getTradedPairs();
+
+    @Query("SELECT DISTINCT symbol FROM historytrade WHERE time BETWEEN :startTime AND :endTime")
+    public abstract List<String> getTradedPairsForDay(long startTime, long endTime);
+
+    @Query("SELECT DISTINCT * FROM historytrade WHERE time BETWEEN :startTime AND :endTime AND symbol LIKE :name")
+    public abstract List<HistoryTrade> getTraidsByDayAndName(long startTime, long endTime, String name);
 
     @Query("SELECT * FROM historytrade WHERE time = (SELECT MAX(time) FROM historytrade) AND symbol LIKE :name")
-    HistoryTrade getLastTradeBySymbol(String name);
+    public abstract HistoryTrade getLastTradeBySymbol(String name);
 
 
 }

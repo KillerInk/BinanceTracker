@@ -26,6 +26,7 @@ public class DownloadFullDayHistoryForAllPairsRunner extends DownloadDepositFull
 
     @Override
     public void run() {
+        SingletonDataBase.binanceDatabase.candelStickDayDao().deleteAll();
         BinanceApiRestClient client = clientFactory.newRestClient();
         List<String> assets = getPairsToDownload();
 

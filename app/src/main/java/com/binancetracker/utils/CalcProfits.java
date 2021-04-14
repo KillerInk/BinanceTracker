@@ -19,7 +19,7 @@ public class CalcProfits
         new Thread(new Runnable() {
             @Override
             public void run() {
-                SingletonDataBase.appDatabase.profitDao().delete();
+                SingletonDataBase.appDatabase.profitDao().deleteAll();
                 List<String> tradedPairs = SingletonDataBase.binanceDatabase.historyTradeDao().getTradedPairs();
                 Log.d(TAG,"Pairs:" + tradedPairs.toString());
                 HashMap<String, Profit> assets = new HashMap<>();

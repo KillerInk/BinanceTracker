@@ -13,23 +13,8 @@ import java.util.Collection;
 import java.util.List;
 
 @Dao
-public interface AssetModelDao {
-
-    @Query("SELECT * FROM assetmodel")
-    List<AssetModel> getAll();
+public abstract class AssetModelDao extends BaseDao<AssetModel> {
 
     @Query("SELECT asset FROM assetmodel")
-    List<String> getAllAssets();
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(AssetModel assetModel);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(Collection<AssetModel> users);
-
-    @Delete
-    void delete(AssetModel assetModel);
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    void update(AssetModel assetModel);
+    public abstract List<String> getAllAssets();
 }

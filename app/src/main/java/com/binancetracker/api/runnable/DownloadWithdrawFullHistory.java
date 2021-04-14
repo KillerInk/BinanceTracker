@@ -30,6 +30,7 @@ public class DownloadWithdrawFullHistory extends DownloadDepositFullHistoryRunne
 
     @Override
     public void run() {
+        SingletonDataBase.binanceDatabase.withdrawHistoryDao().deleteAll();
         BinanceApiRestClient client = clientFactory.newRestClient();
         long endtime = System.currentTimeMillis();
         long starttime = endtime - days30;
