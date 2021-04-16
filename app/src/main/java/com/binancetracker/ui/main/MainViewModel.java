@@ -19,15 +19,16 @@ public class MainViewModel extends ViewModel implements AssetRepo.AssetEvent {
     public MutableLiveData<Collection<AssetModel>> balances;
     private Handler handler;
     public final PieChartModel pieChartModel;
-    private final Handler piechartUpdateHandler;
+    public final LineChartModel lineChartModel;
+
 
     public MainViewModel()
     {
-        piechartUpdateHandler = new Handler(Looper.getMainLooper());
         assetRepo = new AssetRepo();
         handler = new Handler(Looper.getMainLooper());
         balances = new MutableLiveData<>();
-        pieChartModel = new PieChartModel();
+        pieChartModel = new PieChartModel(assetRepo);
+        lineChartModel = new LineChartModel();
     }
 
     public void onResume()
@@ -36,13 +37,13 @@ public class MainViewModel extends ViewModel implements AssetRepo.AssetEvent {
             return;
         assetRepo.setAssetEventListner(this);
         assetRepo.onResume();
-        piechartUpdateHandler.postDelayed(updatePieChart,1000);
-
+        pieChartModel.onResume();
+        lineChartModel.setData();
     }
 
     public void onPause()
     {
-        piechartUpdateHandler.removeCallbacks(updatePieChart);
+        pieChartModel.onPause();
         assetRepo.setAssetEventListner(null);
         assetRepo.onPause();
     }
@@ -56,13 +57,7 @@ public class MainViewModel extends ViewModel implements AssetRepo.AssetEvent {
         });
     }
 
-    private Runnable updatePieChart = new Runnable() {
-        @Override
-        public void run() {
-            pieChartModel.setPieChartData(assetRepo.getAssetModelHashMap());
-            piechartUpdateHandler.postDelayed(updatePieChart,1000);
-        }
-    };
+
 
     @Override
     public void onAssetChanged() {

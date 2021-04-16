@@ -3,11 +3,14 @@ package com.binancetracker.utils;
 import android.util.Log;
 
 import com.binancetracker.room.SingletonDataBase;
+import com.binancetracker.room.entity.CandleStickEntity;
 import com.binancetracker.room.entity.DepositHistoryEntity;
 import com.binancetracker.room.entity.HistoryTrade;
+import com.binancetracker.room.entity.PortofolioHistory;
 import com.binancetracker.room.entity.Profit;
 import com.binancetracker.room.entity.WithdrawHistoryEntity;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -111,6 +114,131 @@ public class CalcProfits
 
     private void calcAssetLifeTime()
     {
+        Log.d(TAG,"start calcAssetLifeTime");
+        SingletonDataBase.appDatabase.portofolioHistoryDao().deleteAll();
+        long firstDepositTime = SingletonDataBase.binanceDatabase.depositHistoryDao().getFirstDepositTime();
+        Date startday = new Date(firstDepositTime);
+        startday.setHours(0);
+        startday.setMinutes(0);
+        startday.setSeconds(0);
+        Date endday = new Date(firstDepositTime);
+        endday.setHours(23);
+        endday.setMinutes(59);
+        endday.setSeconds(59);
+        Date finalDay = new Date(System.currentTimeMillis());
+        finalDay.setHours(0);
+        finalDay.setMinutes(0);
+        finalDay.setSeconds(0);
+        HashMap<Long, HashMap<String, PortofolioHistory>> historyHashmapTime = new HashMap<>();
 
+        while (startday.getTime() <= finalDay.getTime()) {
+
+            Date yesterday = new Date(startday.getTime());
+            yesterday.setDate(yesterday.getDate() -1);
+            HashMap<String, PortofolioHistory> yesterdayHistory = historyHashmapTime.get(yesterday.getTime());
+            HashMap<String, PortofolioHistory> historyHashMap = new HashMap<>();
+
+            fillAmountFromYesterday(yesterdayHistory,historyHashMap);
+            addDepositsForDay(startday,endday,historyHashMap);
+            addTradesForDay(startday,endday,historyHashMap);
+            setDay_ID_Price(startday, endday, historyHashMap);
+
+            historyHashmapTime.put(startday.getTime(), historyHashMap);
+
+            Log.d(TAG,"Finished Day: " + startday.toString());
+            startday.setHours(24);
+            endday.setTime(startday.getTime());
+            endday.setHours(23);
+            endday.setMinutes(59);
+            endday.setSeconds(59);
+        }
+        for (HashMap<String, PortofolioHistory> map : historyHashmapTime.values())
+            SingletonDataBase.appDatabase.portofolioHistoryDao().insertAll(map.values());
+        Log.d(TAG,"end calcAssetLifeTime");
+    }
+
+    private void setDay_ID_Price(Date startday, Date endday, HashMap<String, PortofolioHistory> historyHashMap) {
+        for (PortofolioHistory portofolioHistory: historyHashMap.values())
+        {
+            portofolioHistory.day = startday.getTime();
+            portofolioHistory.id = portofolioHistory.day + (portofolioHistory.asset).hashCode();
+            CandleStickEntity candleStickEntity = null;
+            if (!portofolioHistory.asset.equals("USDT"))
+                candleStickEntity = SingletonDataBase.binanceDatabase.candelStickDayDao().getByTimeAndAsset(startday.getTime(),endday.getTime(),portofolioHistory.asset+"USDT");
+            if (candleStickEntity != null && candleStickEntity.close != null) {
+                portofolioHistory.price = Double.parseDouble(candleStickEntity.close);
+            }
+            historyHashMap.put(portofolioHistory.asset,portofolioHistory);
+        }
+    }
+
+    private void fillAmountFromYesterday(HashMap<String, PortofolioHistory> yesterdayHistory,HashMap<String, PortofolioHistory> historyHashMap) {
+        if (yesterdayHistory != null)
+        {
+            Log.d(TAG,"fillAmountFromYesterday:" +yesterdayHistory.values().size());
+            for (PortofolioHistory yp : yesterdayHistory.values())
+            {
+                PortofolioHistory portofolioHistory = new PortofolioHistory();
+                portofolioHistory.asset = yp.asset;
+                portofolioHistory.amount = yp.amount;
+                historyHashMap.put(portofolioHistory.asset, portofolioHistory);
+            }
+        }
+        else
+            Log.d(TAG,"fillAmountFromYesterday yesterdayHistory is null");
+    }
+
+    private void addTradesForDay(Date start,Date end,HashMap<String, PortofolioHistory> historyHashMap)
+    {
+        List<String> traidedPairsForDay = SingletonDataBase.binanceDatabase.historyTradeDao().getTradedPairsForDay(start.getTime(),end.getTime());
+        if (traidedPairsForDay != null)
+        {
+            for (String pair : traidedPairsForDay)
+            {
+                List<HistoryTrade> trades = SingletonDataBase.binanceDatabase.historyTradeDao().getTraidsByDayAndName(start.getTime(),end.getTime(), pair);
+                MarketPair mpair = new MarketPair(pair);
+                PortofolioHistory base = getPortofolio(mpair.getBaseAsset(),start,end,historyHashMap);
+                PortofolioHistory quote = getPortofolio(mpair.getQuoteAsset(),start,end,historyHashMap);
+                for (HistoryTrade trade : trades)
+                {
+                    if (trade.buyer)
+                    {
+                        quote.amount += Double.parseDouble(trade.qty) -Double.parseDouble(trade.commission);
+                        base.amount -= Double.parseDouble(trade.quoteQty);
+                    }
+                    else
+                    {
+                        quote.amount -= Double.parseDouble(trade.qty);
+                        base.amount += Double.parseDouble(trade.quoteQty)-Double.parseDouble(trade.commission);
+                    }
+                }
+            }
+        }
+    }
+
+    private void addDepositsForDay(Date start, Date end, HashMap<String, PortofolioHistory> historyHashMap)
+    {
+        List<DepositHistoryEntity> depositHistories = SingletonDataBase.binanceDatabase.depositHistoryDao().getByTime(start.getTime(), end.getTime());
+        for (DepositHistoryEntity entity : depositHistories)
+        {
+            PortofolioHistory portofolioHistory = getPortofolio(entity.asset,start,end,historyHashMap);
+            portofolioHistory.amount += entity.amount;
+        }
+    }
+
+
+
+    private PortofolioHistory getPortofolio(String name,Date date,Date end,HashMap<String, PortofolioHistory> historyHashMap)
+    {
+        PortofolioHistory portofolioHistory = historyHashMap.get(name);
+        if (portofolioHistory == null)
+        {
+            portofolioHistory = new PortofolioHistory();
+            portofolioHistory.day = date.getTime();
+            portofolioHistory.asset = name;
+            portofolioHistory.id = (portofolioHistory.day + portofolioHistory.asset).hashCode();
+            historyHashMap.put(name,portofolioHistory);
+        }
+        return portofolioHistory;
     }
 }

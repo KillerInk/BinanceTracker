@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.binancetracker.R;
 import com.binancetracker.databinding.DatabaseFragmentBinding;
+import com.binancetracker.utils.CalcProfits;
 
 public class DataBaseFragment extends Fragment {
     private DatabaseFragmentBinding databaseFragmentBinding;
@@ -57,6 +58,18 @@ public class DataBaseFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 dataBaseViewModel.startDownloadPriceHistoryDayFull();
+            }
+        });
+
+        databaseFragmentBinding.buttonCalcPortofolioHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        new CalcProfits().calcAssetLifeTimeHistory();
+                    }
+                }).start();
             }
         });
         return databaseFragmentBinding.getRoot();

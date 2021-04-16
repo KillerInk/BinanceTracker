@@ -1,11 +1,14 @@
 package com.binancetracker.ui.main;
 
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.binancetracker.BR;
+import com.binancetracker.repo.AssetRepo;
 import com.binancetracker.utils.ConvertingUtil;
 import com.binancetracker.utils.Settings;
 import com.github.mikephil.charting.data.PieData;
@@ -23,6 +26,8 @@ public class PieChartModel extends BaseObservable {
     private PieData pieData;
     private PieDataSet dataSet;
     private String piechartMidString;
+    private final Handler piechartUpdateHandler;
+    private final AssetRepo assetRepo;
 
     public void setPieData(PieData pieData)
     {
@@ -39,8 +44,10 @@ public class PieChartModel extends BaseObservable {
         return piechartMidString;
     }
 
-    public PieChartModel()
+    public PieChartModel(AssetRepo assetRepo)
     {
+        this.assetRepo = assetRepo;
+        piechartUpdateHandler = new Handler(Looper.getMainLooper());
         entries = new ArrayList<>();
         colors = createColors();
         dataSet = new PieDataSet(entries, "Assets");
@@ -58,6 +65,24 @@ public class PieChartModel extends BaseObservable {
         pieData.setValueTextColor(Color.WHITE);
         pieData.setDataSet(dataSet);
     }
+
+    public void onResume()
+    {
+        piechartUpdateHandler.postDelayed(updatePieChart,1000);
+    }
+
+    public void onPause()
+    {
+        piechartUpdateHandler.removeCallbacks(updatePieChart);
+    }
+
+    private Runnable updatePieChart = new Runnable() {
+        @Override
+        public void run() {
+            setPieChartData(assetRepo.getAssetModelHashMap());
+            piechartUpdateHandler.postDelayed(updatePieChart,1000);
+        }
+    };
 
     public void setPieChartData(HashMap<String,AssetModel> strings)
     {

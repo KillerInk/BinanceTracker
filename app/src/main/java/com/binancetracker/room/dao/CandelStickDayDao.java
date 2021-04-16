@@ -20,6 +20,6 @@ public abstract class CandelStickDayDao extends BaseDao<CandleStickEntity> {
     @Query("SELECT symbol FROM candlestickentity")
     public abstract List<String> getAllAssets();
 
-    @Query("SELECT * FROM DepositHistoryEntity WHERE insertTime BETWEEN :startDate AND :endDate AND asset LIKE :assetn LIMIT 1")
+    @Query("SELECT * FROM CandleStickEntity WHERE openTime BETWEEN :startDate AND :endDate AND symbol LIKE :assetn LIMIT 1")
     public abstract CandleStickEntity getByTimeAndAsset(Long startDate, Long endDate,String assetn);
 }
