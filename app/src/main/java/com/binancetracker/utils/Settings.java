@@ -5,28 +5,25 @@ import android.content.SharedPreferences;
 
 import com.binancetracker.R;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.qualifiers.ApplicationContext;
+
 public class Settings {
 
     private static final String SECRETKEY = "secretkey";
     private static final String KEY = "key";
     private static final String defaultAsset = "defaultAsset";
 
-    private static Settings settings;
-
-    public static Settings getInstance()
-    {
-        return settings;
-    }
-
 
     private SharedPreferences sharedPreferences;
     private Context context;
 
-    public Settings(Context context)
+    @Inject
+    public Settings(@ApplicationContext Context context)
     {
         this.context = context;
         sharedPreferences = context.getSharedPreferences("keys",Context.MODE_PRIVATE);
-        settings = this;
     }
 
     public String getSECRETKEY() {

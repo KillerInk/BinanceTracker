@@ -19,14 +19,16 @@ import java.util.List;
 public class DownloadFullDayHistoryForAllPairsRunner extends DownloadDepositFullHistoryRunner{
 
     private final String TAG = DownloadFullDayHistoryForAllPairsRunner.class.getSimpleName();
+    private Settings settings;
 
-    public DownloadFullDayHistoryForAllPairsRunner(BinanceApiClientFactory clientFactory) {
-        super(clientFactory);
+    public DownloadFullDayHistoryForAllPairsRunner(BinanceApiClientFactory clientFactory,SingletonDataBase singletonDataBase,Settings settings) {
+        super(clientFactory,singletonDataBase);
+        this.settings = settings;
     }
 
     @Override
     public void run() {
-        SingletonDataBase.binanceDatabase.candelStickDayDao().deleteAll();
+        singletonDataBase.binanceDatabase.candelStickDayDao().deleteAll();
         BinanceApiRestClient client = clientFactory.newRestClient();
         List<String> assets = getPairsToDownload();
 
@@ -62,11 +64,11 @@ public class DownloadFullDayHistoryForAllPairsRunner extends DownloadDepositFull
 
     private List<String> getPairsToDownload()
     {
-        List<String> assets = SingletonDataBase.appDatabase.assetModelDao().getAllAssets();
-        List<String> profitassets = SingletonDataBase.appDatabase.profitDao().getAllAssets();
+        List<String> assets = singletonDataBase.appDatabase.assetModelDao().getAllAssets();
+        List<String> profitassets = singletonDataBase.appDatabase.profitDao().getAllAssets();
         List<String> pairsToDl = new ArrayList<>();
         String usdt = "USDT";
-        String defasset = Settings.getInstance().getDefaultAsset();
+        String defasset = settings.getDefaultAsset();
 
         for (String asset : assets)
         {
@@ -109,6 +111,6 @@ public class DownloadFullDayHistoryForAllPairsRunner extends DownloadDepositFull
         candleStickEntity.symbol =symbol;
         candleStickEntity.volume = candlestick.getVolume();
         candleStickEntity.id = (long)(symbol+candlestick.getOpenTime()).hashCode();
-        SingletonDataBase.binanceDatabase.candelStickDayDao().insert(candleStickEntity);
+        singletonDataBase.binanceDatabase.candelStickDayDao().insert(candleStickEntity);
     }
 }

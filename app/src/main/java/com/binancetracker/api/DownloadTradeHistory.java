@@ -4,6 +4,7 @@ package com.binancetracker.api;
 import com.binance.api.client.BinanceApiClientFactory;
 import com.binancetracker.api.runnable.DownloadLastTradeHistoryRunner;
 import com.binancetracker.api.runnable.DownloadTradeFullHistoryRunner;
+import com.binancetracker.room.SingletonDataBase;
 import com.binancetracker.thread.RestExecuter;
 
 public class DownloadTradeHistory {
@@ -17,10 +18,10 @@ public class DownloadTradeHistory {
     private DownloadTradeFullHistoryRunner downloadTradeFullHistoryRunner;
     private DownloadLastTradeHistoryRunner downloadLastTradeHistoryRunner;
 
-    public DownloadTradeHistory(BinanceApiClientFactory clientFactory)
+    public DownloadTradeHistory(BinanceApiClientFactory clientFactory, SingletonDataBase singletonDataBase)
     {
-        downloadTradeFullHistoryRunner = new DownloadTradeFullHistoryRunner(clientFactory);
-        downloadLastTradeHistoryRunner = new DownloadLastTradeHistoryRunner(clientFactory);
+        downloadTradeFullHistoryRunner = new DownloadTradeFullHistoryRunner(clientFactory,singletonDataBase);
+        downloadLastTradeHistoryRunner = new DownloadLastTradeHistoryRunner(clientFactory,singletonDataBase);
     }
 
     public void setHistoryEvent(TradeHistoryEvent historyEvent) {

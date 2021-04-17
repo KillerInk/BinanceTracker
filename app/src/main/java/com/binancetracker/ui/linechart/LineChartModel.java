@@ -1,4 +1,4 @@
-package com.binancetracker.ui.main;
+package com.binancetracker.ui.linechart;
 
 import android.graphics.Color;
 
@@ -27,6 +27,13 @@ public class LineChartModel extends BaseObservable
     private LineData data;
     private float max = 170f;
     private float min = 0f;
+    public SingletonDataBase singletonDataBase;
+
+    public LineChartModel(SingletonDataBase singletonDataBase)
+    {
+        this.singletonDataBase = singletonDataBase;
+    }
+
 
     public void setData(LineData data) {
         this.data = data;
@@ -113,7 +120,7 @@ public class LineChartModel extends BaseObservable
         {
             long s = start.getTime();
             long e = end.getTime();
-            List<PortofolioHistory> histories = SingletonDataBase.appDatabase.portofolioHistoryDao().getByTimeRange(s,e);
+            List<PortofolioHistory> histories = singletonDataBase.appDatabase.portofolioHistoryDao().getByTimeRange(s,e);
             for (PortofolioHistory portofolioHistory: histories)
             {
                 if (!entrysList.containsKey(portofolioHistory.asset))
@@ -165,7 +172,7 @@ public class LineChartModel extends BaseObservable
         {
             long s = start.getTime();
             long e = end.getTime();
-            List<PortofolioHistory> histories = SingletonDataBase.appDatabase.portofolioHistoryDao().getByTimeRange(s,e);
+            List<PortofolioHistory> histories = singletonDataBase.appDatabase.portofolioHistoryDao().getByTimeRange(s,e);
             double position = 0;
             for (PortofolioHistory portofolioHistory : histories)
             {

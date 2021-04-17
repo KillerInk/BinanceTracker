@@ -13,23 +13,26 @@ import com.binancetracker.databinding.MainActivityBinding;
 import com.binancetracker.room.SingletonDataBase;
 import com.binancetracker.utils.Settings;
 
+import java.util.Set;
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
 
     private MainActivityBinding mainActivityBinding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivityBinding = DataBindingUtil.setContentView(this, R.layout.main_activity);
-
-        new Settings(getApplicationContext());
-        SingletonDataBase.init(getApplicationContext());
-        BinanceApi.getInstance().setKeys(Settings.getInstance().getKEY(),Settings.getInstance().getSECRETKEY());
     }
 
     @Override
     protected void onDestroy() {
-        SingletonDataBase.close();
         super.onDestroy();
     }
 

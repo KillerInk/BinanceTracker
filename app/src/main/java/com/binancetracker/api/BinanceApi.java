@@ -5,6 +5,11 @@ import com.binance.api.client.BinanceApiRestClient;
 import com.binance.api.client.domain.account.Account;
 import com.binancetracker.api.runnable.DownloadFullDayHistoryForAllPairsRunner;
 
+import com.binancetracker.room.SingletonDataBase;
+import com.binancetracker.utils.Settings;
+
+import javax.inject.Inject;
+
 public class BinanceApi {
 
     private BinanceApiClientFactory clientFactory;
@@ -14,21 +19,24 @@ public class BinanceApi {
     private DownloadDepositHistory downloadDespositHistory;
     private DownloadWithdrawHistory downloadWithdrawHistory;
     private DownloadFullDayHistoryForAllPairsRunner downloadFullDayHistoryForAllPairsRunner;
+    private Settings settings;
+    private SingletonDataBase singletonDataBase;
 
-    private static BinanceApi binanceApi = new BinanceApi();
-
-    public static BinanceApi getInstance() {
-        return binanceApi;
+    @Inject
+    public BinanceApi(Settings settings, SingletonDataBase singletonDataBase)
+    {
+        this.settings = settings;
+        this.singletonDataBase = singletonDataBase;
     }
 
     public void setKeys(String key, String secretKey) {
         clientFactory = BinanceApiClientFactory.newInstance(key, secretKey);
         accountBalance = new AccountBalance(clientFactory);
         ticker = new Ticker(clientFactory);
-        downloadTradeHistory = new DownloadTradeHistory(clientFactory);
-        downloadDespositHistory = new DownloadDepositHistory(clientFactory);
-        downloadWithdrawHistory = new DownloadWithdrawHistory(clientFactory);
-        downloadFullDayHistoryForAllPairsRunner = new DownloadFullDayHistoryForAllPairsRunner(clientFactory);
+        downloadTradeHistory = new DownloadTradeHistory(clientFactory,singletonDataBase);
+        downloadDespositHistory = new DownloadDepositHistory(clientFactory,singletonDataBase);
+        downloadWithdrawHistory = new DownloadWithdrawHistory(clientFactory,singletonDataBase);
+        downloadFullDayHistoryForAllPairsRunner = new DownloadFullDayHistoryForAllPairsRunner(clientFactory,singletonDataBase,settings);
     }
 
     public AccountBalance getAccountBalance() {

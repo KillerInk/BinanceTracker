@@ -5,6 +5,9 @@ import android.content.Context;
 
 import java.io.File;
 
+import dagger.hilt.android.HiltAndroidApp;
+
+@HiltAndroidApp
 public class MyApplication extends Application {
     private static Context context;
 

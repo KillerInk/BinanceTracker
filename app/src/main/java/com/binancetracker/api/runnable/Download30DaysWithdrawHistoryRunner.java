@@ -5,6 +5,7 @@ import android.util.Log;
 import com.binance.api.client.BinanceApiClientFactory;
 import com.binance.api.client.BinanceApiRestClient;
 import com.binance.api.client.domain.account.Withdraw;
+import com.binancetracker.room.SingletonDataBase;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -14,8 +15,8 @@ public class Download30DaysWithdrawHistoryRunner extends DownloadWithdrawFullHis
 
     private final String TAG = Download30DaysWithdrawHistoryRunner.class.getSimpleName();
 
-    public Download30DaysWithdrawHistoryRunner(BinanceApiClientFactory clientFactory) {
-        super(clientFactory);
+    public Download30DaysWithdrawHistoryRunner(BinanceApiClientFactory clientFactory, SingletonDataBase singletonDataBase) {
+        super(clientFactory,singletonDataBase);
     }
 
     @Override

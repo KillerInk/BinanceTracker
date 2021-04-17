@@ -17,7 +17,9 @@ import com.binancetracker.utils.Settings;
 import java.util.HashMap;
 import java.util.List;
 
-public class AssetRepo implements AccountBalance.AccountBalanceEvent {
+import javax.inject.Inject;
+
+public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
 
     public interface AssetEvent
     {
@@ -30,10 +32,26 @@ public class AssetRepo implements AccountBalance.AccountBalanceEvent {
     private final String base = "USDT";
     private String choosenAsset;
     private AssetEvent assetEventListner;
+    private BinanceApi binanceApi;
+    private Settings settings;
+    private SingletonDataBase singletonDataBase;
 
-    public AssetRepo()
+    @Inject
+    public AssetRepo( BinanceApi binanceApi,  Settings settings,  SingletonDataBase singletonDataBase)
     {
+        this.binanceApi = binanceApi;
+        this.settings = settings;
+        this.singletonDataBase = singletonDataBase;
         assetModelHashMap = new HashMap<>();
+
+    }
+
+    public Settings getSettings() {
+        return settings;
+    }
+
+    public BinanceApi getBinanceApi() {
+        return binanceApi;
     }
 
     public HashMap<String, AssetModel> getAssetModelHashMap() {
@@ -46,11 +64,12 @@ public class AssetRepo implements AccountBalance.AccountBalanceEvent {
 
     public void onResume()
     {
-        if (Settings.getInstance().getSECRETKEY().equals("") || Settings.getInstance().getKEY().equals(""))
+        if (settings.getSECRETKEY().equals("") || settings.getKEY().equals(""))
             return;
-        choosenAsset = Settings.getInstance().getDefaultAsset();
+        binanceApi.setKeys(settings.getKEY(),settings.getSECRETKEY());
+        choosenAsset = settings.getDefaultAsset();
 
-        BinanceApi.getInstance().getAccountBalance().setAccountBalanceEventListner(this::onBalanceChanged);
+        binanceApi.getAccountBalance().setAccountBalanceEventListner(this::onBalanceChanged);
         RestExecuter.addTask(onResumeRunner);
     }
 
@@ -61,7 +80,7 @@ public class AssetRepo implements AccountBalance.AccountBalanceEvent {
             fireAssetChangedEvent();
             getProfitsFromDb();
             fireAssetChangedEvent();
-            BinanceApi.getInstance().getAccountBalance().startListenToAssetBalance();
+            binanceApi.getAccountBalance().startListenToAssetBalance();
             fireAssetChangedEvent();
             new Thread(new Runnable() {
                 @Override
@@ -76,20 +95,20 @@ public class AssetRepo implements AccountBalance.AccountBalanceEvent {
     private Runnable updateHistoryRunner = new Runnable() {
         @Override
         public void run() {
-            BinanceApi.getInstance().getDownloadTradeHistory().updateHistoryTrades(false);
-            BinanceApi.getInstance().getDownloadDespositHistory().downloadLast30days(false);
-            BinanceApi.getInstance().getDownloadWithdrawHistory().downloadLast30days(false);
-            new CalcProfits().calcProfits();
+            binanceApi.getDownloadTradeHistory().updateHistoryTrades(false);
+            binanceApi.getDownloadDespositHistory().downloadLast30days(false);
+            binanceApi.getDownloadWithdrawHistory().downloadLast30days(false);
+            new CalcProfits().calcProfits(singletonDataBase);
             getProfitsFromDb();
         }
     };
 
     public void onPause()
     {
-        BinanceApi.getInstance().getAccountBalance().setAccountBalanceEventListner(null);
-        BinanceApi.getInstance().getAccountBalance().stopListenToAssetBalance();
-        BinanceApi.getInstance().getTicker().setPriceChangedEvent(null);
-        BinanceApi.getInstance().getTicker().stop();
+        binanceApi.getAccountBalance().setAccountBalanceEventListner(null);
+        binanceApi.getAccountBalance().stopListenToAssetBalance();
+        binanceApi.getTicker().setPriceChangedEvent(null);
+        binanceApi.getTicker().stop();
         saveAssetModelsToDB();
     }
 
@@ -101,7 +120,7 @@ public class AssetRepo implements AccountBalance.AccountBalanceEvent {
 
     @Override
     public void onBalanceChanged() {
-        for (AssetBalance assetBalance : BinanceApi.getInstance().getAccountBalance().getAccountBalanceCache().values()) {
+        for (AssetBalance assetBalance : binanceApi.getAccountBalance().getAccountBalanceCache().values()) {
             String assetname = assetBalance.getAsset();
             if (assetname.startsWith("LD"))
             {
@@ -119,7 +138,7 @@ public class AssetRepo implements AccountBalance.AccountBalanceEvent {
     private void getProfitsFromDb()
     {
         Log.d(TAG,"getProfitsFromDB");
-        List<Profit> profitList = SingletonDataBase.appDatabase.profitDao().getAll();
+        List<Profit> profitList = singletonDataBase.appDatabase.profitDao().getAll();
         if (profitList != null)
         {
             for (Profit profit : profitList)
@@ -138,7 +157,7 @@ public class AssetRepo implements AccountBalance.AccountBalanceEvent {
     private void getAssetModelsFromDB()
     {
         Log.d(TAG,"getAssetsFromDB");
-        List<AssetModel> assetModels = SingletonDataBase.appDatabase.assetModelDao().getAll();
+        List<AssetModel> assetModels = singletonDataBase.appDatabase.assetModelDao().getAll();
         for (AssetModel assetModel: assetModels)
             assetModelHashMap.put(assetModel.assetName,assetModel);
         Log.d(TAG,"loaded assets:" + assetModels.size());
@@ -150,7 +169,7 @@ public class AssetRepo implements AccountBalance.AccountBalanceEvent {
             @Override
             public void run() {
                 try {
-                    SingletonDataBase.appDatabase.assetModelDao().insertAll(assetModelHashMap.values());
+                    singletonDataBase.appDatabase.assetModelDao().insertAll(assetModelHashMap.values());
                 }
                 catch (IllegalStateException ex)
                 {
@@ -170,7 +189,7 @@ public class AssetRepo implements AccountBalance.AccountBalanceEvent {
             Log.d(TAG, "add new Asset:" + symbol);
             assetModel = new AssetModel();
             assetModel.setAssetName(symbol);
-            assetModel.setChoosenAsset(Settings.getInstance().getDefaultAsset());
+            assetModel.setChoosenAsset(settings.getDefaultAsset());
             assetModelHashMap.put(symbol,assetModel);
         }
         return assetModel;
@@ -191,8 +210,8 @@ public class AssetRepo implements AccountBalance.AccountBalanceEvent {
             if (markets.endsWith(","))
                 markets = markets.substring(0, markets.length() - 1);
             Log.d(TAG,"subscribe to markets:" + markets);
-            BinanceApi.getInstance().getTicker().setMarketsToListen(markets);
-            BinanceApi.getInstance().getTicker().setPriceChangedEvent(new Ticker.PriceChangedEvent() {
+            binanceApi.getTicker().setMarketsToListen(markets);
+            binanceApi.getTicker().setPriceChangedEvent(new Ticker.PriceChangedEvent() {
                 @Override
                 public void onPriceChanged(String symbol,final double price,String priceChang) {
                     //Log.d(TAG,"onPriceChanged:" + symbol + " " + price);
@@ -209,7 +228,7 @@ public class AssetRepo implements AccountBalance.AccountBalanceEvent {
                     }
                 }
             });
-            BinanceApi.getInstance().getTicker().start();
+            binanceApi.getTicker().start();
         }
     }
 }

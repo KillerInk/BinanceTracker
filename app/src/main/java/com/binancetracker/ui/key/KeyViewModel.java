@@ -10,19 +10,33 @@ import com.binancetracker.R;
 import com.binancetracker.api.BinanceApi;
 import com.binancetracker.utils.Settings;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
 public class KeyViewModel extends ViewModel {
     private static final String TAG = KeyViewModel.class.getSimpleName();
     public MutableLiveData<String> key = new MutableLiveData<>();
     public MutableLiveData<String> secret = new MutableLiveData<>();
     public MutableLiveData<String> testkeyresult = new MutableLiveData<>();
     public MutableLiveData<Integer> fiatspinner = new MutableLiveData<>();
+    private BinanceApi binanceApi;
+    private Settings settings;
+
+    @Inject
+    public KeyViewModel(BinanceApi binanceApi,Settings settings)
+    {
+        this.binanceApi = binanceApi;
+        this.settings = settings;
+    }
 
     public void loadKeys()
     {
-        key.setValue(Settings.getInstance().getKEY());
-        secret.setValue(Settings.getInstance().getSECRETKEY());
+        key.setValue(settings.getKEY());
+        secret.setValue(settings.getSECRETKEY());
         String[] fiats = MyApplication.getStringArrayFromRes(R.array.fiats);
-        String fiat = Settings.getInstance().getDefaultAsset();
+        String fiat = settings.getDefaultAsset();
         for (int i = 0; i < fiats.length; i++)
         {
             if (fiat.equals(fiats[i]))
@@ -32,16 +46,16 @@ public class KeyViewModel extends ViewModel {
 
     public void save()
     {
-        Settings.getInstance().setKey(key.getValue());
-        Settings.getInstance().setSecretKey(secret.getValue());
+        settings.setKey(key.getValue());
+        settings.setSecretKey(secret.getValue());
         String[] fiats = MyApplication.getStringArrayFromRes(R.array.fiats);
-        Settings.getInstance().setDefaultAsset(fiats[fiatspinner.getValue()]);
+        settings.setDefaultAsset(fiats[fiatspinner.getValue()]);
     }
 
     public void testKey()
     {
-        BinanceApi.getInstance().setKeys(key.getValue(),secret.getValue());
-        String res = BinanceApi.getInstance().testKey();
+        binanceApi.setKeys(key.getValue(),secret.getValue());
+        String res = binanceApi.testKey();
         Log.d(TAG,res);
         testkeyresult.postValue(res);
     }

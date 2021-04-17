@@ -4,12 +4,17 @@ import android.content.Context;
 
 import androidx.room.Room;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.qualifiers.ApplicationContext;
+
 public class SingletonDataBase {
 
-    public static BinanceDatabase binanceDatabase;
-    public static AppDatabase appDatabase;
+    public final BinanceDatabase binanceDatabase;
+    public final AppDatabase appDatabase;
 
-    public static void init(Context context)
+    @Inject
+    public SingletonDataBase(@ApplicationContext Context context)
     {
         binanceDatabase = Room.databaseBuilder(context,
                 BinanceDatabase.class, "binanceDB").fallbackToDestructiveMigration().build();
@@ -18,9 +23,9 @@ public class SingletonDataBase {
                 AppDatabase.class, "appDB").fallbackToDestructiveMigration().build();
     }
 
-    public static void close()
+    public void close()
     {
         binanceDatabase.close();
-        binanceDatabase = null;
+        appDatabase.close();
     }
 }

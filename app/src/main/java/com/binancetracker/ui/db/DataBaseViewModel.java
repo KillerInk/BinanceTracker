@@ -8,14 +8,28 @@ import androidx.lifecycle.ViewModel;
 
 import com.binancetracker.api.BinanceApi;
 import com.binancetracker.api.DownloadTradeHistory;
+import com.binancetracker.room.SingletonDataBase;
 import com.binancetracker.thread.RestExecuter;
 import com.binancetracker.utils.CalcProfits;
 
+import javax.inject.Inject;
 
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
 public class DataBaseViewModel extends ViewModel
 {
     public ObservableField<String> dbstatus = new ObservableField<>();
     private int max;
+    private BinanceApi binanceApi;
+    private SingletonDataBase singletonDataBase;
+
+    @Inject
+    public DataBaseViewModel(BinanceApi binanceApi,SingletonDataBase singletonDataBase)
+    {
+        this.binanceApi = binanceApi;
+        this.singletonDataBase = singletonDataBase;
+    }
 
     public void startSyncTradeHistory()
     {
@@ -24,7 +38,7 @@ public class DataBaseViewModel extends ViewModel
             private Handler handler = new Handler(Looper.getMainLooper());
             @Override
             public void run() {
-                BinanceApi.getInstance().getDownloadTradeHistory().setHistoryEvent(new DownloadTradeHistory.TradeHistoryEvent() {
+                binanceApi.getDownloadTradeHistory().setHistoryEvent(new DownloadTradeHistory.TradeHistoryEvent() {
                     @Override
                     public void onSyncStart(int max_markets) {
                         max = max_markets;
@@ -58,30 +72,40 @@ public class DataBaseViewModel extends ViewModel
                     }
                 });
                 //start downloading the trade history
-                BinanceApi.getInstance().getDownloadTradeHistory().getFullHistory();
+                binanceApi.getDownloadTradeHistory().getFullHistory();
             }
         }).start();
     }
 
     public void startSyncDeposits()
     {
-        BinanceApi.getInstance().getDownloadDespositHistory().downloadFullHistory();
+        binanceApi.getDownloadDespositHistory().downloadFullHistory();
     }
 
     public void startSyncWithdraws()
     {
-        BinanceApi.getInstance().getDownloadWithdrawHistory().downloadFullHistory();
+        binanceApi.getDownloadWithdrawHistory().downloadFullHistory();
     }
 
     public void startDownloadPriceHistoryDayFull()
     {
-        RestExecuter.addTask(BinanceApi.getInstance().getDownloadFullDayHistoryForAllPairsRunner());
+        RestExecuter.addTask(binanceApi.getDownloadFullDayHistoryForAllPairsRunner());
     }
 
     public void calcTrades()
     {
         CalcProfits profits = new CalcProfits();
-        profits.calcProfits();
+        profits.calcProfits(singletonDataBase);
+    }
+
+    public void calcLifeTimeHistory()
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                new CalcProfits().calcAssetLifeTimeHistory(singletonDataBase);
+            }
+        }).start();
     }
 
 

@@ -9,22 +9,22 @@ import com.binancetracker.room.entity.HistoryTrade;
 import java.util.List;
 
 public class DownloadLastTradeHistoryRunner extends DownloadTradeFullHistoryRunner {
-    public DownloadLastTradeHistoryRunner(BinanceApiClientFactory clientFactory) {
-        super(clientFactory);
+    public DownloadLastTradeHistoryRunner(BinanceApiClientFactory clientFactory,SingletonDataBase singletonDataBase) {
+        super(clientFactory,singletonDataBase);
     }
 
     @Override
     public void run() {
-        List<String> tradedPairs = SingletonDataBase.binanceDatabase.historyTradeDao().getTradedPairs();
+        List<String> tradedPairs = singletonDataBase.binanceDatabase.historyTradeDao().getTradedPairs();
         if (tradedPairs != null && tradedPairs.size() >0)
         {
             BinanceApiRestClient client = clientFactory.newRestClient();
             for (String pair : tradedPairs)
             {
-                HistoryTrade trade = SingletonDataBase.binanceDatabase.historyTradeDao().getLastTradeBySymbol(pair);
+                HistoryTrade trade = singletonDataBase.binanceDatabase.historyTradeDao().getLastTradeBySymbol(pair);
                 if (trade != null) {
                     List<Trade> histtrades = client.getMyTrades(pair, trade.id);
-                    insertHistory(client, SingletonDataBase.binanceDatabase.historyTradeDao(), pair, histtrades);
+                    insertHistory(client, singletonDataBase.binanceDatabase.historyTradeDao(), pair, histtrades);
                 }
             }
         }

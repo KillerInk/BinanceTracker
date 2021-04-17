@@ -34,16 +34,14 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class MainFragment extends Fragment {
 
     private MainViewModel mViewModel;
     private CustomAdapter customAdapter;
     private MainFragmentBinding mainFragmentBinding;
-
-
-    public static MainFragment newInstance() {
-        return new MainFragment();
-    }
 
     @Nullable
     @Override
@@ -159,9 +157,12 @@ public class MainFragment extends Fragment {
         ll.setFormToTextSpace(1f);
         ll.setForm(Legend.LegendForm.CIRCLE);
         ll.setWordWrapEnabled(true);
-        ll.setDrawInside(false);
+        ll.setDrawInside(true);
         ll.setYOffset(10f);
         ll.setXOffset(35f);
+        ll.setMaxSizePercent(0);
+        ll.setDirection(Legend.LegendDirection.LEFT_TO_RIGHT );
+
         ll.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         ll.setTextColor(Color.WHITE);
 

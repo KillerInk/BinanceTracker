@@ -14,6 +14,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.binancetracker.R;
 import com.binancetracker.databinding.KeyFragmentBinding;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class KeyFragment extends Fragment {
     private KeyViewModel mViewModel;
     private KeyFragmentBinding keyFragmentBinding;

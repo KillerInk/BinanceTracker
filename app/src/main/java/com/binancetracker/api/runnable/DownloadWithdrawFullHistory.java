@@ -24,13 +24,13 @@ public class DownloadWithdrawFullHistory extends DownloadDepositFullHistoryRunne
 
     private final String TAG = DownloadWithdrawFullHistory.class.getSimpleName();
 
-    public DownloadWithdrawFullHistory(BinanceApiClientFactory clientFactory) {
-        super(clientFactory);
+    public DownloadWithdrawFullHistory(BinanceApiClientFactory clientFactory,SingletonDataBase singletonDataBase) {
+        super(clientFactory,singletonDataBase);
     }
 
     @Override
     public void run() {
-        SingletonDataBase.binanceDatabase.withdrawHistoryDao().deleteAll();
+        singletonDataBase.binanceDatabase.withdrawHistoryDao().deleteAll();
         BinanceApiRestClient client = clientFactory.newRestClient();
         long endtime = System.currentTimeMillis();
         long starttime = endtime - days30;
@@ -70,7 +70,7 @@ public class DownloadWithdrawFullHistory extends DownloadDepositFullHistoryRunne
                         dhe.address = deposit.getAddress();
                     if (deposit.getTxId() != null)
                         dhe.txId = deposit.getTxId();
-                    SingletonDataBase.binanceDatabase.withdrawHistoryDao().insert(dhe);
+                    singletonDataBase.binanceDatabase.withdrawHistoryDao().insert(dhe);
                 }
             }
         }

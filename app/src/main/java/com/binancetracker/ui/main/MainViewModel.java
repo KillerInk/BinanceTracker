@@ -7,35 +7,41 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.binancetracker.repo.AssetRepo;
+import com.binancetracker.room.SingletonDataBase;
+import com.binancetracker.ui.linechart.LineChartModel;
+import com.binancetracker.ui.piechart.PieChartModel;
 import com.binancetracker.utils.Settings;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
 
-public class MainViewModel extends ViewModel implements AssetRepo.AssetEvent {
+import dagger.hilt.android.lifecycle.HiltViewModel;
 
-    private static final String TAG = MainViewModel.class.getSimpleName();
+@HiltViewModel
+public class MainViewModel extends ViewModel {
+
     private AssetRepo assetRepo;
     public MutableLiveData<Collection<AssetModel>> balances;
     private Handler handler;
     public final PieChartModel pieChartModel;
     public final LineChartModel lineChartModel;
 
-
-    public MainViewModel()
+    @Inject
+    public MainViewModel(AssetRepo assetRepo, LineChartModel lineChartModel)
     {
-        assetRepo = new AssetRepo();
+        this.assetRepo = assetRepo;
         handler = new Handler(Looper.getMainLooper());
         balances = new MutableLiveData<>();
-        pieChartModel = new PieChartModel(assetRepo);
-        lineChartModel = new LineChartModel();
+        pieChartModel = new PieChartModel(assetRepo,assetRepo.getSettings());
+        this.lineChartModel = lineChartModel;
     }
 
     public void onResume()
     {
-        if (Settings.getInstance().getSECRETKEY().equals("") || Settings.getInstance().getKEY().equals(""))
+        if (assetRepo.getSettings().getSECRETKEY().equals("") || assetRepo.getSettings().getKEY().equals(""))
             return;
-        assetRepo.setAssetEventListner(this);
+        assetRepo.setAssetEventListner(assetEvent);
         assetRepo.onResume();
         pieChartModel.onResume();
         lineChartModel.setData();
@@ -57,10 +63,12 @@ public class MainViewModel extends ViewModel implements AssetRepo.AssetEvent {
         });
     }
 
+    private AssetRepo.AssetEvent assetEvent = new AssetRepo.AssetEvent() {
+        @Override
+        public void onAssetChanged() {
+            applyHasmapToLiveData();
+        }
+    };
 
 
-    @Override
-    public void onAssetChanged() {
-        applyHasmapToLiveData();
-    }
 }

@@ -1,4 +1,4 @@
-package com.binancetracker.ui.main;
+package com.binancetracker.ui.piechart;
 
 import android.graphics.Color;
 import android.os.Handler;
@@ -9,6 +9,7 @@ import androidx.databinding.Bindable;
 
 import com.binancetracker.BR;
 import com.binancetracker.repo.AssetRepo;
+import com.binancetracker.ui.main.AssetModel;
 import com.binancetracker.utils.ConvertingUtil;
 import com.binancetracker.utils.Settings;
 import com.github.mikephil.charting.data.PieData;
@@ -28,6 +29,7 @@ public class PieChartModel extends BaseObservable {
     private String piechartMidString;
     private final Handler piechartUpdateHandler;
     private final AssetRepo assetRepo;
+    private Settings settings;
 
     public void setPieData(PieData pieData)
     {
@@ -44,9 +46,10 @@ public class PieChartModel extends BaseObservable {
         return piechartMidString;
     }
 
-    public PieChartModel(AssetRepo assetRepo)
+    public PieChartModel(AssetRepo assetRepo,Settings settings)
     {
         this.assetRepo = assetRepo;
+        this.settings = settings;
         piechartUpdateHandler = new Handler(Looper.getMainLooper());
         entries = new ArrayList<>();
         colors = createColors();
@@ -84,7 +87,7 @@ public class PieChartModel extends BaseObservable {
         }
     };
 
-    public void setPieChartData(HashMap<String,AssetModel> strings)
+    public void setPieChartData(HashMap<String, AssetModel> strings)
     {
         new Thread(new Runnable() {
             @Override
@@ -150,7 +153,7 @@ public class PieChartModel extends BaseObservable {
                     else if(smallvaluescount < 1 && small != null)
                         entries.remove(small);
                 }
-                piechartMidString = "USDT:"+ ConvertingUtil.getDoubleString2F(usdt) + "\n" + Settings.getInstance().getDefaultAsset()+":"+ConvertingUtil.getDoubleString2F(choosenCurency);
+                piechartMidString = "USDT:"+ ConvertingUtil.getDoubleString2F(usdt) + "\n" + settings.getDefaultAsset()+":"+ConvertingUtil.getDoubleString2F(choosenCurency);
                 setPieData(pieData);
             }
         }).start();

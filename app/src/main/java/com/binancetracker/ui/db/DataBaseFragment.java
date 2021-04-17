@@ -13,8 +13,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.binancetracker.R;
 import com.binancetracker.databinding.DatabaseFragmentBinding;
+import com.binancetracker.room.SingletonDataBase;
 import com.binancetracker.utils.CalcProfits;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class DataBaseFragment extends Fragment {
     private DatabaseFragmentBinding databaseFragmentBinding;
     private DataBaseViewModel dataBaseViewModel;
@@ -64,12 +70,7 @@ public class DataBaseFragment extends Fragment {
         databaseFragmentBinding.buttonCalcPortofolioHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        new CalcProfits().calcAssetLifeTimeHistory();
-                    }
-                }).start();
+                dataBaseViewModel.calcLifeTimeHistory();
             }
         });
         return databaseFragmentBinding.getRoot();

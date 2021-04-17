@@ -16,13 +16,14 @@ public class DownloadDepositFullHistoryRunner extends ClientFactoryRunner {
     private final String TAG = DownloadDepositFullHistoryRunner.class.getSimpleName();
     protected final static long days30 = 2592000000L; // 30days
     protected final static int checkyears = 3*365/30; //3years split into 30days
-    public DownloadDepositFullHistoryRunner(BinanceApiClientFactory clientFactory) {
-        super(clientFactory);
+
+    public DownloadDepositFullHistoryRunner(BinanceApiClientFactory clientFactory,SingletonDataBase singletonDataBase) {
+        super(clientFactory,singletonDataBase);
     }
 
     @Override
     public void run() {
-        SingletonDataBase.binanceDatabase.depositHistoryDao().deleteAll();
+        singletonDataBase.binanceDatabase.depositHistoryDao().deleteAll();
         BinanceApiRestClient client = clientFactory.newRestClient();
         long endtime = System.currentTimeMillis();
         long starttime = endtime - days30;
@@ -50,7 +51,7 @@ public class DownloadDepositFullHistoryRunner extends ClientFactoryRunner {
                     dhe.amount = Double.parseDouble(deposit.getAmount());
                     dhe.insertTime = Long.parseLong(deposit.getInsertTime());
                     dhe.txId = deposit.getTxId();
-                    SingletonDataBase.binanceDatabase.depositHistoryDao().insert(dhe);
+                    singletonDataBase.binanceDatabase.depositHistoryDao().insert(dhe);
                 }
             }
         }

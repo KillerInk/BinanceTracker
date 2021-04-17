@@ -5,6 +5,7 @@ import android.util.Log;
 import com.binance.api.client.BinanceApiClientFactory;
 import com.binance.api.client.BinanceApiRestClient;
 import com.binance.api.client.domain.account.Deposit;
+import com.binancetracker.room.SingletonDataBase;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -13,8 +14,8 @@ import java.util.List;
 public class Download30DaysDepositHistoryRunner extends DownloadDepositFullHistoryRunner {
 
     private final String TAG = Download30DaysDepositHistoryRunner.class.getSimpleName();
-    public Download30DaysDepositHistoryRunner(BinanceApiClientFactory clientFactory) {
-        super(clientFactory);
+    public Download30DaysDepositHistoryRunner(BinanceApiClientFactory clientFactory, SingletonDataBase singletonDataBase) {
+        super(clientFactory,singletonDataBase);
     }
 
     @Override
