@@ -24,17 +24,13 @@ public class MainViewModel extends ViewModel {
     private AssetRepo assetRepo;
     public MutableLiveData<Collection<AssetModel>> balances;
     private Handler handler;
-    public final PieChartModel pieChartModel;
-    public final LineChartModel lineChartModel;
 
     @Inject
-    public MainViewModel(AssetRepo assetRepo, LineChartModel lineChartModel)
+    public MainViewModel(AssetRepo assetRepo)
     {
         this.assetRepo = assetRepo;
         handler = new Handler(Looper.getMainLooper());
         balances = new MutableLiveData<>();
-        pieChartModel = new PieChartModel(assetRepo,assetRepo.getSettings());
-        this.lineChartModel = lineChartModel;
     }
 
     public void onResume()
@@ -43,13 +39,10 @@ public class MainViewModel extends ViewModel {
             return;
         assetRepo.setAssetEventListner(assetEvent);
         assetRepo.onResume();
-        pieChartModel.onResume();
-        lineChartModel.setData();
     }
 
     public void onPause()
     {
-        pieChartModel.onPause();
         assetRepo.setAssetEventListner(null);
         assetRepo.onPause();
     }

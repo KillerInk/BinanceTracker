@@ -27,6 +27,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class LineChartFragment extends Fragment {
     private LinechartFragmentBinding fragmentBinding;
     private LineChartViewModel mViewModel;
@@ -37,6 +40,12 @@ public class LineChartFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(LineChartViewModel.class);
         createLineChart();
         return fragmentBinding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mViewModel.onResume();
     }
 
     private void createLineChart() {

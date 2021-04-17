@@ -19,6 +19,9 @@ import com.binancetracker.databinding.PiechartFragmentBinding;
 import com.binancetracker.ui.main.MainViewModel;
 import com.github.mikephil.charting.components.Legend;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class PieChartFragment extends Fragment {
 
     private PiechartFragmentBinding fragmentBinding;
@@ -31,6 +34,18 @@ public class PieChartFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(PieChartViewModel.class);
         createPieChart();
         return fragmentBinding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewModel.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        viewModel.onPause();
     }
 
     private void createPieChart() {
