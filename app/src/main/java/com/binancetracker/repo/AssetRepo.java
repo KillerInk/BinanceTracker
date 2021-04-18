@@ -98,6 +98,7 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
             binanceApi.getDownloadTradeHistory().updateHistoryTrades(false);
             binanceApi.getDownloadDespositHistory().downloadLast30days(false);
             binanceApi.getDownloadWithdrawHistory().downloadLast30days(false);
+            binanceApi.getDownloadCandleStickHistory().downloadLatestHistory(false);
             new CalcProfits().calcProfits(singletonDataBase);
             getProfitsFromDb();
         }

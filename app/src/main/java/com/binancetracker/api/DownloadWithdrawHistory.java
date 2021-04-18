@@ -1,6 +1,6 @@
 package com.binancetracker.api;
 
-import com.binance.api.client.BinanceApiClientFactory;
+import com.binance.api.client.factory.BinanceSpotApiClientFactory;
 import com.binancetracker.api.runnable.Download30DaysWithdrawHistoryRunner;
 import com.binancetracker.api.runnable.DownloadWithdrawFullHistory;
 import com.binancetracker.room.SingletonDataBase;
@@ -10,7 +10,7 @@ public class DownloadWithdrawHistory {
     private DownloadWithdrawFullHistory downloadWithdrawFullHistory;
     private Download30DaysWithdrawHistoryRunner download30DaysWithdrawHistoryRunner;
 
-    public DownloadWithdrawHistory(BinanceApiClientFactory clientFactory, SingletonDataBase singletonDataBase)
+    public DownloadWithdrawHistory(BinanceSpotApiClientFactory clientFactory, SingletonDataBase singletonDataBase)
     {
         downloadWithdrawFullHistory = new DownloadWithdrawFullHistory(clientFactory,singletonDataBase);
         download30DaysWithdrawHistoryRunner = new Download30DaysWithdrawHistoryRunner(clientFactory,singletonDataBase);

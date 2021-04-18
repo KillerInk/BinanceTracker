@@ -2,10 +2,10 @@ package com.binancetracker.api.runnable;
 
 import android.util.Log;
 
-import com.binance.api.client.BinanceApiClientFactory;
-import com.binance.api.client.BinanceApiRestClient;
+import com.binance.api.client.api.sync.BinanceApiSpotRestClient;
 import com.binance.api.client.domain.account.Trade;
 import com.binance.api.client.domain.general.SymbolInfo;
+import com.binance.api.client.factory.BinanceSpotApiClientFactory;
 import com.binancetracker.api.DownloadTradeHistory;
 import com.binancetracker.room.SingletonDataBase;
 import com.binancetracker.room.dao.HistoryTradeDao;
@@ -26,7 +26,7 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner {
 
     private final int LIMIT = 1000;
 
-    public DownloadTradeFullHistoryRunner(BinanceApiClientFactory clientFactory,SingletonDataBase singletonDataBase) {
+    public DownloadTradeFullHistoryRunner(BinanceSpotApiClientFactory clientFactory, SingletonDataBase singletonDataBase) {
         super(clientFactory,singletonDataBase);
     }
 
@@ -38,7 +38,7 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner {
     public void run() {
         Log.d(TAG,"getFullHistory");
         singletonDataBase.binanceDatabase.historyTradeDao().deleteAll();
-        BinanceApiRestClient client = clientFactory.newRestClient();
+        BinanceApiSpotRestClient client = clientFactory.newRestClient();
         List<SymbolInfo> info = client.getExchangeInfo().getSymbols();
         MarketDao marketDao = singletonDataBase.binanceDatabase.marketDao();
         List<Market> markets = marketDao.getAll();
@@ -83,14 +83,14 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner {
             tradeHistoryEventListner.onSyncEnd();
     }
 
-    private void getAllHistoryforPair(BinanceApiRestClient client,HistoryTradeDao historyTradeDao,String pair, long id)
+    private void getAllHistoryforPair(BinanceApiSpotRestClient client,HistoryTradeDao historyTradeDao,String pair, long id)
     {
         List<Trade> histtrades = client.getMyTrades(pair, id,LIMIT);
         tradescounter += histtrades.size();
         insertHistory(client, historyTradeDao, pair, histtrades);
     }
 
-    protected void insertHistory(BinanceApiRestClient client, HistoryTradeDao historyTradeDao, String pair, List<Trade> histtrades) {
+    protected void insertHistory(BinanceApiSpotRestClient client, HistoryTradeDao historyTradeDao, String pair, List<Trade> histtrades) {
         for (Trade t : histtrades)
         {
             insertHistotrade(historyTradeDao, t);

@@ -1,15 +1,13 @@
 package com.binancetracker.api.runnable;
 
-import android.os.Build;
 import android.util.Log;
-
-import androidx.annotation.RequiresApi;
-
-import com.binance.api.client.BinanceApiClientFactory;
-import com.binance.api.client.BinanceApiRestClient;
+;
+import com.binance.api.client.api.sync.BinanceApiSpotRestClient;
 import com.binance.api.client.domain.account.Withdraw;
+import com.binance.api.client.factory.BinanceSpotApiClientFactory;
 import com.binancetracker.room.SingletonDataBase;
 import com.binancetracker.room.entity.WithdrawHistoryEntity;
+import com.binancetracker.utils.MyTime;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -24,25 +22,25 @@ public class DownloadWithdrawFullHistory extends DownloadDepositFullHistoryRunne
 
     private final String TAG = DownloadWithdrawFullHistory.class.getSimpleName();
 
-    public DownloadWithdrawFullHistory(BinanceApiClientFactory clientFactory,SingletonDataBase singletonDataBase) {
+    public DownloadWithdrawFullHistory(BinanceSpotApiClientFactory clientFactory, SingletonDataBase singletonDataBase) {
         super(clientFactory,singletonDataBase);
     }
 
     @Override
     public void run() {
         singletonDataBase.binanceDatabase.withdrawHistoryDao().deleteAll();
-        BinanceApiRestClient client = clientFactory.newRestClient();
-        long endtime = System.currentTimeMillis();
-        long starttime = endtime - days30;
-        Log.d(TAG, "startTime:" + DateFormat.getDateTimeInstance().format(new Date(starttime)) + " endTime:" + DateFormat.getDateTimeInstance().format(new Date(endtime)));
+        BinanceApiSpotRestClient client = clientFactory.newRestClient();
+        MyTime endtime = new MyTime(System.currentTimeMillis());
+        MyTime starttime = new MyTime(endtime.getTime()).setDays(-30);
+        Log.d(TAG, "startTime:" + starttime.getString()+ " endTime:" + endtime.getString());
         for (int i = 0; i < checkyears; i++) {
-            List<Withdraw> withdraws = client.getWalletEndPoint().getWithdrawHistory(starttime,endtime);
+            List<Withdraw> withdraws = client.getWalletEndPoint().getWithdrawHistory(starttime.getTime(),endtime.getTime());
             if (withdraws != null)
             {
                 addWithdrawItemToDB(withdraws);
             }
-            endtime = endtime - days30;
-            starttime = starttime - days30;
+            endtime.setDays(-30).setDayToEnd();
+            starttime.setDays(-30).setDayToBegin();
         }
         Log.d(TAG, "DownloadWithdrawFullHistory done");
     }

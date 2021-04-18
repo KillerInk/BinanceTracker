@@ -2,8 +2,8 @@ package com.binancetracker.api;
 
 import android.text.TextUtils;
 
-import com.binance.api.client.BinanceApiClientFactory;
-import com.binance.api.client.BinanceApiWebSocketClient;
+import com.binance.api.client.api.BinanceApiWebSocketClient;
+import com.binance.api.client.factory.BinanceSpotApiClientFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -15,13 +15,13 @@ public class Ticker {
         void onPriceChanged(String symbol, double price, String percentChange);
     }
 
-    private BinanceApiClientFactory clientFactory;
+    private BinanceSpotApiClientFactory clientFactory;
     private String listenKey;
     private Closeable dataStream;
     private String marketsToListen;
     private PriceChangedEvent priceChangedEvent;
 
-    public Ticker(BinanceApiClientFactory clientFactory)
+    public Ticker(BinanceSpotApiClientFactory clientFactory)
     {
         this.clientFactory = clientFactory;
     }

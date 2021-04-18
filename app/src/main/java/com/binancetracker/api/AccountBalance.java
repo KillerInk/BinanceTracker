@@ -1,17 +1,17 @@
 package com.binancetracker.api;
 
-import com.binance.api.client.BinanceApiClientFactory;
-import com.binance.api.client.BinanceApiRestClient;
-import com.binance.api.client.BinanceApiWebSocketClient;
+import com.binance.api.client.api.BinanceApiWebSocketClient;
+import com.binance.api.client.api.sync.BinanceApiSpotRestClient;
 import com.binance.api.client.domain.account.Account;
 import com.binance.api.client.domain.account.AssetBalance;
+import com.binance.api.client.domain.event.UserDataUpdateEventType;
+import com.binance.api.client.factory.BinanceSpotApiClientFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static com.binance.api.client.domain.event.UserDataUpdateEvent.UserDataUpdateEventType.ACCOUNT_UPDATE;
 
 public class AccountBalance {
 
@@ -20,7 +20,7 @@ public class AccountBalance {
         void onBalanceChanged();
     }
 
-    private BinanceApiClientFactory clientFactory;
+    private BinanceSpotApiClientFactory clientFactory;
 
     /**
      * Key is the symbol, and the value is the balance of that symbol on the account.
@@ -36,7 +36,7 @@ public class AccountBalance {
 
     private Closeable userdataStream;
 
-    public AccountBalance(BinanceApiClientFactory clientFactory)
+    public AccountBalance(BinanceSpotApiClientFactory clientFactory)
     {
         this.clientFactory = clientFactory;
         this.accountBalanceCache = new TreeMap<>();
@@ -73,7 +73,7 @@ public class AccountBalance {
      * @return a listenKey that can be used with the user data streaming API.
      */
     private String initializeAssetBalanceCacheAndStreamSession() {
-        BinanceApiRestClient client = clientFactory.newRestClient();
+        BinanceApiSpotRestClient client = clientFactory.newRestClient();
         Account account = client.getAccount();
         accountBalanceCache.clear();
         for (AssetBalance assetBalance : account.getBalances()) {
@@ -102,7 +102,7 @@ public class AccountBalance {
         BinanceApiWebSocketClient client = clientFactory.newWebSocketClient();
 
         userdataStream = client.onUserDataUpdateEvent(listenKey, response -> {
-            if (response.getEventType() == ACCOUNT_UPDATE) {
+            if (response.getEventType() == UserDataUpdateEventType.ACCOUNT_UPDATE) {
                 // Override cached asset balances
                 for (AssetBalance assetBalance : response.getAccountUpdateEvent().getBalances()) {
                     accountBalanceCache.put(assetBalance.getAsset(), assetBalance);

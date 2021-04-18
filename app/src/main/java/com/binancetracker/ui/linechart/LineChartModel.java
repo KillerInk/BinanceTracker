@@ -6,9 +6,9 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.binancetracker.BR;
-import com.binancetracker.repo.AssetRepo;
 import com.binancetracker.room.SingletonDataBase;
 import com.binancetracker.room.entity.PortofolioHistory;
+import com.binancetracker.utils.MyTime;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -132,15 +132,8 @@ public class LineChartModel extends BaseObservable
         min =0;
         max = 0;
         HashMap<String, List<Entry>> entrysList = new HashMap<>();
-        Date start = new Date((System.currentTimeMillis()/1000) *1000);
-        start.setDate(start.getDate() - days);
-        start.setHours(0);
-        start.setMinutes(0);
-        start.setSeconds(0);
-        Date end = new Date(start.getTime());
-        end.setHours(23);
-        end.setMinutes(59);
-        end.setSeconds(59);
+        MyTime start = new MyTime().setDays(-365).setDayToBegin();
+        MyTime end = new MyTime(start.getTime()).setDayToEnd();
         long today = System.currentTimeMillis();
         List<Entry> totalValueEntries = new ArrayList<>();
         while (end.getTime() < today)
@@ -157,14 +150,20 @@ public class LineChartModel extends BaseObservable
             for (PortofolioHistory portofolioHistory: histories)
             {
                 float pos = (float) (portofolioHistory.amount * portofolioHistory.price);
-                position += pos;
-                if(pos > 1f)
-                    entrysList.get(portofolioHistory.asset).add(new Entry(start.getTime(), pos));
+
+                if(pos > 10f) {
+                    position += pos;
+                    Entry entry = new Entry(start.getTime(), pos);
+                    entry.setData(portofolioHistory.asset);
+                    entrysList.get(portofolioHistory.asset).add(entry);
+                }
             }
             findMinMax(position);
-            totalValueEntries.add(new Entry(start.getTime(), (float) position));
-            end.setDate(end.getDate()+1);
-            start.setDate(start.getDate()+1);
+            Entry entry = new Entry(start.getTime(), (float) position);
+            entry.setData("Total");
+            totalValueEntries.add(entry);
+            end.setDays(1);
+            start.setDays(1);
         }
         max = (float) (max + ((float)max*0.3 ));
         entrysList.put("TOTAL",totalValueEntries);

@@ -2,11 +2,11 @@ package com.binancetracker.api.runnable;
 
 import android.util.Log;
 
-import com.binance.api.client.BinanceApiClientFactory;
-import com.binance.api.client.BinanceApiRestClient;
+import com.binance.api.client.api.sync.BinanceApiSpotRestClient;
 import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
 import com.binance.api.client.exception.BinanceApiException;
+import com.binance.api.client.factory.BinanceSpotApiClientFactory;
 import com.binancetracker.room.SingletonDataBase;
 import com.binancetracker.room.entity.CandleStickEntity;
 import com.binancetracker.utils.Settings;
@@ -21,7 +21,7 @@ public class DownloadFullDayHistoryForAllPairsRunner extends DownloadDepositFull
     private final String TAG = DownloadFullDayHistoryForAllPairsRunner.class.getSimpleName();
     private Settings settings;
 
-    public DownloadFullDayHistoryForAllPairsRunner(BinanceApiClientFactory clientFactory,SingletonDataBase singletonDataBase,Settings settings) {
+    public DownloadFullDayHistoryForAllPairsRunner(BinanceSpotApiClientFactory clientFactory, SingletonDataBase singletonDataBase, Settings settings) {
         super(clientFactory,singletonDataBase);
         this.settings = settings;
     }
@@ -29,13 +29,19 @@ public class DownloadFullDayHistoryForAllPairsRunner extends DownloadDepositFull
     @Override
     public void run() {
         singletonDataBase.binanceDatabase.candelStickDayDao().deleteAll();
-        BinanceApiRestClient client = clientFactory.newRestClient();
+        BinanceApiSpotRestClient client = clientFactory.newRestClient();
         List<String> assets = getPairsToDownload();
 
         long endtime = System.currentTimeMillis();
         long starttime = endtime - (days30 * checkyears);
         Log.d(TAG,"download start priceHistory for " + assets.size());
         Log.d(TAG, "startTime:" + DateFormat.getDateTimeInstance().format(new Date(starttime)) + " endTime:" + DateFormat.getDateTimeInstance().format(new Date(endtime)));
+        getCandlestickRangeForAssets(client, assets, endtime, starttime);
+
+        Log.d(TAG,"download priceHistory done ");
+    }
+
+    protected void getCandlestickRangeForAssets(BinanceApiSpotRestClient client, List<String> assets, long endtime, long starttime) {
         int i = 1;
         try {
             for (String asset : assets)
@@ -58,11 +64,10 @@ public class DownloadFullDayHistoryForAllPairsRunner extends DownloadDepositFull
         {
             ex.printStackTrace();
         }
-
-        Log.d(TAG,"download priceHistory done ");
     }
 
-    private List<String> getPairsToDownload()
+
+    protected List<String> getPairsToDownload()
     {
         List<String> assets = singletonDataBase.appDatabase.assetModelDao().getAllAssets();
         List<String> profitassets = singletonDataBase.appDatabase.profitDao().getAllAssets();

@@ -2,11 +2,12 @@ package com.binancetracker.api.runnable;
 
 import android.util.Log;
 
-import com.binance.api.client.BinanceApiClientFactory;
-import com.binance.api.client.BinanceApiRestClient;
+import com.binance.api.client.api.sync.BinanceApiSpotRestClient;
 import com.binance.api.client.domain.account.Deposit;
+import com.binance.api.client.factory.BinanceSpotApiClientFactory;
 import com.binancetracker.room.SingletonDataBase;
 import com.binancetracker.room.entity.DepositHistoryEntity;
+import com.binancetracker.utils.MyTime;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -17,26 +18,26 @@ public class DownloadDepositFullHistoryRunner extends ClientFactoryRunner {
     protected final static long days30 = 2592000000L; // 30days
     protected final static int checkyears = 3*365/30; //3years split into 30days
 
-    public DownloadDepositFullHistoryRunner(BinanceApiClientFactory clientFactory,SingletonDataBase singletonDataBase) {
+    public DownloadDepositFullHistoryRunner(BinanceSpotApiClientFactory clientFactory, SingletonDataBase singletonDataBase) {
         super(clientFactory,singletonDataBase);
     }
 
     @Override
     public void run() {
         singletonDataBase.binanceDatabase.depositHistoryDao().deleteAll();
-        BinanceApiRestClient client = clientFactory.newRestClient();
-        long endtime = System.currentTimeMillis();
-        long starttime = endtime - days30;
-        Log.d(TAG, "startTime:" + DateFormat.getDateTimeInstance().format(new Date(starttime)) + " endTime:" + DateFormat.getDateTimeInstance().format(new Date(endtime)));
+        BinanceApiSpotRestClient client = clientFactory.newRestClient();
+        MyTime endtime = new MyTime(System.currentTimeMillis());
+        MyTime starttime = new MyTime(endtime.getTime()).setDays(-30);
+        Log.d(TAG, "startTime:" + starttime.getString()+ " endTime:" + endtime.getString());
         for (int i = 0; i < checkyears; i++) {
-            List<Deposit> deposits = client.getWalletEndPoint().getDepositHistory(starttime,endtime);
+            List<Deposit> deposits = client.getWalletEndPoint().getDepositHistory(starttime.getTime(),endtime.getTime());
             if (deposits != null)
             {
                 addItemToDB(deposits);
             }
-            endtime = endtime - days30;
-            starttime = starttime - days30;
-            Log.d(TAG, "startTime:" + DateFormat.getDateTimeInstance().format(new Date(starttime)) + " endTime:" + DateFormat.getDateTimeInstance().format(new Date(endtime)));
+            endtime.setDays(-30).setDayToEnd();
+            starttime.setDays(-30).setDayToBegin();
+            Log.d(TAG, "startTime:" + starttime.getString()+ " endTime:" + endtime.getString());
         }
     }
 

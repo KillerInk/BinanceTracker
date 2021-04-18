@@ -7,10 +7,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.binancetracker.repo.AssetRepo;
-import com.binancetracker.room.SingletonDataBase;
-import com.binancetracker.ui.linechart.LineChartModel;
-import com.binancetracker.ui.piechart.PieChartModel;
-import com.binancetracker.utils.Settings;
 
 import java.util.Collection;
 

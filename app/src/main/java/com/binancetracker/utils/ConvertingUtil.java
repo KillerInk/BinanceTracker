@@ -32,4 +32,9 @@ public class ConvertingUtil
     {
         return String.format(String.format("%.2f", in));
     }
+
+    public static String getDoubleString8F(double in)
+    {
+        return String.format(String.format("%.8f", in));
+    }
 }

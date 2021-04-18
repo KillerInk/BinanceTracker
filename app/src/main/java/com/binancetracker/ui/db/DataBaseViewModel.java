@@ -89,7 +89,7 @@ public class DataBaseViewModel extends ViewModel
 
     public void startDownloadPriceHistoryDayFull()
     {
-        RestExecuter.addTask(binanceApi.getDownloadFullDayHistoryForAllPairsRunner());
+        binanceApi.getDownloadCandleStickHistory().downloadFullHistory();
     }
 
     public void calcTrades()

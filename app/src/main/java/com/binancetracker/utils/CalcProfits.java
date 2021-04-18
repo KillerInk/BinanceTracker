@@ -117,18 +117,10 @@ public class CalcProfits
         Log.d(TAG,"start calcAssetLifeTime");
         singletonDataBase.appDatabase.portofolioHistoryDao().deleteAll();
         long firstDepositTime = singletonDataBase.binanceDatabase.depositHistoryDao().getFirstDepositTime();
-        Date startday = new Date(firstDepositTime);
-        startday.setHours(0);
-        startday.setMinutes(0);
-        startday.setSeconds(0);
-        Date endday = new Date(firstDepositTime);
-        endday.setHours(23);
-        endday.setMinutes(59);
-        endday.setSeconds(59);
-        Date finalDay = new Date(System.currentTimeMillis());
-        finalDay.setHours(0);
-        finalDay.setMinutes(0);
-        finalDay.setSeconds(0);
+        MyTime startday = new MyTime(firstDepositTime).setDayToBegin();
+        MyTime endday = new MyTime(firstDepositTime).setDayToEnd();
+        MyTime finalDay = new MyTime(System.currentTimeMillis()).setDayToBegin();
+
         HashMap<Long, HashMap<String, PortofolioHistory>> historyHashmapTime = new HashMap<>();
 
         while (startday.getTime() <= finalDay.getTime()) {
@@ -146,18 +138,15 @@ public class CalcProfits
             historyHashmapTime.put(startday.getTime(), historyHashMap);
 
             Log.d(TAG,"Finished Day: " + startday.toString());
-            startday.setHours(24);
-            endday.setTime(startday.getTime());
-            endday.setHours(23);
-            endday.setMinutes(59);
-            endday.setSeconds(59);
+            startday.setDays(1).setDayToBegin();
+            endday.setDays(1).setDayToEnd();
         }
         for (HashMap<String, PortofolioHistory> map : historyHashmapTime.values())
             singletonDataBase.appDatabase.portofolioHistoryDao().insertAll(map.values());
         Log.d(TAG,"end calcAssetLifeTime");
     }
 
-    private void setDay_ID_Price(Date startday, Date endday, HashMap<String, PortofolioHistory> historyHashMap,SingletonDataBase singletonDataBase) {
+    private void setDay_ID_Price(MyTime startday, MyTime endday, HashMap<String, PortofolioHistory> historyHashMap,SingletonDataBase singletonDataBase) {
         for (PortofolioHistory portofolioHistory: historyHashMap.values())
         {
             portofolioHistory.day = startday.getTime();
@@ -188,7 +177,7 @@ public class CalcProfits
             Log.d(TAG,"fillAmountFromYesterday yesterdayHistory is null");
     }
 
-    private void addTradesForDay(Date start,Date end,HashMap<String, PortofolioHistory> historyHashMap,SingletonDataBase singletonDataBase)
+    private void addTradesForDay(MyTime start,MyTime end,HashMap<String, PortofolioHistory> historyHashMap,SingletonDataBase singletonDataBase)
     {
         List<String> traidedPairsForDay = singletonDataBase.binanceDatabase.historyTradeDao().getTradedPairsForDay(start.getTime(),end.getTime());
         if (traidedPairsForDay != null)
@@ -216,7 +205,7 @@ public class CalcProfits
         }
     }
 
-    private void addDepositsForDay(Date start, Date end, HashMap<String, PortofolioHistory> historyHashMap,SingletonDataBase singletonDataBase)
+    private void addDepositsForDay(MyTime start, MyTime end, HashMap<String, PortofolioHistory> historyHashMap,SingletonDataBase singletonDataBase)
     {
         List<DepositHistoryEntity> depositHistories = singletonDataBase.binanceDatabase.depositHistoryDao().getByTime(start.getTime(), end.getTime());
         for (DepositHistoryEntity entity : depositHistories)
@@ -228,7 +217,7 @@ public class CalcProfits
 
 
 
-    private PortofolioHistory getPortofolio(String name,Date date,Date end,HashMap<String, PortofolioHistory> historyHashMap)
+    private PortofolioHistory getPortofolio(String name,MyTime date,MyTime end,HashMap<String, PortofolioHistory> historyHashMap)
     {
         PortofolioHistory portofolioHistory = historyHashMap.get(name);
         if (portofolioHistory == null)
