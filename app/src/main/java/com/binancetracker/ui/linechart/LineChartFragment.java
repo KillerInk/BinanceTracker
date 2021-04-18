@@ -39,6 +39,27 @@ public class LineChartFragment extends Fragment {
         fragmentBinding =  DataBindingUtil.inflate(inflater, R.layout.linechart_fragment, container, false);
         mViewModel = new ViewModelProvider(this).get(LineChartViewModel.class);
         createLineChart();
+
+        fragmentBinding.button1week.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewModel.setTimeToFetch(TimeToFetch.week);
+            }
+        });
+
+        fragmentBinding.button1month.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewModel.setTimeToFetch(TimeToFetch.month);
+            }
+        });
+
+        fragmentBinding.button1year.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewModel.setTimeToFetch(TimeToFetch.year);
+            }
+        });
         return fragmentBinding.getRoot();
     }
 

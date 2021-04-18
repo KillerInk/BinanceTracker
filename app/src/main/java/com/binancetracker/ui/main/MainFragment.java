@@ -1,4 +1,4 @@
-package com.binancetracker.ui.main;
+ package com.binancetracker.ui.main;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -82,11 +82,13 @@ public class MainFragment extends Fragment {
                 if (!showLineChart)
                 {
                     showLineChart = true;
+                    mainFragmentBinding.imageButtonPieLine.setImageResource(R.mipmap.line_chart);
                     loadLineChart();
                 }
                 else
                 {
                     showLineChart = false;
+                    mainFragmentBinding.imageButtonPieLine.setImageResource(R.mipmap.pie);
                     loadPieChart();
                 }
             }

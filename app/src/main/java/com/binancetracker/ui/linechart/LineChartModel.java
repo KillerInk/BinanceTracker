@@ -53,12 +53,23 @@ public class LineChartModel extends BaseObservable
         return data;
     }
 
-    public void setData()
+    public void setData(TimeToFetch timeToFetch)
     {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                HashMap<String, List<Entry>> allentries = getAllLast30DayEntries();
+                HashMap<String, List<Entry>> allentries = null;
+                switch (timeToFetch)
+                {
+                    case week:
+                        allentries = getAllLast7DayEntries();
+                        break;
+                    case month:
+                        allentries = getAllLast30DayEntries();
+                        break;
+                    case year:
+                        allentries = getAllLast365DayEntries();
+                }
                 List<ILineDataSet> sets = getLineData(allentries);
 
                 // create a data object with the data sets
@@ -104,9 +115,25 @@ public class LineChartModel extends BaseObservable
 
     private  HashMap<String, List<Entry>> getAllLast30DayEntries() {
         //List<List<Entry>> entrysList = new ArrayList<>();
+        return getDaysEntries(30);
+    }
+
+    private  HashMap<String, List<Entry>> getAllLast7DayEntries() {
+        //List<List<Entry>> entrysList = new ArrayList<>();
+        return getDaysEntries(7);
+    }
+
+    private  HashMap<String, List<Entry>> getAllLast365DayEntries() {
+        //List<List<Entry>> entrysList = new ArrayList<>();
+        return getDaysEntries(365);
+    }
+
+    private HashMap<String, List<Entry>> getDaysEntries(int days) {
+        min =0;
+        max = 0;
         HashMap<String, List<Entry>> entrysList = new HashMap<>();
         Date start = new Date((System.currentTimeMillis()/1000) *1000);
-        start.setDate(start.getDate() - 180);
+        start.setDate(start.getDate() - days);
         start.setHours(0);
         start.setMinutes(0);
         start.setSeconds(0);
@@ -139,7 +166,7 @@ public class LineChartModel extends BaseObservable
             end.setDate(end.getDate()+1);
             start.setDate(start.getDate()+1);
         }
-        max = (float) (max + ((float)max*0.5));
+        max = (float) (max + ((float)max*0.3 ));
         entrysList.put("TOTAL",totalValueEntries);
         return entrysList;
     }
