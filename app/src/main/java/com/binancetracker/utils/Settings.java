@@ -61,7 +61,7 @@ public class Settings {
 
     public void setLastSync(long time)
     {
-        sharedPreferences.edit().putLong(lastSync,time);
+        sharedPreferences.edit().putLong(lastSync,time).apply();
     }
 
 

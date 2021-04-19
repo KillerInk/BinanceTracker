@@ -1,5 +1,6 @@
  package com.binancetracker.ui.main;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import com.binancetracker.BR;
 import com.binancetracker.MainActivity;
 import com.binancetracker.R;
 import com.binancetracker.databinding.MainFragmentBinding;
+import com.binancetracker.ui.linechart.LineChartActivity;
 import com.binancetracker.ui.linechart.LineChartFragment;
 import com.binancetracker.ui.piechart.PieChartFragment;
 import com.github.mikephil.charting.components.AxisBase;
@@ -83,14 +85,24 @@ public class MainFragment extends Fragment {
                 {
                     showLineChart = true;
                     mainFragmentBinding.imageButtonPieLine.setImageResource(R.mipmap.line_chart);
+                    mainFragmentBinding.imageButtonLinechartfullscreen.setVisibility(View.VISIBLE);
                     loadLineChart();
                 }
                 else
                 {
                     showLineChart = false;
                     mainFragmentBinding.imageButtonPieLine.setImageResource(R.mipmap.pie);
+                    mainFragmentBinding.imageButtonLinechartfullscreen.setVisibility(View.GONE);
                     loadPieChart();
                 }
+            }
+        });
+
+        mainFragmentBinding.imageButtonLinechartfullscreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), LineChartActivity.class);
+                getActivity().startActivity(intent);
             }
         });
 
