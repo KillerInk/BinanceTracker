@@ -16,17 +16,6 @@
         android:layout_marginRight="5dp"/>
 
 
-    <TextView
-        android:id="@+id/textView_chartvalue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="ETH:1400"
-        android:textColor="@color/white"
-        android:textSize="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/timerange_spinner"
-        tools:layout_editor_absoluteY="16dp" />
-
     <Spinner
         android:id="@+id/timerange_spinner"
         android:layout_width="wrap_content"
