@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class LineChartModel extends BaseObservable
 {
@@ -68,6 +69,10 @@ public class LineChartModel extends BaseObservable
                         break;
                     case year:
                         allentries = getAllLast365DayEntries();
+                        break;
+                    case lifetime:
+                        allentries = getLifeTimeEntries();
+                        break;
                 }
                 List<ILineDataSet> sets = getLineData(allentries);
 
@@ -125,6 +130,14 @@ public class LineChartModel extends BaseObservable
     private  HashMap<String, List<Entry>> getAllLast365DayEntries() {
         //List<List<Entry>> entrysList = new ArrayList<>();
         return getDaysEntries(365);
+    }
+
+    private  HashMap<String, List<Entry>> getLifeTimeEntries() {
+        //List<List<Entry>> entrysList = new ArrayList<>();
+        long firstActionAdded=singletonDataBase.appDatabase.portofolioHistoryDao().getOldestTime();
+        long diff = System.currentTimeMillis() -firstActionAdded;
+        long days = TimeUnit.MILLISECONDS.toDays(diff);
+        return getDaysEntries((int)days);
     }
 
     private HashMap<String, List<Entry>> getDaysEntries(int days) {

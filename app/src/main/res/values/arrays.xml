@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="timerange_array">
+        <item>1Week</item>
+        <item>1Month</item>
+        <item>1Year</item>
+        <item>LifeTime</item>
+    </string-array>
+</resources>

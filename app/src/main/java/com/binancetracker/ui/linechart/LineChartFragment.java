@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,24 +48,23 @@ public class LineChartFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(LineChartViewModel.class);
         createLineChart();
 
-        fragmentBinding.button1week.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mViewModel.setTimeToFetch(TimeToFetch.week);
-            }
-        });
+        ArrayAdapter<CharSequence> adapter =ArrayAdapter.createFromResource(getContext(),
+                R.array.timerange_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        fragmentBinding.timerangeSpinner.setAdapter(adapter);
 
-        fragmentBinding.button1month.setOnClickListener(new View.OnClickListener() {
+        fragmentBinding.timerangeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                mViewModel.setTimeToFetch(TimeToFetch.month);
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                TimeToFetch timeToFetch = TimeToFetch.values()[position];
+                mViewModel.setTimeToFetch(timeToFetch);
             }
-        });
 
-        fragmentBinding.button1year.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                mViewModel.setTimeToFetch(TimeToFetch.year);
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
         return fragmentBinding.getRoot();

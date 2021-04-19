@@ -24,32 +24,14 @@
         android:text="ETH:1400"
         android:textColor="@color/white"
         android:textSize="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/button_1year"
+        app:layout_constraintEnd_toStartOf="@+id/timerange_spinner"
         tools:layout_editor_absoluteY="16dp" />
 
-    <Button
-        android:id="@+id/button_1week"
-        android:layout_width="60dp"
+    <Spinner
+        android:id="@+id/timerange_spinner"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_marginEnd="4dp"
-        android:text="1W"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteY="0dp" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <Button
-        android:id="@+id/button_1month"
-        android:layout_width="60dp"
-        android:layout_height="40dp"
-        android:text="1M"
-        app:layout_constraintEnd_toStartOf="@+id/button_1week"
-        tools:layout_editor_absoluteY="0dp" />
-
-    <Button
-        android:id="@+id/button_1year"
-        android:layout_width="60dp"
-        android:layout_height="40dp"
-        android:text="1Y"
-        app:layout_constraintEnd_toStartOf="@+id/button_1month"
-        tools:layout_editor_absoluteY="0dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
