@@ -1,5 +1,6 @@
 package com.binancetracker.ui.linechart;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +39,9 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class LineChartFragment extends Fragment {
+
+    public static final String ASSET_MSG = "asset_msg";
+
     private static final String TAG = LineChartFragment.class.getSimpleName();
     private LinechartFragmentBinding fragmentBinding;
     private LineChartViewModel mViewModel;
@@ -46,6 +50,14 @@ public class LineChartFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentBinding =  DataBindingUtil.inflate(inflater, R.layout.linechart_fragment, container, false);
         mViewModel = new ViewModelProvider(this).get(LineChartViewModel.class);
+        Intent intent = getActivity().getIntent();
+        if (intent != null)
+        {
+            String as = intent.getStringExtra(ASSET_MSG);
+            if (as != null)
+                mViewModel.setAsset(as);
+        }
+
         createLineChart();
 
         ArrayAdapter<CharSequence> adapter =ArrayAdapter.createFromResource(getContext(),

@@ -28,12 +28,17 @@ public class LineChartModel extends BaseObservable
     private float max = 170f;
     private float min = 0f;
     public SingletonDataBase singletonDataBase;
+    private String asset;
 
     public LineChartModel(SingletonDataBase singletonDataBase)
     {
         this.singletonDataBase = singletonDataBase;
+        asset = null;
     }
 
+    public void setAsset(String asset) {
+        this.asset = asset;
+    }
 
     public void setData(LineData data) {
         this.data = data;
@@ -152,35 +157,43 @@ public class LineChartModel extends BaseObservable
         {
             long s = start.getTime();
             long e = end.getTime();
-            List<PortofolioHistory> histories = singletonDataBase.appDatabase.portofolioHistoryDao().getByTimeRange(s,e);
-            for (PortofolioHistory portofolioHistory: histories)
-            {
-                if (!entrysList.containsKey(portofolioHistory.asset))
-                    entrysList.put(portofolioHistory.asset,new ArrayList<>());
-            }
-            double position = 0;
-            for (PortofolioHistory portofolioHistory: histories)
-            {
-                float pos = (float) (portofolioHistory.amount * portofolioHistory.price);
-
-                if(pos > 10f) {
-                    position += pos;
-                    Entry entry = new Entry(start.getTime(), pos);
-                    entry.setData(portofolioHistory.asset);
-                    entrysList.get(portofolioHistory.asset).add(entry);
-                    findMinMax(position,pos);
-                }
-            }
-
-            Entry entry = new Entry(start.getTime(), (float) position);
-            entry.setData("Total");
-            totalValueEntries.add(entry);
+            List<PortofolioHistory> histories;
+            if (asset == null)
+                histories = singletonDataBase.appDatabase.portofolioHistoryDao().getByTimeRange(s,e);
+            else
+                histories = singletonDataBase.appDatabase.portofolioHistoryDao().getByTimeAndAsset(s,e,asset);
+            processHistory(entrysList, start, totalValueEntries, histories);
             end.setDays(1);
             start.setDays(1);
         }
         max = (float) (max + ((float)max*0.3 ));
         entrysList.put("TOTAL",totalValueEntries);
         return entrysList;
+    }
+
+    private void processHistory(HashMap<String, List<Entry>> entrysList, MyTime start, List<Entry> totalValueEntries, List<PortofolioHistory> histories) {
+        for (PortofolioHistory portofolioHistory: histories)
+        {
+            if (!entrysList.containsKey(portofolioHistory.asset))
+                entrysList.put(portofolioHistory.asset,new ArrayList<>());
+        }
+        double position = 0;
+        for (PortofolioHistory portofolioHistory: histories)
+        {
+            float pos = (float) (portofolioHistory.amount * portofolioHistory.price);
+
+            if(pos > 10f) {
+                position += pos;
+                Entry entry = new Entry(start.getTime(), pos);
+                entry.setData(portofolioHistory.asset);
+                entrysList.get(portofolioHistory.asset).add(entry);
+                findMinMax(position,pos);
+            }
+        }
+
+        Entry entry = new Entry(start.getTime(), (float) position);
+        entry.setData("Total");
+        totalValueEntries.add(entry);
     }
 
     private void findMinMax(double position,double assetpos) {

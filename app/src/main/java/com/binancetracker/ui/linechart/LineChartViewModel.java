@@ -29,4 +29,9 @@ public class LineChartViewModel extends ViewModel {
         this.timeToFetch = timeToFetch;
         lineChartModel.setData(timeToFetch);
     }
+
+    public void setAsset(String asset)
+    {
+        lineChartModel.setAsset(asset);
+    }
 }

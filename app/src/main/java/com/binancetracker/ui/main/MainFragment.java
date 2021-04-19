@@ -96,8 +96,20 @@ public class MainFragment extends Fragment {
         else mainFragmentBinding.imageButtonLinechartfullscreen.setVisibility(View.GONE);
 
         customAdapter = new CustomAdapter();
+        customAdapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pos = mainFragmentBinding.recyclerViewBalance.getChildLayoutPosition(v);
+                AssetModel assetModel = customAdapter.getAssetModel(pos);
+                Intent intent = new Intent(getActivity(), LineChartActivity.class);
+                intent.putExtra(LineChartFragment.ASSET_MSG, assetModel.assetName);
+
+                getActivity().startActivity(intent);
+            }
+        });
         mainFragmentBinding.recyclerViewBalance.setAdapter(customAdapter);
         mainFragmentBinding.recyclerViewBalance.setLayoutManager(new LinearLayoutManager(getContext()));
+
         mViewModel.balances.observe(getViewLifecycleOwner(), new Observer<Collection<AssetModel>>() {
             @Override
             public void onChanged(Collection<AssetModel> strings) {

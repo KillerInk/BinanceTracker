@@ -1,6 +1,7 @@
 package com.binancetracker.ui.main;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.databinding.DataBindingUtil;
@@ -18,6 +19,7 @@ import java.util.List;
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
     private List<AssetModel> assetModels;
+    private View.OnClickListener onClickListener;
 
     /**
      * Provide a reference to the type of views that you are using
@@ -40,6 +42,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         assetModels = new ArrayList<>();
     }
 
+    public void setOnClickListener(View.OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
+
     public synchronized void setLocalDataSet(Collection<AssetModel> dataSet)
     {
         assetModels.clear();
@@ -54,6 +60,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         //notifyDataSetChanged();
     }
 
+    public AssetModel getAssetModel(int pos)
+    {
+        return assetModels.get(pos);
+    }
+
     // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -61,6 +72,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
         TextRowItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()),
                 R.layout.text_row_item, viewGroup, false);
+        binding.framelayoutRecycleritem.setOnClickListener(onClickListener);
         return new ViewHolder(binding);
     }
 
