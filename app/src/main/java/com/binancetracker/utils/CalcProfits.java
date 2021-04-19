@@ -137,7 +137,7 @@ public class CalcProfits
 
             historyHashmapTime.put(startday.getTime(), historyHashMap);
 
-            Log.d(TAG,"Finished Day: " + startday.toString());
+            Log.d(TAG,"Finished Day: " + startday.getString());
             startday.setDays(1).setDayToBegin();
             endday.setDays(1).setDayToEnd();
         }

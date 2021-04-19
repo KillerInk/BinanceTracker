@@ -132,7 +132,7 @@ public class LineChartModel extends BaseObservable
         min =0;
         max = 0;
         HashMap<String, List<Entry>> entrysList = new HashMap<>();
-        MyTime start = new MyTime().setDays(-365).setDayToBegin();
+        MyTime start = new MyTime().setDays(-days).setDayToBegin();
         MyTime end = new MyTime(start.getTime()).setDayToEnd();
         long today = System.currentTimeMillis();
         List<Entry> totalValueEntries = new ArrayList<>();
@@ -156,9 +156,10 @@ public class LineChartModel extends BaseObservable
                     Entry entry = new Entry(start.getTime(), pos);
                     entry.setData(portofolioHistory.asset);
                     entrysList.get(portofolioHistory.asset).add(entry);
+                    findMinMax(position,pos);
                 }
             }
-            findMinMax(position);
+
             Entry entry = new Entry(start.getTime(), (float) position);
             entry.setData("Total");
             totalValueEntries.add(entry);
@@ -170,7 +171,7 @@ public class LineChartModel extends BaseObservable
         return entrysList;
     }
 
-    private void findMinMax(double position) {
+    private void findMinMax(double position,double assetpos) {
         if (max == 0 && min == 0) {
             max = (float) position;
             min = (float) position;
@@ -179,37 +180,8 @@ public class LineChartModel extends BaseObservable
             max = (float) position;
         else if (position < min)
             min = (float) position;
+        if (assetpos < min)
+            min = (float) assetpos;
     }
 
-    private List<Entry> getLast30Days()
-    {
-        Date start = new Date((System.currentTimeMillis()/1000) *1000);
-        start.setDate(start.getDate() - 30);
-        start.setHours(0);
-        start.setMinutes(0);
-        start.setSeconds(0);
-        Date end = new Date(start.getTime());
-        end.setHours(23);
-        end.setMinutes(59);
-        end.setSeconds(59);
-        long today = System.currentTimeMillis();
-        List<Entry> entries = new ArrayList<>();
-        while (end.getTime() < today)
-        {
-            long s = start.getTime();
-            long e = end.getTime();
-            List<PortofolioHistory> histories = singletonDataBase.appDatabase.portofolioHistoryDao().getByTimeRange(s,e);
-            double position = 0;
-            for (PortofolioHistory portofolioHistory : histories)
-            {
-                position += portofolioHistory.amount * portofolioHistory.price;
-            }
-            findMinMax(position);
-            entries.add(new Entry(start.getTime(), (float) position));
-            end.setDate(end.getDate()+1);
-            start.setDate(start.getDate()+1);
-        }
-        max = (float) (max + ((float)max*0.4));
-        return entries;
-    }
 }
