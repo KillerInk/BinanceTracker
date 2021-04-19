@@ -48,6 +48,12 @@ public class MyTime {
         return this;
     }
 
+    public MyTime setMinutes(int min)
+    {
+        date.setMinutes(date.getMinutes() + min);
+        return this;
+    }
+
     public String getString()
     {
         return DateFormat.getDateTimeInstance().format(date);

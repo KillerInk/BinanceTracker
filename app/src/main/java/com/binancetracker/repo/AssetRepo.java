@@ -12,6 +12,7 @@ import com.binancetracker.thread.RestExecuter;
 import com.binancetracker.ui.main.AssetModel;
 import com.binancetracker.utils.CalcProfits;
 import com.binancetracker.utils.MarketPair;
+import com.binancetracker.utils.MyTime;
 import com.binancetracker.utils.Settings;
 
 import java.util.HashMap;
@@ -70,6 +71,7 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
         choosenAsset = settings.getDefaultAsset();
 
         binanceApi.getAccountBalance().setAccountBalanceEventListner(this::onBalanceChanged);
+
         RestExecuter.addTask(onResumeRunner);
     }
 
@@ -88,7 +90,11 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
                     updatedPrices();
                 }
             }).start();
-            RestExecuter.addTask(updateHistoryRunner);
+            MyTime lastSync = new MyTime(settings.getLastSync()).setMinutes(5);
+            if (lastSync.getTime() < System.currentTimeMillis()) {
+                RestExecuter.addTask(updateHistoryRunner);
+                settings.setLastSync(System.currentTimeMillis());
+            }
         }
     };
 
