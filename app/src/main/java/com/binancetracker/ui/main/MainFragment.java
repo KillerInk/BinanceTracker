@@ -1,7 +1,6 @@
  package com.binancetracker.ui.main;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.Observable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -20,25 +18,13 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.binancetracker.BR;
-import com.binancetracker.MainActivity;
 import com.binancetracker.R;
 import com.binancetracker.databinding.MainFragmentBinding;
-import com.binancetracker.ui.linechart.LineChartActivity;
+import com.binancetracker.ui.LineChartActivity;
 import com.binancetracker.ui.linechart.LineChartFragment;
 import com.binancetracker.ui.piechart.PieChartFragment;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
-import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

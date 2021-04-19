@@ -6,10 +6,9 @@ import android.os.Looper;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
-import com.binancetracker.api.BinanceApi;
-import com.binancetracker.api.DownloadTradeHistory;
-import com.binancetracker.room.SingletonDataBase;
-import com.binancetracker.thread.RestExecuter;
+import com.binancetracker.repo.api.BinanceApi;
+import com.binancetracker.repo.api.DownloadTradeHistory;
+import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.utils.CalcProfits;
 
 import javax.inject.Inject;

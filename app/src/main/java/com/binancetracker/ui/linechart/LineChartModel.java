@@ -6,8 +6,8 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.binancetracker.BR;
-import com.binancetracker.room.SingletonDataBase;
-import com.binancetracker.room.entity.PortofolioHistory;
+import com.binancetracker.repo.room.SingletonDataBase;
+import com.binancetracker.repo.room.entity.PortofolioHistory;
 import com.binancetracker.utils.MyTime;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -17,7 +17,6 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;

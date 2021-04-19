@@ -13,10 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.binancetracker.R;
 import com.binancetracker.databinding.DatabaseFragmentBinding;
-import com.binancetracker.room.SingletonDataBase;
-import com.binancetracker.utils.CalcProfits;
-
-import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

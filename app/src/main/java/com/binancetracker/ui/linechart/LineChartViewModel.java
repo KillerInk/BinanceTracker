@@ -2,9 +2,7 @@ package com.binancetracker.ui.linechart;
 
 import androidx.lifecycle.ViewModel;
 
-import com.binancetracker.room.SingletonDataBase;
-
-import java.sql.Time;
+import com.binancetracker.repo.room.SingletonDataBase;
 
 import javax.inject.Inject;
 

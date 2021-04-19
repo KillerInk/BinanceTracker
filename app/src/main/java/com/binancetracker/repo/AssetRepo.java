@@ -3,12 +3,12 @@ package com.binancetracker.repo;
 import android.util.Log;
 
 import com.binance.api.client.domain.account.AssetBalance;
-import com.binancetracker.api.AccountBalance;
-import com.binancetracker.api.BinanceApi;
-import com.binancetracker.api.Ticker;
-import com.binancetracker.room.SingletonDataBase;
-import com.binancetracker.room.entity.Profit;
-import com.binancetracker.thread.RestExecuter;
+import com.binancetracker.repo.api.AccountBalance;
+import com.binancetracker.repo.api.BinanceApi;
+import com.binancetracker.repo.api.Ticker;
+import com.binancetracker.repo.room.SingletonDataBase;
+import com.binancetracker.repo.room.entity.Profit;
+import com.binancetracker.repo.thread.RestExecuter;
 import com.binancetracker.ui.main.AssetModel;
 import com.binancetracker.utils.CalcProfits;
 import com.binancetracker.utils.MarketPair;

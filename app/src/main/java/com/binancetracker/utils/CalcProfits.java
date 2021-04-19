@@ -2,13 +2,13 @@ package com.binancetracker.utils;
 
 import android.util.Log;
 
-import com.binancetracker.room.SingletonDataBase;
-import com.binancetracker.room.entity.CandleStickEntity;
-import com.binancetracker.room.entity.DepositHistoryEntity;
-import com.binancetracker.room.entity.HistoryTrade;
-import com.binancetracker.room.entity.PortofolioHistory;
-import com.binancetracker.room.entity.Profit;
-import com.binancetracker.room.entity.WithdrawHistoryEntity;
+import com.binancetracker.repo.room.SingletonDataBase;
+import com.binancetracker.repo.room.entity.CandleStickEntity;
+import com.binancetracker.repo.room.entity.DepositHistoryEntity;
+import com.binancetracker.repo.room.entity.HistoryTrade;
+import com.binancetracker.repo.room.entity.PortofolioHistory;
+import com.binancetracker.repo.room.entity.Profit;
+import com.binancetracker.repo.room.entity.WithdrawHistoryEntity;
 
 import java.util.Date;
 import java.util.HashMap;

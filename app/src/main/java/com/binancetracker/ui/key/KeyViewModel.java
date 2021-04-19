@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.binancetracker.MyApplication;
 import com.binancetracker.R;
-import com.binancetracker.api.BinanceApi;
+import com.binancetracker.repo.api.BinanceApi;
 import com.binancetracker.utils.Settings;
 
 import javax.inject.Inject;

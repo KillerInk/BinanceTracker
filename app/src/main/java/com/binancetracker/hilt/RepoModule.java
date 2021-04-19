@@ -2,10 +2,9 @@ package com.binancetracker.hilt;
 
 import android.content.Context;
 
-import com.binancetracker.api.BinanceApi;
+import com.binancetracker.repo.api.BinanceApi;
 import com.binancetracker.repo.AssetRepo;
-import com.binancetracker.room.SingletonDataBase;
-import com.binancetracker.ui.linechart.LineChartModel;
+import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.utils.Settings;
 
 import javax.inject.Singleton;
