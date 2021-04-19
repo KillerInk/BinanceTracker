@@ -93,7 +93,7 @@ public class LineChartFragment extends Fragment {
 
         // set an alternative background color
         fragmentBinding.chart2.setBackgroundColor(Color.BLACK);
-        fragmentBinding.chart2.setViewPortOffsets(0f, 0f, 0f, 0f);
+        //fragmentBinding.chart2.setViewPortOffsets(0f, 0f, 0f, 0f);
         // get the legend (only possible after setting data)
         Legend ll = fragmentBinding.chart2.getLegend();
         ll.setEnabled(true);
@@ -102,22 +102,22 @@ public class LineChartFragment extends Fragment {
         ll.setFormToTextSpace(1f);
         ll.setForm(Legend.LegendForm.CIRCLE);
         ll.setWordWrapEnabled(true);
-        ll.setDrawInside(true);
-        ll.setYOffset(10f);
-        ll.setXOffset(35f);
-        ll.setMaxSizePercent(0);
+        ll.setDrawInside(false);
+        ll.setYOffset(3f);
+        //ll.setXOffset(35f);
+        //ll.setMaxSizePercent(0);
         ll.setDirection(Legend.LegendDirection.LEFT_TO_RIGHT );
 
         ll.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         ll.setTextColor(Color.WHITE);
 
         XAxis xAxis = fragmentBinding.chart2.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.TOP_INSIDE);
+        //xAxis.setPosition(XAxis.XAxisPosition.TOP);
         xAxis.setAvoidFirstLastClipping(true);
         xAxis.setTextSize(5f);
         xAxis.setTextColor(Color.WHITE);
-        xAxis.setDrawAxisLine(false);
-        xAxis.setDrawGridLines(true);
+        xAxis.setDrawAxisLine(true);
+        xAxis.setDrawGridLines(false);
         xAxis.setTextColor(Color.rgb(255, 192, 56));
         xAxis.setCenterAxisLabels(true);
         xAxis.setGranularity(1f); // one hour
@@ -134,11 +134,12 @@ public class LineChartFragment extends Fragment {
         });
 
         YAxis leftAxis = fragmentBinding.chart2.getAxisLeft();
-        leftAxis.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        //leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         //leftAxis.setTypeface(tfLight);
         leftAxis.setTextColor(ColorTemplate.getHoloBlue());
-        leftAxis.setDrawGridLines(true);
-        leftAxis.setGranularityEnabled(true);
+        leftAxis.setDrawAxisLine(true);
+        //leftAxis.setDrawGridLines(false);
+        //leftAxis.setGranularityEnabled(false);
         leftAxis.setTextColor(Color.WHITE);
         leftAxis.setTextSize(5f);
         leftAxis.setAxisMinimum(0f);
@@ -168,26 +169,11 @@ public class LineChartFragment extends Fragment {
             }
         });
 
-        fragmentBinding.chart2.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry e, Highlight h) {
-                Log.v(TAG,e.toString() + " " + h.toString());
-                if (e == null || h == null)
-                    fragmentBinding.textViewChartvalue.setVisibility(View.GONE);
-                else
-                {
-                    if(e.getX() < 1)
-                        fragmentBinding.textViewChartvalue.setText((String)e.getData() + ":" + ConvertingUtil.getDoubleString8F(e.getY()));
-                    else
-                        fragmentBinding.textViewChartvalue.setText((String)e.getData() + ":" + ConvertingUtil.getDoubleString2F(e.getY()));
-                    fragmentBinding.textViewChartvalue.setVisibility(View.VISIBLE);
-                }
-            }
+        ChartMarkerView chartMarkerView = new ChartMarkerView(getContext(),R.layout.chartmarkerview);
+        // create marker to display box when values are selected
 
-            @Override
-            public void onNothingSelected() {
-
-            }
-        });
+        // Set the marker to the chart
+        chartMarkerView.setChartView(fragmentBinding.chart2);
+        fragmentBinding.chart2.setMarker(chartMarkerView);
     }
 }

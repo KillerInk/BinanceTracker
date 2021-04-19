@@ -91,6 +91,9 @@ public class MainFragment extends Fragment {
                 getActivity().startActivity(intent);
             }
         });
+        if (chartfragment != null && chartfragment instanceof LineChartFragment)
+            mainFragmentBinding.imageButtonLinechartfullscreen.setVisibility(View.VISIBLE);
+        else mainFragmentBinding.imageButtonLinechartfullscreen.setVisibility(View.GONE);
 
         customAdapter = new CustomAdapter();
         mainFragmentBinding.recyclerViewBalance.setAdapter(customAdapter);
