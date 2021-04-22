@@ -69,6 +69,13 @@ public class DataBaseFragment extends Fragment {
                 dataBaseViewModel.calcLifeTimeHistory();
             }
         });
+
+        databaseFragmentBinding.buttonStartSyncFuturesTransactionHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataBaseViewModel.startDownloadFuturesTransactionHistory();
+            }
+        });
         return databaseFragmentBinding.getRoot();
     }
 }

@@ -5,6 +5,7 @@ import android.util.Log;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.room.entity.CandleStickEntity;
 import com.binancetracker.repo.room.entity.DepositHistoryEntity;
+import com.binancetracker.repo.room.entity.FuturesTransactionHistoryEntity;
 import com.binancetracker.repo.room.entity.HistoryTrade;
 import com.binancetracker.repo.room.entity.PortofolioHistory;
 import com.binancetracker.repo.room.entity.Profit;
@@ -72,6 +73,16 @@ public class CalcProfits
                             profit.withdraws += d.amount;
                         }
                     }
+
+                    List<FuturesTransactionHistoryEntity> futuresTransactionHistoryEntities = singletonDataBase.binanceDatabase.futuresTransactionHistoryDao().getByName(s);
+                    if (futuresTransactionHistoryEntities != null && futuresTransactionHistoryEntities.size() > 0) {
+                        for (FuturesTransactionHistoryEntity entity : futuresTransactionHistoryEntities) {
+                            if (entity.type.equals("1") || entity.equals("3"))
+                                profit.profit += Double.parseDouble(entity.amount);
+                            else
+                                profit.profit -= Double.parseDouble(entity.amount);
+                        }
+                    }
                 }
                 for (Profit profit : assets.values())
                     singletonDataBase.appDatabase.profitDao().insert(profit);
@@ -132,6 +143,7 @@ public class CalcProfits
 
             fillAmountFromYesterday(yesterdayHistory,historyHashMap);
             addDepositsForDay(startday,endday,historyHashMap,singletonDataBase);
+            addFutureTransactions(startday,endday,historyHashMap,singletonDataBase);
             addTradesForDay(startday,endday,historyHashMap,singletonDataBase);
             setDay_ID_Price(startday, endday, historyHashMap,singletonDataBase);
 
@@ -145,6 +157,8 @@ public class CalcProfits
             singletonDataBase.appDatabase.portofolioHistoryDao().insertAll(map.values());
         Log.d(TAG,"end calcAssetLifeTime");
     }
+
+
 
     private void setDay_ID_Price(MyTime startday, MyTime endday, HashMap<String, PortofolioHistory> historyHashMap,SingletonDataBase singletonDataBase) {
         for (PortofolioHistory portofolioHistory: historyHashMap.values())
@@ -175,6 +189,26 @@ public class CalcProfits
         }
         else
             Log.d(TAG,"fillAmountFromYesterday yesterdayHistory is null");
+    }
+
+    private void addFutureTransactions(MyTime startday, MyTime endday, HashMap<String, PortofolioHistory> historyHashMap, SingletonDataBase singletonDataBase) {
+        List<String> transactionsForDay = singletonDataBase.binanceDatabase.futuresTransactionHistoryDao().getTransactionsForDay(startday.getTime(),endday.getTime());
+        if (transactionsForDay != null)
+        {
+            for (String asset : transactionsForDay)
+            {
+                List<FuturesTransactionHistoryEntity> entities = singletonDataBase.binanceDatabase.futuresTransactionHistoryDao().getTraidsByDayAndName(startday.getTime(),endday.getTime(), asset);
+                for (FuturesTransactionHistoryEntity entity : entities)
+                {
+                    // one of 1( from spot to USDT-Ⓜ), 2( from USDT-Ⓜ to spot), 3( from spot to COIN-Ⓜ), and 4( from COIN-Ⓜ to spot)
+                    PortofolioHistory portofolioHistory = getPortofolio(entity.asset,startday,endday,historyHashMap);
+                    if (entity.type.equals("1") || entity.equals("3"))
+                        portofolioHistory.amount += Double.parseDouble(entity.amount);
+                    else
+                        portofolioHistory.amount -= Double.parseDouble(entity.amount);
+                }
+            }
+        }
     }
 
     private void addTradesForDay(MyTime start,MyTime end,HashMap<String, PortofolioHistory> historyHashMap,SingletonDataBase singletonDataBase)

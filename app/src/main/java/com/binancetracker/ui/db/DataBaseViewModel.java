@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.binancetracker.repo.api.BinanceApi;
 import com.binancetracker.repo.api.DownloadTradeHistory;
+import com.binancetracker.repo.api.runnable.ClientFactoryRunner;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.utils.CalcProfits;
 
@@ -33,62 +34,33 @@ public class DataBaseViewModel extends ViewModel
     public void startSyncTradeHistory()
     {
         dbstatus.set("StartSync");
-        new Thread(new Runnable() {
-            private Handler handler = new Handler(Looper.getMainLooper());
-            @Override
-            public void run() {
-                binanceApi.getDownloadTradeHistory().setHistoryEvent(new DownloadTradeHistory.TradeHistoryEvent() {
-                    @Override
-                    public void onSyncStart(int max_markets) {
-                        max = max_markets;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                dbstatus.set("0/"+max);
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onSyncUpdate(int currentmarket) {
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                dbstatus.set(currentmarket+"/"+max);
-                            }
-                        });
-
-                    }
-
-                    @Override
-                    public void onSyncEnd() {
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                dbstatus.set("Done Sync");
-                            }
-                        });
-                    }
-                });
-                //start downloading the trade history
-                binanceApi.getDownloadTradeHistory().getFullHistory();
-            }
-        }).start();
+        binanceApi.getDownloadTradeHistory().setHistoryEvent(messageEvent);
+        //start downloading the trade history
+        binanceApi.getDownloadTradeHistory().getFullHistory();
     }
 
     public void startSyncDeposits()
     {
+        binanceApi.getDownloadDespositHistory().setMessageEventListner(messageEvent);
         binanceApi.getDownloadDespositHistory().downloadFullHistory();
     }
 
     public void startSyncWithdraws()
     {
+        binanceApi.getDownloadWithdrawHistory().setMessageEvent(messageEvent);
         binanceApi.getDownloadWithdrawHistory().downloadFullHistory();
     }
 
     public void startDownloadPriceHistoryDayFull()
     {
+        binanceApi.getDownloadCandleStickHistory().setMessageEventListner(messageEvent);
         binanceApi.getDownloadCandleStickHistory().downloadFullHistory();
+    }
+
+    public void startDownloadFuturesTransactionHistory()
+    {
+        binanceApi.getDownloadFuturesHistory().setMessageEventListner(messageEvent);
+        binanceApi.getDownloadFuturesHistory().downloadFullHistory();
     }
 
     public void calcTrades()
@@ -107,6 +79,53 @@ public class DataBaseViewModel extends ViewModel
         }).start();
     }
 
+
+    private void resetMessageEvent()
+    {
+        binanceApi.getDownloadCandleStickHistory().setMessageEventListner(null);
+        binanceApi.getDownloadWithdrawHistory().setMessageEvent(null);
+        binanceApi.getDownloadDespositHistory().setMessageEventListner(null);
+        binanceApi.getDownloadTradeHistory().setHistoryEvent(null);
+        binanceApi.getDownloadFuturesHistory().setMessageEventListner(null);
+    }
+
+    private ClientFactoryRunner.MessageEvent messageEvent = new ClientFactoryRunner.MessageEvent() {
+
+        private Handler handler = new Handler(Looper.getMainLooper());
+
+        @Override
+        public void onSyncStart(int max_markets) {
+            max = max_markets;
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    dbstatus.set("0/"+max);
+                }
+            });
+        }
+
+        @Override
+        public void onSyncUpdate(int currentmarket,String msg) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    dbstatus.set(currentmarket+"/"+max+" "+msg);
+                }
+            });
+
+        }
+
+        @Override
+        public void onSyncEnd() {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    dbstatus.set("Done Sync");
+                    resetMessageEvent();
+                }
+            });
+        }
+    };
 
 
 }

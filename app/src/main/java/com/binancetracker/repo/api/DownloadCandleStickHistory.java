@@ -1,6 +1,7 @@
 package com.binancetracker.repo.api;
 
 import com.binance.api.client.factory.BinanceSpotApiClientFactory;
+import com.binancetracker.repo.api.runnable.ClientFactoryRunner;
 import com.binancetracker.repo.api.runnable.DownloadFullDayHistoryForAllPairsRunner;
 import com.binancetracker.repo.api.runnable.DownloadLatestDayHistoryForAllPairsRunner;
 import com.binancetracker.repo.room.SingletonDataBase;
@@ -15,6 +16,12 @@ public class DownloadCandleStickHistory {
     {
         downloadFullDayHistoryForAllPairsRunner = new DownloadFullDayHistoryForAllPairsRunner(clientFactory,singletonDataBase,settings);
         downloadLatestDayHistoryForAllPairsRunner = new DownloadLatestDayHistoryForAllPairsRunner(clientFactory,singletonDataBase,settings);
+    }
+
+    public void setMessageEventListner(ClientFactoryRunner.MessageEvent messageEventListner)
+    {
+        downloadFullDayHistoryForAllPairsRunner.setMessageEventListner(messageEventListner);
+        downloadLatestDayHistoryForAllPairsRunner.setMessageEventListner(messageEventListner);
     }
 
     public void downloadFullHistory()

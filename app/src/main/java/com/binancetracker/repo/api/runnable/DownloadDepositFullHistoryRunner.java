@@ -11,7 +11,7 @@ import com.binancetracker.utils.MyTime;
 
 import java.util.List;
 
-public class DownloadDepositFullHistoryRunner extends ClientFactoryRunner {
+public class DownloadDepositFullHistoryRunner extends ClientFactoryRunner<BinanceSpotApiClientFactory> {
     private final String TAG = DownloadDepositFullHistoryRunner.class.getSimpleName();
     protected final static long days30 = 2592000000L; // 30days
     protected final static int checkyears = 3*365/30; //3years split into 30days
@@ -27,16 +27,19 @@ public class DownloadDepositFullHistoryRunner extends ClientFactoryRunner {
         MyTime endtime = new MyTime(System.currentTimeMillis());
         MyTime starttime = new MyTime(endtime.getTime()).setDays(-30);
         Log.d(TAG, "startTime:" + starttime.getString()+ " endTime:" + endtime.getString());
+        fireOnSyncStart(checkyears);
         for (int i = 0; i < checkyears; i++) {
             List<Deposit> deposits = client.getWalletEndPoint().getDepositHistory(starttime.getTime(),endtime.getTime());
             if (deposits != null)
             {
                 addItemToDB(deposits);
             }
+            fireOnSyncUpdate(i,"");
             endtime.setDays(-30).setDayToEnd();
             starttime.setDays(-30).setDayToBegin();
             Log.d(TAG, "startTime:" + starttime.getString()+ " endTime:" + endtime.getString());
         }
+        fireOnSyncEnd();
     }
 
     protected void addItemToDB(List<Deposit> depositHistory) {

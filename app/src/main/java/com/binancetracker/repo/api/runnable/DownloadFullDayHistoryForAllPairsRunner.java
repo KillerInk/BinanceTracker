@@ -31,13 +31,14 @@ public class DownloadFullDayHistoryForAllPairsRunner extends DownloadDepositFull
         singletonDataBase.binanceDatabase.candelStickDayDao().deleteAll();
         BinanceApiSpotRestClient client = clientFactory.newRestClient();
         List<String> assets = getPairsToDownload();
-
+        fireOnSyncStart(assets.size());
         long endtime = System.currentTimeMillis();
         long starttime = endtime - (days30 * checkyears);
         Log.d(TAG,"download start priceHistory for " + assets.size());
         Log.d(TAG, "startTime:" + DateFormat.getDateTimeInstance().format(new Date(starttime)) + " endTime:" + DateFormat.getDateTimeInstance().format(new Date(endtime)));
         getCandlestickRangeForAssets(client, assets, endtime, starttime);
 
+        fireOnSyncEnd();
         Log.d(TAG,"download priceHistory done ");
     }
 
@@ -46,6 +47,7 @@ public class DownloadFullDayHistoryForAllPairsRunner extends DownloadDepositFull
         try {
             for (String asset : assets)
             {
+                fireOnSyncUpdate(i,"download priceHistory for " + asset);
                 Log.d(TAG,"download priceHistory for " + asset);
                 List<Candlestick> candlestickList = client.getCandlestickBars(asset, CandlestickInterval.DAILY,1000,starttime,endtime);
                 Log.d(TAG,"candle count: " + candlestickList.size());

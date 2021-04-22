@@ -15,12 +15,11 @@ import com.binancetracker.repo.room.entity.Market;
 
 import java.util.List;
 
-public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner {
+public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner<BinanceSpotApiClientFactory> {
 
 
     private final String TAG = DownloadTradeFullHistoryRunner.class.getSimpleName();
 
-    private DownloadTradeHistory.TradeHistoryEvent tradeHistoryEventListner;
     private int i;
     private int tradescounter = 0;
 
@@ -30,9 +29,6 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner {
         super(clientFactory,singletonDataBase);
     }
 
-    public void setTradeHistoryEventListner(DownloadTradeHistory.TradeHistoryEvent tradeHistoryEventListner) {
-        this.tradeHistoryEventListner = tradeHistoryEventListner;
-    }
 
     @Override
     public void run() {
@@ -64,8 +60,7 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner {
             marketDao.insert(market);
         }
         markets = marketDao.getAll();
-        if (tradeHistoryEventListner != null)
-            tradeHistoryEventListner.onSyncStart(markets.size());
+        fireOnSyncStart(markets.size());
         HistoryTradeDao historyTradeDao = singletonDataBase.binanceDatabase.historyTradeDao();
         i = 0;
         Log.d(this.getClass().getSimpleName(),"startParsing markets");
@@ -73,14 +68,12 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner {
             String pair = m.baseAsset+m.quoteAsset;
             tradescounter = 0;
             Log.d(this.getClass().getSimpleName(),"download Trades for: " + pair);
-            if (tradeHistoryEventListner != null)
-                tradeHistoryEventListner.onSyncUpdate(i++);
+            fireOnSyncUpdate(i++, pair);
             getAllHistoryforPair(client,historyTradeDao,pair,0);
             Log.d(this.getClass().getSimpleName(),"download done for: " + pair + " found trades:" + tradescounter);
         }
         Log.d(this.getClass().getSimpleName(),"finished download fullHistory");
-        if (tradeHistoryEventListner != null)
-            tradeHistoryEventListner.onSyncEnd();
+        fireOnSyncEnd();
     }
 
     private void getAllHistoryforPair(BinanceApiSpotRestClient client,HistoryTradeDao historyTradeDao,String pair, long id)

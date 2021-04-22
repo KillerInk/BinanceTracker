@@ -1,6 +1,7 @@
 package com.binancetracker.repo.api;
 
 import com.binance.api.client.factory.BinanceSpotApiClientFactory;
+import com.binancetracker.repo.api.runnable.ClientFactoryRunner;
 import com.binancetracker.repo.api.runnable.Download30DaysDepositHistoryRunner;
 import com.binancetracker.repo.api.runnable.DownloadDepositFullHistoryRunner;
 import com.binancetracker.repo.room.SingletonDataBase;
@@ -16,6 +17,12 @@ public class DownloadDepositHistory
     {
         fullHistoryRunner = new DownloadDepositFullHistoryRunner(clientFactory,singletonDataBase);
         d30daysHistorRunner = new Download30DaysDepositHistoryRunner(clientFactory,singletonDataBase);
+    }
+
+    public void setMessageEventListner(ClientFactoryRunner.MessageEvent messageEventListner)
+    {
+        fullHistoryRunner.setMessageEventListner(messageEventListner);
+        d30daysHistorRunner.setMessageEventListner(messageEventListner);
     }
 
     public void downloadFullHistory()

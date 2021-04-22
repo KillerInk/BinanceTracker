@@ -1,6 +1,7 @@
 package com.binancetracker.repo.api;
 
 import com.binance.api.client.factory.BinanceSpotApiClientFactory;
+import com.binancetracker.repo.api.runnable.ClientFactoryRunner;
 import com.binancetracker.repo.api.runnable.Download30DaysWithdrawHistoryRunner;
 import com.binancetracker.repo.api.runnable.DownloadWithdrawFullHistory;
 import com.binancetracker.repo.room.SingletonDataBase;
@@ -26,5 +27,11 @@ public class DownloadWithdrawHistory {
         if (threaded)
             RestExecuter.addTask(download30DaysWithdrawHistoryRunner);
         else download30DaysWithdrawHistoryRunner.run();
+    }
+
+    public void setMessageEvent(ClientFactoryRunner.MessageEvent messageEvent)
+    {
+        download30DaysWithdrawHistoryRunner.setMessageEventListner(messageEvent);
+        downloadWithdrawFullHistory.setMessageEventListner(messageEvent);
     }
 }

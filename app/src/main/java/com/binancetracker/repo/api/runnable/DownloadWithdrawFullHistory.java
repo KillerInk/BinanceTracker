@@ -29,15 +29,18 @@ public class DownloadWithdrawFullHistory extends DownloadDepositFullHistoryRunne
         MyTime endtime = new MyTime(System.currentTimeMillis());
         MyTime starttime = new MyTime(endtime.getTime()).setDays(-30);
         Log.d(TAG, "startTime:" + starttime.getString()+ " endTime:" + endtime.getString());
+        fireOnSyncStart(checkyears);
         for (int i = 0; i < checkyears; i++) {
             List<Withdraw> withdraws = client.getWalletEndPoint().getWithdrawHistory(starttime.getTime(),endtime.getTime());
             if (withdraws != null)
             {
                 addWithdrawItemToDB(withdraws);
             }
+            fireOnSyncUpdate(i,"");
             endtime.setDays(-30).setDayToEnd();
             starttime.setDays(-30).setDayToBegin();
         }
+        fireOnSyncEnd();
         Log.d(TAG, "DownloadWithdrawFullHistory done");
     }
 

@@ -6,6 +6,7 @@ import com.binance.api.client.domain.account.Account;
 import com.binance.api.client.factory.BinanceAbstractFactory;
 import com.binance.api.client.factory.BinanceSpotApiClientFactory;
 
+import com.binancetracker.repo.api.runnable.DownloadFuturesTransactionHistory;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.utils.Settings;
 
@@ -13,13 +14,14 @@ import javax.inject.Inject;
 
 public class BinanceApi {
 
-    private BinanceSpotApiClientFactory clientFactory;
+    private BinanceSpotApiClientFactory spotClientFactory;
     private AccountBalance accountBalance;
     private Ticker ticker;
     private DownloadTradeHistory downloadTradeHistory;
     private DownloadDepositHistory downloadDespositHistory;
     private DownloadWithdrawHistory downloadWithdrawHistory;
     private DownloadCandleStickHistory downloadCandleStickHistory;
+    private DownloadFuturesHistory downloadFuturesHistory;
     private Settings settings;
     private SingletonDataBase singletonDataBase;
 
@@ -31,13 +33,14 @@ public class BinanceApi {
     }
 
     public void setKeys(String key, String secretKey) {
-        clientFactory = BinanceAbstractFactory.createSpotFactory(key, secretKey);
-        accountBalance = new AccountBalance(clientFactory);
-        ticker = new Ticker(clientFactory);
-        downloadTradeHistory = new DownloadTradeHistory(clientFactory,singletonDataBase);
-        downloadDespositHistory = new DownloadDepositHistory(clientFactory,singletonDataBase);
-        downloadWithdrawHistory = new DownloadWithdrawHistory(clientFactory,singletonDataBase);
-        downloadCandleStickHistory = new DownloadCandleStickHistory(clientFactory,singletonDataBase,settings);
+        spotClientFactory = BinanceAbstractFactory.createSpotFactory(key, secretKey);
+        accountBalance = new AccountBalance(spotClientFactory);
+        ticker = new Ticker(spotClientFactory);
+        downloadTradeHistory = new DownloadTradeHistory(spotClientFactory,singletonDataBase);
+        downloadDespositHistory = new DownloadDepositHistory(spotClientFactory,singletonDataBase);
+        downloadWithdrawHistory = new DownloadWithdrawHistory(spotClientFactory,singletonDataBase);
+        downloadCandleStickHistory = new DownloadCandleStickHistory(spotClientFactory,singletonDataBase,settings);
+        downloadFuturesHistory = new DownloadFuturesHistory(spotClientFactory,singletonDataBase);
     }
 
     public AccountBalance getAccountBalance() {
@@ -65,6 +68,10 @@ public class BinanceApi {
         return downloadCandleStickHistory;
     }
 
+    public DownloadFuturesHistory getDownloadFuturesHistory() {
+        return downloadFuturesHistory;
+    }
+
     private Account account = null;
     public String testKey()
     {
@@ -74,7 +81,7 @@ public class BinanceApi {
             @Override
             public void run() {
 
-                BinanceApiSpotRestClient client = clientFactory.newRestClient();
+                BinanceApiSpotRestClient client = spotClientFactory.newRestClient();
 
                 // Get account balances
                 synchronized (ob) {
