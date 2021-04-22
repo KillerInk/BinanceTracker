@@ -34,7 +34,7 @@ public class DataBaseViewModel extends ViewModel
     public void startSyncTradeHistory()
     {
         dbstatus.set("StartSync");
-        binanceApi.getDownloadTradeHistory().setHistoryEvent(messageEvent);
+        binanceApi.getDownloadTradeHistory().setMessageEventListner(messageEvent);
         //start downloading the trade history
         binanceApi.getDownloadTradeHistory().getFullHistory();
     }
@@ -47,7 +47,7 @@ public class DataBaseViewModel extends ViewModel
 
     public void startSyncWithdraws()
     {
-        binanceApi.getDownloadWithdrawHistory().setMessageEvent(messageEvent);
+        binanceApi.getDownloadWithdrawHistory().setMessageEventListner(messageEvent);
         binanceApi.getDownloadWithdrawHistory().downloadFullHistory();
     }
 
@@ -61,6 +61,18 @@ public class DataBaseViewModel extends ViewModel
     {
         binanceApi.getDownloadFuturesHistory().setMessageEventListner(messageEvent);
         binanceApi.getDownloadFuturesHistory().downloadFullHistory();
+    }
+
+    public void startDownloadSwapHistory()
+    {
+        binanceApi.getDownloadSwapHistory().setMessageEventListner(messageEvent);
+        binanceApi.getDownloadSwapHistory().downloadSwapHistory();
+    }
+
+    public void startDownloadLiquidSwapHistory()
+    {
+        binanceApi.getDownloadSwapHistory().setMessageEventListner(messageEvent);
+        binanceApi.getDownloadSwapHistory().downloadLiquidSwapHistory();
     }
 
     public void calcTrades()
@@ -83,10 +95,11 @@ public class DataBaseViewModel extends ViewModel
     private void resetMessageEvent()
     {
         binanceApi.getDownloadCandleStickHistory().setMessageEventListner(null);
-        binanceApi.getDownloadWithdrawHistory().setMessageEvent(null);
+        binanceApi.getDownloadWithdrawHistory().setMessageEventListner(null);
         binanceApi.getDownloadDespositHistory().setMessageEventListner(null);
-        binanceApi.getDownloadTradeHistory().setHistoryEvent(null);
+        binanceApi.getDownloadTradeHistory().setMessageEventListner(null);
         binanceApi.getDownloadFuturesHistory().setMessageEventListner(null);
+        binanceApi.getDownloadSwapHistory().setMessageEventListner(null);
     }
 
     private ClientFactoryRunner.MessageEvent messageEvent = new ClientFactoryRunner.MessageEvent() {

@@ -15,19 +15,36 @@
         android:id="@+id/button_startSyncHistorOrders"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sync History Orders" />
+        android:text="Sync History Orders"
+        android:onClick="@{()->viewmodel.startSyncTradeHistory()}"/>
 
     <Button
         android:id="@+id/button_startSyncDeposit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sync Deposit History" />
+        android:text="Sync Deposit History"
+        android:onClick="@{()->viewmodel.startSyncDeposits()}"/>
 
     <Button
         android:id="@+id/button_startSyncWithdraw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sync Withdraw History" />
+        android:text="Sync Withdraw History"
+        android:onClick="@{()->viewmodel.startSyncWithdraws()}"/>
+
+    <Button
+        android:id="@+id/button_startSyncSwapHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sync Swap History"
+        android:onClick="@{()->viewmodel.startDownloadSwapHistory()}"/>
+
+    <Button
+        android:id="@+id/button_startSyncLiquidSwapHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sync Liquid Swap History"
+        android:onClick="@{()->viewmodel.startDownloadLiquidSwapHistory()}"/>
 
 
 
@@ -41,24 +58,28 @@
         android:id="@+id/button_calctrades"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="calc trades" />
+        android:text="calc trades"
+        android:onClick="@{()->viewmodel.calcTrades()}"/>
 
     <Button
         android:id="@+id/button_startSyncPairFullHistory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sync traded Pairs Price History" />
+        android:text="Sync traded Pairs Price History"
+        android:onClick="@{()->viewmodel.startDownloadPriceHistoryDayFull()}"/>
 
     <Button
         android:id="@+id/button_startSyncFuturesTransactionHistory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sync Futures TransactionHistory" />
+        android:text="Sync Futures TransactionHistory"
+        android:onClick="@{()->viewmodel.startDownloadFuturesTransactionHistory()}"/>
 
     <Button
         android:id="@+id/button_calcPortofolioHistory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Calc Portofolio History" />
+        android:text="Calc Portofolio History"
+        android:onClick="@{()->viewmodel.calcLifeTimeHistory()}"/>
 </LinearLayout>
 </layout>

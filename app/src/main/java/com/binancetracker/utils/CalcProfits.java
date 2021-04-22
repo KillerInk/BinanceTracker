@@ -9,6 +9,7 @@ import com.binancetracker.repo.room.entity.FuturesTransactionHistoryEntity;
 import com.binancetracker.repo.room.entity.HistoryTrade;
 import com.binancetracker.repo.room.entity.PortofolioHistory;
 import com.binancetracker.repo.room.entity.Profit;
+import com.binancetracker.repo.room.entity.SwapHistoryEntity;
 import com.binancetracker.repo.room.entity.WithdrawHistoryEntity;
 
 import java.util.Date;
@@ -40,14 +41,14 @@ public class CalcProfits
                     {
                         if (ht.buyer)
                         {
-                            quoteass.profit += Double.parseDouble(ht.qty);
+                            quoteass.profit += Double.parseDouble(ht.qty)- Double.parseDouble(ht.commission);
                             quoteass.tradescount++;
                             baseass.profit -= Double.parseDouble(ht.quoteQty);
                         }
                         else
                         {
                             quoteass.profit -= Double.parseDouble(ht.qty);
-                            baseass.profit += Double.parseDouble(ht.quoteQty);
+                            baseass.profit += Double.parseDouble(ht.quoteQty) - Double.parseDouble(ht.commission);
                             baseass.tradescount++;
                         }
                     }
@@ -77,13 +78,24 @@ public class CalcProfits
                     List<FuturesTransactionHistoryEntity> futuresTransactionHistoryEntities = singletonDataBase.binanceDatabase.futuresTransactionHistoryDao().getByName(s);
                     if (futuresTransactionHistoryEntities != null && futuresTransactionHistoryEntities.size() > 0) {
                         for (FuturesTransactionHistoryEntity entity : futuresTransactionHistoryEntities) {
-                            if (entity.type.equals("1") || entity.equals("3"))
-                                profit.profit += Double.parseDouble(entity.amount);
-                            else
+                            if (entity.type.equals("1") || entity.type.equals("3")) {
                                 profit.profit -= Double.parseDouble(entity.amount);
+                            }
+                            else
+                                profit.profit += Double.parseDouble(entity.amount);
                         }
                     }
                 }
+
+                /*List<SwapHistoryEntity> swapHistoryEntityList = singletonDataBase.binanceDatabase.swapHistoryDao().getAll();
+                if (swapHistoryEntityList != null)
+                {
+                    for (SwapHistoryEntity entity : swapHistoryEntityList)
+                    {
+                        Profit quoteAsset = singletonDataBase.appDatabase.profitDao().getByName(entity.quoteAsset);
+                        Profit baseAsset = singletonDataBase.appDatabase.profitDao().getByName(entity.baseAsset);
+                    }
+                }*/
                 for (Profit profit : assets.values())
                     singletonDataBase.appDatabase.profitDao().insert(profit);
                 Log.d(TAG,"Profit calc done");
@@ -169,7 +181,11 @@ public class CalcProfits
             if (!portofolioHistory.asset.equals("USDT"))
                 candleStickEntity = singletonDataBase.binanceDatabase.candelStickDayDao().getByTimeAndAsset(startday.getTime(),endday.getTime(),portofolioHistory.asset+"USDT");
             if (candleStickEntity != null && candleStickEntity.close != null) {
-                portofolioHistory.price = Double.parseDouble(candleStickEntity.close);
+                if (portofolioHistory.amount > 0)
+                    portofolioHistory.price = Double.parseDouble(candleStickEntity.close);
+                else {
+                    portofolioHistory.price = 0;
+                }
             }
             historyHashMap.put(portofolioHistory.asset,portofolioHistory);
         }
@@ -202,10 +218,11 @@ public class CalcProfits
                 {
                     // one of 1( from spot to USDT-Ⓜ), 2( from USDT-Ⓜ to spot), 3( from spot to COIN-Ⓜ), and 4( from COIN-Ⓜ to spot)
                     PortofolioHistory portofolioHistory = getPortofolio(entity.asset,startday,endday,historyHashMap);
-                    if (entity.type.equals("1") || entity.equals("3"))
-                        portofolioHistory.amount += Double.parseDouble(entity.amount);
-                    else
+                    if (entity.type.equals("1") || entity.type.equals("3")) {
                         portofolioHistory.amount -= Double.parseDouble(entity.amount);
+                    }
+                    else
+                        portofolioHistory.amount += Double.parseDouble(entity.amount);
                 }
             }
         }
@@ -228,11 +245,21 @@ public class CalcProfits
                     {
                         quote.amount += Double.parseDouble(trade.qty) -Double.parseDouble(trade.commission);
                         base.amount -= Double.parseDouble(trade.quoteQty);
+                        if(base.amount < 0)
+                        {
+                            quote.amount += base.amount / Double.parseDouble(trade.price);
+                            base.amount = 0;
+                        }
                     }
                     else
                     {
                         quote.amount -= Double.parseDouble(trade.qty);
                         base.amount += Double.parseDouble(trade.quoteQty)-Double.parseDouble(trade.commission);
+                        if (quote.amount < 0)
+                        {
+                            base.amount += quote.amount * Double.parseDouble(trade.price);
+                            quote.amount = 0;
+                        }
                     }
                 }
             }
@@ -259,7 +286,8 @@ public class CalcProfits
             portofolioHistory = new PortofolioHistory();
             portofolioHistory.day = date.getTime();
             portofolioHistory.asset = name;
-            portofolioHistory.id = (portofolioHistory.day + portofolioHistory.asset).hashCode();
+            portofolioHistory.amount = 0;
+            portofolioHistory.id = portofolioHistory.day + (portofolioHistory.asset).hashCode();
             historyHashMap.put(name,portofolioHistory);
         }
         return portofolioHistory;

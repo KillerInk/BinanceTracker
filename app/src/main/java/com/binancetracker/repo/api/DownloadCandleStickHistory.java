@@ -8,7 +8,7 @@ import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.thread.RestExecuter;
 import com.binancetracker.utils.Settings;
 
-public class DownloadCandleStickHistory {
+public class DownloadCandleStickHistory extends DownloadHistory {
     private DownloadLatestDayHistoryForAllPairsRunner downloadLatestDayHistoryForAllPairsRunner;
     private DownloadFullDayHistoryForAllPairsRunner downloadFullDayHistoryForAllPairsRunner;
 
@@ -18,6 +18,7 @@ public class DownloadCandleStickHistory {
         downloadLatestDayHistoryForAllPairsRunner = new DownloadLatestDayHistoryForAllPairsRunner(clientFactory,singletonDataBase,settings);
     }
 
+    @Override
     public void setMessageEventListner(ClientFactoryRunner.MessageEvent messageEventListner)
     {
         downloadFullDayHistoryForAllPairsRunner.setMessageEventListner(messageEventListner);

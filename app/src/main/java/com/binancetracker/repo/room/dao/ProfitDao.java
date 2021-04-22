@@ -12,5 +12,7 @@ public abstract class ProfitDao extends BaseDao<Profit>{
 
     @Query("SELECT asset FROM profit")
     public abstract List<String> getAllAssets();
+    @Query("SELECT * FROM profit WHERE asset LIKE :name LIMIT 1")
+    public abstract Profit getByName(String name);
 
 }

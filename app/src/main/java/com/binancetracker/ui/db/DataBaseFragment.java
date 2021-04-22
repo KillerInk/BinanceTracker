@@ -28,54 +28,7 @@ public class DataBaseFragment extends Fragment {
         databaseFragmentBinding =  DataBindingUtil.inflate(inflater, R.layout.database_fragment, container, false);
         dataBaseViewModel = new ViewModelProvider(this).get(DataBaseViewModel.class);
         databaseFragmentBinding.setViewmodel(dataBaseViewModel);
-        databaseFragmentBinding.buttonStartSyncHistorOrders.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dataBaseViewModel.startSyncTradeHistory();
-            }
-        });
 
-        databaseFragmentBinding.buttonStartSyncDeposit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dataBaseViewModel.startSyncDeposits();
-            }
-        });
-
-        databaseFragmentBinding.buttonCalctrades.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dataBaseViewModel.calcTrades();
-            }
-        });
-
-        databaseFragmentBinding.buttonStartSyncWithdraw.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dataBaseViewModel.startSyncWithdraws();
-            }
-        });
-
-        databaseFragmentBinding.buttonStartSyncPairFullHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dataBaseViewModel.startDownloadPriceHistoryDayFull();
-            }
-        });
-
-        databaseFragmentBinding.buttonCalcPortofolioHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dataBaseViewModel.calcLifeTimeHistory();
-            }
-        });
-
-        databaseFragmentBinding.buttonStartSyncFuturesTransactionHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dataBaseViewModel.startDownloadFuturesTransactionHistory();
-            }
-        });
         return databaseFragmentBinding.getRoot();
     }
 }

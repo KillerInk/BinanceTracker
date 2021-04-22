@@ -182,13 +182,13 @@ public class LineChartModel extends BaseObservable
         {
             float pos = (float) (portofolioHistory.amount * portofolioHistory.price);
 
-            if(pos > 10f) {
+            //if(pos > 10f) {
                 position += pos;
                 Entry entry = new Entry(start.getTime(), pos);
-                entry.setData(portofolioHistory.asset);
+                entry.setData(portofolioHistory);
                 entrysList.get(portofolioHistory.asset).add(entry);
                 findMinMax(position,pos);
-            }
+            //}
         }
 
         Entry entry = new Entry(start.getTime(), (float) position);

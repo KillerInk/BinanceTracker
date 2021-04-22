@@ -8,7 +8,7 @@ import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.thread.RestExecuter;
 
 
-public class DownloadDepositHistory
+public class DownloadDepositHistory extends DownloadHistory
 {
     private DownloadDepositFullHistoryRunner fullHistoryRunner;
     private Download30DaysDepositHistoryRunner d30daysHistorRunner;
@@ -19,6 +19,7 @@ public class DownloadDepositHistory
         d30daysHistorRunner = new Download30DaysDepositHistoryRunner(clientFactory,singletonDataBase);
     }
 
+    @Override
     public void setMessageEventListner(ClientFactoryRunner.MessageEvent messageEventListner)
     {
         fullHistoryRunner.setMessageEventListner(messageEventListner);

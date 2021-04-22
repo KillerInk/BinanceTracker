@@ -7,7 +7,7 @@ import com.binancetracker.repo.api.runnable.DownloadWithdrawFullHistory;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.thread.RestExecuter;
 
-public class DownloadWithdrawHistory {
+public class DownloadWithdrawHistory extends DownloadHistory {
     private DownloadWithdrawFullHistory downloadWithdrawFullHistory;
     private Download30DaysWithdrawHistoryRunner download30DaysWithdrawHistoryRunner;
 
@@ -29,9 +29,9 @@ public class DownloadWithdrawHistory {
         else download30DaysWithdrawHistoryRunner.run();
     }
 
-    public void setMessageEvent(ClientFactoryRunner.MessageEvent messageEvent)
-    {
-        download30DaysWithdrawHistoryRunner.setMessageEventListner(messageEvent);
-        downloadWithdrawFullHistory.setMessageEventListner(messageEvent);
+    @Override
+    public void setMessageEventListner(ClientFactoryRunner.MessageEvent messageEventListner) {
+        download30DaysWithdrawHistoryRunner.setMessageEventListner(messageEventListner);
+        downloadWithdrawFullHistory.setMessageEventListner(messageEventListner);
     }
 }

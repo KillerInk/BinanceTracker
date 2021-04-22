@@ -8,7 +8,7 @@ import com.binancetracker.repo.api.runnable.DownloadFuturesTransactionHistory;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.thread.RestExecuter;
 
-public class DownloadFuturesHistory {
+public class DownloadFuturesHistory extends DownloadHistory{
     private DownloadFuturesTransactionHistory downloadFuturesTransactionHistory;
 
     public DownloadFuturesHistory(BinanceSpotApiClientFactory binanceApiSpotRestClient, SingletonDataBase singletonDataBase)
@@ -16,6 +16,7 @@ public class DownloadFuturesHistory {
         downloadFuturesTransactionHistory = new DownloadFuturesTransactionHistory(binanceApiSpotRestClient,singletonDataBase);
     }
 
+    @Override
     public void setMessageEventListner(ClientFactoryRunner.MessageEvent tradeHistoryEventListner) {
         downloadFuturesTransactionHistory.setMessageEventListner(tradeHistoryEventListner);
     }

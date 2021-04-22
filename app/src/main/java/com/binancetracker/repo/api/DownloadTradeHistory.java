@@ -8,7 +8,7 @@ import com.binancetracker.repo.api.runnable.DownloadTradeFullHistoryRunner;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.thread.RestExecuter;
 
-public class DownloadTradeHistory {
+public class DownloadTradeHistory extends DownloadHistory {
 
     private DownloadTradeFullHistoryRunner downloadTradeFullHistoryRunner;
     private DownloadLastTradeHistoryRunner downloadLastTradeHistoryRunner;
@@ -17,11 +17,6 @@ public class DownloadTradeHistory {
     {
         downloadTradeFullHistoryRunner = new DownloadTradeFullHistoryRunner(clientFactory,singletonDataBase);
         downloadLastTradeHistoryRunner = new DownloadLastTradeHistoryRunner(clientFactory,singletonDataBase);
-    }
-
-    public void setHistoryEvent(ClientFactoryRunner.MessageEvent historyEvent) {
-        downloadTradeFullHistoryRunner.setMessageEventListner(historyEvent);
-        downloadLastTradeHistoryRunner.setMessageEventListner(historyEvent);
     }
 
     public void getFullHistory()
@@ -36,4 +31,9 @@ public class DownloadTradeHistory {
         else downloadLastTradeHistoryRunner.run();
     }
 
+    @Override
+    public void setMessageEventListner(ClientFactoryRunner.MessageEvent messageEventListner) {
+        downloadTradeFullHistoryRunner.setMessageEventListner(messageEventListner);
+        downloadLastTradeHistoryRunner.setMessageEventListner(messageEventListner);
+    }
 }

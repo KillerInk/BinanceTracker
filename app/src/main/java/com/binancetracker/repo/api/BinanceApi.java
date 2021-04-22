@@ -22,6 +22,7 @@ public class BinanceApi {
     private DownloadWithdrawHistory downloadWithdrawHistory;
     private DownloadCandleStickHistory downloadCandleStickHistory;
     private DownloadFuturesHistory downloadFuturesHistory;
+    private DownloadSwapHistory downloadSwapHistory;
     private Settings settings;
     private SingletonDataBase singletonDataBase;
 
@@ -41,6 +42,7 @@ public class BinanceApi {
         downloadWithdrawHistory = new DownloadWithdrawHistory(spotClientFactory,singletonDataBase);
         downloadCandleStickHistory = new DownloadCandleStickHistory(spotClientFactory,singletonDataBase,settings);
         downloadFuturesHistory = new DownloadFuturesHistory(spotClientFactory,singletonDataBase);
+        downloadSwapHistory = new DownloadSwapHistory(BinanceAbstractFactory.createSwapFactory(key,secretKey),singletonDataBase);
     }
 
     public AccountBalance getAccountBalance() {
@@ -70,6 +72,10 @@ public class BinanceApi {
 
     public DownloadFuturesHistory getDownloadFuturesHistory() {
         return downloadFuturesHistory;
+    }
+
+    public DownloadSwapHistory getDownloadSwapHistory() {
+        return downloadSwapHistory;
     }
 
     private Account account = null;
