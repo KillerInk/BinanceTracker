@@ -165,6 +165,7 @@ public class LineChartFragment extends Fragment {
         mViewModel.lineChartModel.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
+
                 fragmentBinding.chart2.post(new Runnable() {
                     @Override
                     public void run() {
