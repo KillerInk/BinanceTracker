@@ -46,6 +46,13 @@
         android:text="Sync Liquid Swap History"
         android:onClick="@{()->viewmodel.startDownloadLiquidSwapHistory()}"/>-->
 
+    <Button
+        android:id="@+id/button_startSyncSavingPurchaseHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sync Saving Purchase History"
+        android:onClick="@{()->viewmodel.startDownloadSavingPurchaseHistory()}"/>
+
 
 
     <TextView

@@ -17,7 +17,7 @@ public class DownloadLatestDayHistoryForAllPairsRunner extends DownloadFullDayHi
     }
 
     @Override
-    public void run() {
+    public void processRun() {
         long lastentrydate = singletonDataBase.binanceDatabase.candelStickDayDao().getLatestDate();
         BinanceApiSpotRestClient client = clientFactory.newRestClient();
         List<String> assets = getPairsToDownload();

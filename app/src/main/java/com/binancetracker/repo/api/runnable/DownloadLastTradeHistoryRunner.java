@@ -15,7 +15,7 @@ public class DownloadLastTradeHistoryRunner extends DownloadTradeFullHistoryRunn
     }
 
     @Override
-    public void run() {
+    public void processRun() {
         List<String> tradedPairs = singletonDataBase.binanceDatabase.historyTradeDao().getTradedPairs();
         if (tradedPairs != null && tradedPairs.size() >0)
         {

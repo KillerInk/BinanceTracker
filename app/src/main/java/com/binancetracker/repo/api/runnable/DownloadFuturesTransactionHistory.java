@@ -22,7 +22,7 @@ public class DownloadFuturesTransactionHistory extends ClientFactoryRunner<Binan
     }
 
     @Override
-    public void run() {
+    public void processRun() {
         BinanceApiSpotRestClient client = clientFactory.newRestClient();
         List<String> assets = singletonDataBase.appDatabase.assetModelDao().getAllAssets();
         singletonDataBase.binanceDatabase.futuresTransactionHistoryDao().deleteAll();

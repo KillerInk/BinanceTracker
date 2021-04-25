@@ -40,7 +40,7 @@ import com.binancetracker.repo.room.entity.WithdrawHistoryEntity;
                 PurchaseRecordEntity.class,
                 InterestHistoryEntity.class
         },
-        version = 4)
+        version = 5)
 public abstract class BinanceDatabase extends RoomDatabase {
     public abstract MarketDao marketDao();
     public abstract HistoryTradeDao historyTradeDao();

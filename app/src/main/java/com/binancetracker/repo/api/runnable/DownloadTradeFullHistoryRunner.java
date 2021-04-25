@@ -31,7 +31,7 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner<BinanceS
 
 
     @Override
-    public void run() {
+    public void processRun() {
         Log.d(TAG,"getFullHistory");
         singletonDataBase.binanceDatabase.historyTradeDao().deleteAll();
         BinanceApiSpotRestClient client = clientFactory.newRestClient();

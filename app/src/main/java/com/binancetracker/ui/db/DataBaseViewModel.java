@@ -20,6 +20,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class DataBaseViewModel extends ViewModel
 {
     public ObservableField<String> dbstatus = new ObservableField<>();
+    public ObservableField<String> errorMSG = new ObservableField<>();
     private int max;
     private BinanceApi binanceApi;
     private SingletonDataBase singletonDataBase;
@@ -75,6 +76,12 @@ public class DataBaseViewModel extends ViewModel
         binanceApi.getDownloadSwapHistory().downloadLiquidSwapHistory();
     }
 
+    public void startDownloadSavingPurchaseHistory()
+    {
+        binanceApi.getDownloadPurchaseHistory().setMessageEventListner(messageEvent);
+        binanceApi.getDownloadPurchaseHistory().downloadPurchaseHistory();
+    }
+
     public void calcTrades()
     {
         CalcProfits profits = new CalcProfits();
@@ -100,6 +107,7 @@ public class DataBaseViewModel extends ViewModel
         binanceApi.getDownloadTradeHistory().setMessageEventListner(null);
         binanceApi.getDownloadFuturesHistory().setMessageEventListner(null);
         binanceApi.getDownloadSwapHistory().setMessageEventListner(null);
+        binanceApi.getDownloadPurchaseHistory().setMessageEventListner(null);
     }
 
     private ClientFactoryRunner.MessageEvent messageEvent = new ClientFactoryRunner.MessageEvent() {
@@ -137,6 +145,13 @@ public class DataBaseViewModel extends ViewModel
                     resetMessageEvent();
                 }
             });
+        }
+
+        @Override
+        public void onError(String msg) {
+            dbstatus.set("Sync failed: " + msg);
+            errorMSG.set(msg);
+            resetMessageEvent();
         }
     };
 

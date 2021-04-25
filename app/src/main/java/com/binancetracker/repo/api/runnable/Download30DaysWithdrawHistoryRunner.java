@@ -18,7 +18,7 @@ public class Download30DaysWithdrawHistoryRunner extends DownloadWithdrawFullHis
     }
 
     @Override
-    public void run() {
+    public void processRun() {
         BinanceApiSpotRestClient client = clientFactory.newRestClient();
         MyTime endtime = new MyTime(System.currentTimeMillis());
         MyTime starttime = new MyTime(endtime.getTime()).setDays(-30);

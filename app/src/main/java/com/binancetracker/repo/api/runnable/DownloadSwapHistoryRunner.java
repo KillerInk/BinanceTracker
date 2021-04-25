@@ -15,7 +15,7 @@ public class DownloadSwapHistoryRunner extends ClientFactoryRunner<BinanceSwapAp
     }
 
     @Override
-    public void run() {
+    public void processRun() {
 
         fireOnSyncStart(0);
         BinanceApiSwapRestClient client = clientFactory.newRestClient();

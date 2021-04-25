@@ -17,7 +17,7 @@ public class DownloadLiquidSwapHistoryRunner extends ClientFactoryRunner<Binance
     }
 
     @Override
-    public void run() {
+    public void processRun() {
         fireOnSyncStart(0);
         BinanceApiSwapRestClient client = clientFactory.newRestClient();
         MyTime  startTime = new MyTime(System.currentTimeMillis());

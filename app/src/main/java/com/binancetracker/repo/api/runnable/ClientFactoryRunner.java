@@ -1,5 +1,6 @@
 package com.binancetracker.repo.api.runnable;
 
+import com.binance.api.client.exception.BinanceApiException;
 import com.binance.api.client.factory.BinanceFactory;
 import com.binance.api.client.factory.BinanceSpotApiClientFactory;
 import com.binancetracker.repo.room.SingletonDataBase;
@@ -11,6 +12,7 @@ public abstract class ClientFactoryRunner<T extends BinanceFactory> implements R
         void onSyncStart(int max);
         void onSyncUpdate(int currentmarket,String msg);
         void onSyncEnd();
+        void onError(String msg);
     }
 
     protected T clientFactory;
@@ -44,4 +46,23 @@ public abstract class ClientFactoryRunner<T extends BinanceFactory> implements R
         if (messageEventListner != null)
             messageEventListner.onSyncEnd();
     }
+
+    protected void fireOnError(String msg)
+    {
+        if (messageEventListner != null)
+            messageEventListner.onError(msg);
+    }
+
+    @Override
+    public void run() {
+        try {
+            processRun();
+        }
+        catch (BinanceApiException e)
+        {
+            fireOnError(e.getMessage());
+        }
+    }
+
+    public abstract void processRun();
 }

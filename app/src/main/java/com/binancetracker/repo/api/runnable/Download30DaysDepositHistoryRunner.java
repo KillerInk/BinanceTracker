@@ -18,7 +18,7 @@ public class Download30DaysDepositHistoryRunner extends DownloadDepositFullHisto
     }
 
     @Override
-    public void run() {
+    public void processRun() {
         BinanceApiSpotRestClient client = clientFactory.newRestClient();
         MyTime endtime = new MyTime(System.currentTimeMillis());
         MyTime starttime = new MyTime(endtime.getTime()).setDays(-30);
@@ -29,4 +29,5 @@ public class Download30DaysDepositHistoryRunner extends DownloadDepositFullHisto
             addItemToDB(depositHistory);
         }
     }
+
 }

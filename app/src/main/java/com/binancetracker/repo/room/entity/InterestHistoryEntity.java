@@ -15,5 +15,5 @@ public class InterestHistoryEntity {
     @ColumnInfo(name ="productName")
     public String productName;
     @PrimaryKey
-    Long time;
+    public Long time;
 }
