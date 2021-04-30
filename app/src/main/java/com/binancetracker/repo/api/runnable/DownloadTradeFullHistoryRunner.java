@@ -6,11 +6,10 @@ import com.binance.api.client.api.sync.BinanceApiSpotRestClient;
 import com.binance.api.client.domain.account.Trade;
 import com.binance.api.client.domain.general.SymbolInfo;
 import com.binance.api.client.factory.BinanceSpotApiClientFactory;
-import com.binancetracker.repo.api.DownloadTradeHistory;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.room.dao.HistoryTradeDao;
 import com.binancetracker.repo.room.dao.MarketDao;
-import com.binancetracker.repo.room.entity.HistoryTrade;
+import com.binancetracker.repo.room.entity.HistoryTradeEntity;
 import com.binancetracker.repo.room.entity.Market;
 
 import java.util.List;
@@ -44,18 +43,7 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner<BinanceS
         }
         for (SymbolInfo i : info)
         {
-            Market market = new Market();
-            market.baseAsset = i.getBaseAsset();
-            market.baseAssetPrecision = i.getBaseAssetPrecision();
-            market.icebergAllowed = i.isIcebergAllowed();
-            market.isMarginTradingAllowed = i.isMarginTradingAllowed();
-            market.isSpotTradingAllowed = i.isSpotTradingAllowed();
-            market.ocoAllowed = i.isOcoAllowed();
-            market.quoteAsset = i.getQuoteAsset();
-            market.quotePrecision = i.getQuotePrecision();
-            market.quoteOrderQtyMarketAllowed = i.isQuoteOrderQtyMarketAllowed();
-            //market.status = i.getStatus();
-            market.symbol = i.getSymbol();
+            Market market = JsonToDBConverter.getMarketEntity(i);
             Log.d(TAG,"add Market to DB " + market.symbol);
             marketDao.insert(market);
         }
@@ -71,10 +59,17 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner<BinanceS
             fireOnSyncUpdate(i++, pair);
             getAllHistoryforPair(client,historyTradeDao,pair,0);
             Log.d(this.getClass().getSimpleName(),"download done for: " + pair + " found trades:" + tradescounter);
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         Log.d(this.getClass().getSimpleName(),"finished download fullHistory");
         fireOnSyncEnd();
     }
+
+
 
     private void getAllHistoryforPair(BinanceApiSpotRestClient client,HistoryTradeDao historyTradeDao,String pair, long id)
     {
@@ -93,17 +88,17 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner<BinanceS
     }
 
     private void insertHistotrade(HistoryTradeDao historyTradeDao, Trade t) {
-        HistoryTrade historyTrade = new HistoryTrade();
-        historyTrade.commission = t.getCommission();
-        historyTrade.commissionAsset = t.getCommissionAsset();
-        historyTrade.id = t.getId();
-        historyTrade.price = t.getPrice();
-        historyTrade.qty = t.getQty();
-        historyTrade.quoteQty = t.getQuoteQty();
-        historyTrade.time = t.getTime();
-        historyTrade.symbol = t.getSymbol();
-        historyTrade.buyer = t.isBuyer();
-        historyTrade.maker = t.isMaker();
-        historyTradeDao.insert(historyTrade);
+        HistoryTradeEntity historyTradeEntity = new HistoryTradeEntity();
+        historyTradeEntity.commission = t.getCommission();
+        historyTradeEntity.commissionAsset = t.getCommissionAsset();
+        historyTradeEntity.id = t.getId();
+        historyTradeEntity.price = t.getPrice();
+        historyTradeEntity.qty = t.getQty();
+        historyTradeEntity.quoteQty = t.getQuoteQty();
+        historyTradeEntity.time = t.getTime();
+        historyTradeEntity.symbol = t.getSymbol();
+        historyTradeEntity.buyer = t.isBuyer();
+        historyTradeEntity.maker = t.isMaker();
+        historyTradeDao.insert(historyTradeEntity);
     }
 }

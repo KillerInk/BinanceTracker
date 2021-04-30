@@ -4,6 +4,12 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.binance.api.client.domain.account.Withdraw;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @Entity
 public class WithdrawHistoryEntity {
 
@@ -40,4 +46,6 @@ public class WithdrawHistoryEntity {
      */
     @PrimaryKey
     public Long id;
+
+
 }

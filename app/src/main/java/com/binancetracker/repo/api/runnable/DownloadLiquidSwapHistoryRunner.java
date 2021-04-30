@@ -22,24 +22,19 @@ public class DownloadLiquidSwapHistoryRunner extends ClientFactoryRunner<Binance
         BinanceApiSwapRestClient client = clientFactory.newRestClient();
         MyTime  startTime = new MyTime(System.currentTimeMillis());
         startTime.setDays(-365 * 3);
-        List<LiquidityOperationRecord> liquidityOperationRecords = client.getPoolLiquidityOperationRecords(null,null,null,startTime.getTime(),System.currentTimeMillis(),100L);
+        List<LiquidityOperationRecord> liquidityOperationRecords = client.getPoolLiquidityOperationRecords(null,null,null,startTime.getUtcTime(),System.currentTimeMillis(),100L);
         if (liquidityOperationRecords != null)
         {
             List<LiquidityOperationRecordEntity> entities = new ArrayList<>();
             for (LiquidityOperationRecord record: liquidityOperationRecords)
             {
-                LiquidityOperationRecordEntity entity = new LiquidityOperationRecordEntity();
-                entity.shareAmount = record.getShareAmount();
-                entity.operation = record.getOperation();
-                entity.operationId = record.getOperationId();
-                entity.poolId = record.getPoolId();
-                entity.poolName = record.getPoolName();
-                entity.status = record.getStatus().name();
-                entity.updateTime = record.getUpdateTime();
+                LiquidityOperationRecordEntity entity = JsonToDBConverter.getLiquidityOperationRecordEntity(record);
                 entities.add(entity);
             }
             singletonDataBase.binanceDatabase.liquidityOperationRecordDao().insertAll(entities);
         }
         fireOnSyncEnd();
     }
+
+
 }

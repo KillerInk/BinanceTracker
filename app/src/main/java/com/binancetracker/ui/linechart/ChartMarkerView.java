@@ -13,7 +13,13 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class ChartMarkerView extends MarkerView {
+
+    private final SimpleDateFormat mFormat = new SimpleDateFormat("dd-MM-yy", Locale.ENGLISH);
     /**
      * Constructor. Sets up the MarkerView with a custom layout resource.
      *
@@ -40,7 +46,7 @@ public class ChartMarkerView extends MarkerView {
         }
         else
         {
-            textView.setText("Total:" + e.getY());
+            textView.setText(getTimeString(e.getX()) + "\n" + "Total:" + e.getY());
         }
         super.refreshContent(e, highlight);
     }
@@ -48,6 +54,7 @@ public class ChartMarkerView extends MarkerView {
     private String getMarkerString(PortofolioHistory history,Entry e)
     {
         StringBuilder b = new StringBuilder();
+        b.append(getTimeString(e.getX()) + "\n");
         b.append(history.asset).append(":");
         if (e.getX() < 1)
             b.append(ConvertingUtil.getDoubleString8F(e.getY()));
@@ -62,5 +69,10 @@ public class ChartMarkerView extends MarkerView {
     @Override
     public MPPointF getOffset() {
         return new MPPointF(-(getWidth()/2),-(getHeight()*5));
+    }
+
+    private String getTimeString(double time)
+    {
+        return mFormat.format(new Date((long) time));
     }
 }

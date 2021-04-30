@@ -104,20 +104,9 @@ public class DownloadFullDayHistoryForAllPairsRunner extends DownloadDepositFull
 
     private void addCandelStickToDb(Candlestick candlestick,String symbol)
     {
-        CandleStickEntity candleStickEntity = new CandleStickEntity();
-        candleStickEntity.close = candlestick.getClose();
-        candleStickEntity.closeTime = candlestick.getCloseTime();
-        candleStickEntity.high = candlestick.getHigh();
-        candleStickEntity.low = candlestick.getLow();
-        candleStickEntity.numberOfTrades = candlestick.getNumberOfTrades();
-        candleStickEntity.open = candlestick.getOpen();
-        candleStickEntity.openTime = candlestick.getOpenTime();
-        candleStickEntity.quoteAssetVolume = candlestick.getQuoteAssetVolume();
-        candleStickEntity.takerBuyBaseAssetVolume = candlestick.getTakerBuyBaseAssetVolume();
-        candleStickEntity.takerBuyQuoteAssetVolume = candlestick.getTakerBuyQuoteAssetVolume();
-        candleStickEntity.symbol =symbol;
-        candleStickEntity.volume = candlestick.getVolume();
-        candleStickEntity.id = (long)(symbol+candlestick.getOpenTime()).hashCode();
+        CandleStickEntity candleStickEntity = JsonToDBConverter.getCandleStickEntity(candlestick, symbol);
         singletonDataBase.binanceDatabase.candelStickDayDao().insert(candleStickEntity);
     }
+
+
 }

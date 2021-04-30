@@ -32,7 +32,7 @@ public class DownloadWithdrawFullHistory extends DownloadDepositFullHistoryRunne
         Log.d(TAG, "startTime:" + starttime.getString()+ " endTime:" + endtime.getString());
         fireOnSyncStart(checkyears);
         for (int i = 0; i < checkyears; i++) {
-            List<Withdraw> withdraws = client.getWalletEndPoint().getWithdrawHistory(starttime.getTime(),endtime.getTime());
+            List<Withdraw> withdraws = client.getWalletEndPoint().getWithdrawHistory(starttime.getUtcTime(),endtime.getUtcTime());
             if (withdraws != null)
             {
                 addWithdrawItemToDB(withdraws);
@@ -50,24 +50,7 @@ public class DownloadWithdrawFullHistory extends DownloadDepositFullHistoryRunne
             List<Withdraw> deposits = depositHistory;
             if (deposits != null) {
                 for (Withdraw deposit : deposits) {
-                    WithdrawHistoryEntity dhe = new WithdrawHistoryEntity();
-                    dhe.id = (long)deposit.getApplyTime().hashCode();
-                    dhe.asset = deposit.getAsset();
-                    dhe.amount = Double.parseDouble(deposit.getAmount());
-                    //'2020-12-23 19:38:57'
-                    SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    try {
-                        Date d = f.parse(deposit.getApplyTime());
-                        dhe.applyTime = d.getTime();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    if (deposit.getSuccessTime() != null)
-                        dhe.successTime = Long.parseLong(deposit.getSuccessTime());
-                    if (deposit.getAddress() != null)
-                        dhe.address = deposit.getAddress();
-                    if (deposit.getTxId() != null)
-                        dhe.txId = deposit.getTxId();
+                    WithdrawHistoryEntity dhe = JsonToDBConverter.getWithdrawHistoryEntity(deposit);
                     singletonDataBase.binanceDatabase.withdrawHistoryDao().insert(dhe);
                 }
             }

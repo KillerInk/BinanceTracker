@@ -29,7 +29,7 @@ public class DownloadDepositFullHistoryRunner extends ClientFactoryRunner<Binanc
         Log.d(TAG, "startTime:" + starttime.getString()+ " endTime:" + endtime.getString());
         fireOnSyncStart(checkyears);
         for (int i = 0; i < checkyears; i++) {
-            List<Deposit> deposits = client.getWalletEndPoint().getDepositHistory(starttime.getTime(),endtime.getTime());
+            List<Deposit> deposits = client.getWalletEndPoint().getDepositHistory(starttime.getUtcTime(),endtime.getUtcTime());
             if (deposits != null)
             {
                 addItemToDB(deposits);
@@ -47,16 +47,13 @@ public class DownloadDepositFullHistoryRunner extends ClientFactoryRunner<Binanc
             List<Deposit> deposits = depositHistory;
             if (deposits != null) {
                 for (Deposit deposit : deposits) {
-                    DepositHistoryEntity dhe = new DepositHistoryEntity();
-                    dhe.id = Long.parseLong(deposit.getInsertTime());
-                    dhe.asset = deposit.getAsset();
-                    dhe.amount = Double.parseDouble(deposit.getAmount());
-                    dhe.insertTime = Long.parseLong(deposit.getInsertTime());
-                    dhe.txId = deposit.getTxId();
+                    DepositHistoryEntity dhe = JsonToDBConverter.getDepositHistoryEntity(deposit);
                     singletonDataBase.binanceDatabase.depositHistoryDao().insert(dhe);
                 }
             }
         }
         Log.d(TAG,"download Deposit list done");
     }
+
+
 }

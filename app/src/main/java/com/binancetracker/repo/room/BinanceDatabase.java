@@ -17,7 +17,7 @@ import com.binancetracker.repo.room.dao.WithdrawHistoryDao;
 import com.binancetracker.repo.room.entity.CandleStickEntity;
 import com.binancetracker.repo.room.entity.DepositHistoryEntity;
 import com.binancetracker.repo.room.entity.FuturesTransactionHistoryEntity;
-import com.binancetracker.repo.room.entity.HistoryTrade;
+import com.binancetracker.repo.room.entity.HistoryTradeEntity;
 import com.binancetracker.repo.room.entity.InterestHistoryEntity;
 import com.binancetracker.repo.room.entity.LiquidityOperationRecordEntity;
 import com.binancetracker.repo.room.entity.Market;
@@ -29,7 +29,7 @@ import com.binancetracker.repo.room.entity.WithdrawHistoryEntity;
 @Database(entities =
         {
                 Market.class,
-                HistoryTrade.class,
+                HistoryTradeEntity.class,
                 DepositHistoryEntity.class,
                 WithdrawHistoryEntity.class,
                 CandleStickEntity.class,
@@ -40,7 +40,7 @@ import com.binancetracker.repo.room.entity.WithdrawHistoryEntity;
                 PurchaseRecordEntity.class,
                 InterestHistoryEntity.class
         },
-        version = 5)
+        version = 7)
 public abstract class BinanceDatabase extends RoomDatabase {
     public abstract MarketDao marketDao();
     public abstract HistoryTradeDao historyTradeDao();

@@ -5,11 +5,14 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.binance.api.client.domain.LiquidityOperationRecordStatus;
+import com.binance.api.client.domain.account.LiquidityOperationRecord;
 
 @Entity
 public class LiquidityOperationRecordEntity {
 
     @PrimaryKey
+    public Long id;
+    @ColumnInfo(name ="operationId")
     public Long operationId;
     @ColumnInfo(name ="poolId")
     public Long poolId;
@@ -23,4 +26,5 @@ public class LiquidityOperationRecordEntity {
     public Long updateTime;
     @ColumnInfo(name ="shareAmount")
     public String shareAmount;
+
 }

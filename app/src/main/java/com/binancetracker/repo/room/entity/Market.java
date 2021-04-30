@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.binance.api.client.domain.general.SymbolInfo;
+
 @Entity
 public class Market {
 

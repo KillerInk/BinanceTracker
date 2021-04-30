@@ -53,6 +53,20 @@
         android:text="Sync Saving Purchase History"
         android:onClick="@{()->viewmodel.startDownloadSavingPurchaseHistory()}"/>
 
+    <Button
+        android:id="@+id/button_startSyncSavingRedemptionHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sync Saving Redemption History"
+        android:onClick="@{()->viewmodel.startDownloadSavingRedemptionHistory()}"/>
+
+    <Button
+        android:id="@+id/button_startSyncSavingInterestHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sync Saving Redemption History"
+        android:onClick="@{()->viewmodel.startDownloadSavingInterestHistory()}"/>
+
 
 
     <TextView

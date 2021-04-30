@@ -37,13 +37,7 @@ public class DownloadFuturesTransactionHistory extends ClientFactoryRunner<Binan
                 if (historyList != null && historyList.getRows() != null) {
                     List<FuturesTransactionHistoryEntity> entities = new ArrayList<>();
                     for (FuturesTransactionHistory transactionHistory : historyList.getRows()) {
-                        FuturesTransactionHistoryEntity entity = new FuturesTransactionHistoryEntity();
-                        entity.amount = transactionHistory.getAmount();
-                        entity.asset = transactionHistory.getAsset();
-                        entity.status = transactionHistory.getStatus();
-                        entity.timestamp = transactionHistory.getTimestamp();
-                        entity.tranId = transactionHistory.getTranId();
-                        entity.type = transactionHistory.getType();
+                        FuturesTransactionHistoryEntity entity = JsonToDBConverter.getFuturesTransactionHistoryEntity(transactionHistory);
                         entities.add(entity);
                     }
                     singletonDataBase.binanceDatabase.futuresTransactionHistoryDao().insertAll(entities);
@@ -52,6 +46,8 @@ public class DownloadFuturesTransactionHistory extends ClientFactoryRunner<Binan
         }
         fireOnSyncEnd();
     }
+
+
 
     private boolean isFiat(String in)
     {

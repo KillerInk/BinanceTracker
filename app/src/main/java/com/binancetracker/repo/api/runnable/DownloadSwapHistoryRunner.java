@@ -25,20 +25,13 @@ public class DownloadSwapHistoryRunner extends ClientFactoryRunner<BinanceSwapAp
             List<SwapHistoryEntity> entities = new ArrayList<>();
             for (SwapHistory s : swapHistory)
             {
-                SwapHistoryEntity entity = new SwapHistoryEntity();
-                entity.baseAsset = s.getBaseAsset();
-                entity.baseQty = s.getBaseQty();
-                entity.fee = s.getFee();
-                entity.price = s.getPrice();
-                entity.quoteAsset = s.getQuoteAsset();
-                entity.status = s.getStatus();
-                entity.quoteQty = s.getQuoteQty();
-                entity.swapId = s.getSwapId();
-                entity.swapTime = s.getSwapTime();
+                SwapHistoryEntity entity = JsonToDBConverter.getSwapHistoryEntity(s);
                 entities.add(entity);
             }
             singletonDataBase.binanceDatabase.swapHistoryDao().insertAll(entities);
         }
         fireOnSyncEnd();
     }
+
+
 }

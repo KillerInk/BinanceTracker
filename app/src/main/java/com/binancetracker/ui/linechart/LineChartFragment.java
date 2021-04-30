@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.binancetracker.R;
 import com.binancetracker.databinding.LinechartFragmentBinding;
 import com.binancetracker.utils.ConvertingUtil;
+import com.binancetracker.utils.MyTime;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -129,19 +130,17 @@ public class LineChartFragment extends Fragment {
         xAxis.setTextSize(5f);
         xAxis.setTextColor(Color.WHITE);
         xAxis.setDrawAxisLine(true);
-        xAxis.setDrawGridLines(false);
+        //xAxis.setDrawGridLines(true);
         xAxis.setTextColor(Color.rgb(255, 192, 56));
         xAxis.setCenterAxisLabels(true);
         xAxis.setGranularity(1f); // one hour
         xAxis.setValueFormatter(new IAxisValueFormatter() {
 
-            private final SimpleDateFormat mFormat = new SimpleDateFormat("dd-MM-yy HH:mm:ss", Locale.ENGLISH);
-
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
 
                 //long millis = TimeUnit.HOURS.toMillis((long) value);
-                return mFormat.format(new Date((long) value));
+                return new MyTime((long)value).getString();
             }
         });
 

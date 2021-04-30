@@ -4,8 +4,12 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.binance.api.client.domain.account.FuturesTransactionHistory;
+
 @Entity
 public class FuturesTransactionHistoryEntity {
+    @PrimaryKey
+    public long id;
     @ColumnInfo(name = "asset")
     public String asset;
     @ColumnInfo(name = "tranId")
@@ -14,8 +18,9 @@ public class FuturesTransactionHistoryEntity {
     public String amount;
     @ColumnInfo(name = "type")
     public String type;
-    @PrimaryKey
+    @ColumnInfo(name = "timestamp")
     public long timestamp;
     @ColumnInfo(name = "status")
     public String status;
+
 }

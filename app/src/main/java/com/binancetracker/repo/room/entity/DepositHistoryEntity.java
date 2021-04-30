@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.binance.api.client.domain.account.Deposit;
+
 @Entity
 public class DepositHistoryEntity {
 
@@ -36,4 +38,5 @@ public class DepositHistoryEntity {
      */
     @ColumnInfo(name = "txId")
     public String txId;
+
 }

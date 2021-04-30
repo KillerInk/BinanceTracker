@@ -6,10 +6,10 @@ import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.room.entity.CandleStickEntity;
 import com.binancetracker.repo.room.entity.DepositHistoryEntity;
 import com.binancetracker.repo.room.entity.FuturesTransactionHistoryEntity;
-import com.binancetracker.repo.room.entity.HistoryTrade;
+import com.binancetracker.repo.room.entity.HistoryTradeEntity;
+import com.binancetracker.repo.room.entity.InterestHistoryEntity;
 import com.binancetracker.repo.room.entity.PortofolioHistory;
 import com.binancetracker.repo.room.entity.Profit;
-import com.binancetracker.repo.room.entity.SwapHistoryEntity;
 import com.binancetracker.repo.room.entity.WithdrawHistoryEntity;
 
 import java.util.Date;
@@ -33,11 +33,11 @@ public class CalcProfits
                 {
                     Log.d(TAG,"Pair:" + pair);
                     MarketPair mpair = new MarketPair(pair);
-                    List<HistoryTrade> trades = singletonDataBase.binanceDatabase.historyTradeDao().findByName(pair);
+                    List<HistoryTradeEntity> trades = singletonDataBase.binanceDatabase.historyTradeDao().findByName(pair);
                     Profit quoteass = getQuoteAsset(mpair,assets);
                     Profit baseass = getBaseAsset(mpair,assets);
 
-                    for (HistoryTrade ht : trades)
+                    for (HistoryTradeEntity ht : trades)
                     {
                         if (ht.buyer)
                         {
@@ -83,6 +83,13 @@ public class CalcProfits
                             }
                             else
                                 profit.profit += Double.parseDouble(entity.amount);
+                        }
+                    }
+
+                    List<InterestHistoryEntity> interestHistoryEntities = singletonDataBase.binanceDatabase.interestHistoryDao().getByName(s);
+                    if (interestHistoryEntities != null && interestHistoryEntities.size() > 0) {
+                        for (InterestHistoryEntity entity : interestHistoryEntities) {
+                            profit.profit += entity.interest;
                         }
                     }
                 }
@@ -142,14 +149,13 @@ public class CalcProfits
         long firstDepositTime = singletonDataBase.binanceDatabase.depositHistoryDao().getFirstDepositTime();
         MyTime startday = new MyTime(firstDepositTime).setDayToBegin();
         MyTime endday = new MyTime(firstDepositTime).setDayToEnd();
-        MyTime finalDay = new MyTime(System.currentTimeMillis()).setDayToBegin();
+        MyTime finalDay = new MyTime().setDayToEnd();
 
         HashMap<Long, HashMap<String, PortofolioHistory>> historyHashmapTime = new HashMap<>();
 
         while (startday.getTime() <= finalDay.getTime()) {
 
-            Date yesterday = new Date(startday.getTime());
-            yesterday.setDate(yesterday.getDate() -1);
+            MyTime yesterday = new MyTime(startday.getTime()).setDays(-1);
             HashMap<String, PortofolioHistory> yesterdayHistory = historyHashmapTime.get(yesterday.getTime());
             HashMap<String, PortofolioHistory> historyHashMap = new HashMap<>();
 
@@ -157,6 +163,7 @@ public class CalcProfits
             addDepositsForDay(startday,endday,historyHashMap,singletonDataBase);
             addFutureTransactions(startday,endday,historyHashMap,singletonDataBase);
             addTradesForDay(startday,endday,historyHashMap,singletonDataBase);
+            addInterestHistory(startday,endday,historyHashMap,singletonDataBase);
             setDay_ID_Price(startday, endday, historyHashMap,singletonDataBase);
 
             historyHashmapTime.put(startday.getTime(), historyHashMap);
@@ -177,15 +184,13 @@ public class CalcProfits
         {
             portofolioHistory.day = startday.getTime();
             portofolioHistory.id = portofolioHistory.day + (portofolioHistory.asset).hashCode();
+            long utcstartTime = startday.getUtcTime();
+            long utdend = endday.getUtcTime();
             CandleStickEntity candleStickEntity = null;
             if (!portofolioHistory.asset.equals("USDT"))
-                candleStickEntity = singletonDataBase.binanceDatabase.candelStickDayDao().getByTimeAndAsset(startday.getTime(),endday.getTime(),portofolioHistory.asset+"USDT");
+                candleStickEntity = singletonDataBase.binanceDatabase.candelStickDayDao().getByTimeAndAsset(utcstartTime,utdend,portofolioHistory.asset+"USDT");
             if (candleStickEntity != null && candleStickEntity.close != null) {
-                if (portofolioHistory.amount > 0)
-                    portofolioHistory.price = Double.parseDouble(candleStickEntity.close);
-                else {
-                    portofolioHistory.price = 0;
-                }
+                portofolioHistory.price = Double.parseDouble(candleStickEntity.close);
             }
             historyHashMap.put(portofolioHistory.asset,portofolioHistory);
         }
@@ -235,11 +240,11 @@ public class CalcProfits
         {
             for (String pair : traidedPairsForDay)
             {
-                List<HistoryTrade> trades = singletonDataBase.binanceDatabase.historyTradeDao().getTraidsByDayAndName(start.getTime(),end.getTime(), pair);
+                List<HistoryTradeEntity> trades = singletonDataBase.binanceDatabase.historyTradeDao().getTraidsByDayAndName(start.getTime(),end.getTime(), pair);
                 MarketPair mpair = new MarketPair(pair);
                 PortofolioHistory base = getPortofolio(mpair.getBaseAsset(),start,end,historyHashMap);
                 PortofolioHistory quote = getPortofolio(mpair.getQuoteAsset(),start,end,historyHashMap);
-                for (HistoryTrade trade : trades)
+                for (HistoryTradeEntity trade : trades)
                 {
                     if (trade.buyer)
                     {
@@ -291,5 +296,16 @@ public class CalcProfits
             historyHashMap.put(name,portofolioHistory);
         }
         return portofolioHistory;
+    }
+
+    private void addInterestHistory(MyTime startTime,MyTime endtime,HashMap<String, PortofolioHistory> historyHashMap,SingletonDataBase singletonDataBase)
+    {
+        List<InterestHistoryEntity> interestHistoryEntities = singletonDataBase.binanceDatabase.interestHistoryDao().getByTime(startTime.getTime(),endtime.getTime());
+        for (InterestHistoryEntity entity : interestHistoryEntities)
+        {
+            PortofolioHistory portofolioHistory = getPortofolio(entity.asset,startTime,endtime,historyHashMap);
+            portofolioHistory.amount += entity.interest;
+        }
+
     }
 }

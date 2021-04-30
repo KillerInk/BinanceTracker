@@ -16,7 +16,7 @@ import com.binancetracker.ui.main.AssetModel;
                 AssetModel.class,
                 PortofolioHistory.class
         },
-        version = 4)
+        version = 7)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract ProfitDao profitDao();
     public abstract AssetModelDao assetModelDao();

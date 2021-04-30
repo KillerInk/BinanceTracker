@@ -6,6 +6,8 @@ import androidx.room.PrimaryKey;
 
 @Entity
 public class InterestHistoryEntity {
+    @PrimaryKey
+    public long id;
     @ColumnInfo(name ="asset")
     public String asset;
     @ColumnInfo(name ="interest")
@@ -14,6 +16,6 @@ public class InterestHistoryEntity {
     public String lendingType;
     @ColumnInfo(name ="productName")
     public String productName;
-    @PrimaryKey
+    @ColumnInfo(name ="time")
     public Long time;
 }

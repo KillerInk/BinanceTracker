@@ -22,10 +22,10 @@ public class DownloadLatestDayHistoryForAllPairsRunner extends DownloadFullDayHi
         BinanceApiSpotRestClient client = clientFactory.newRestClient();
         List<String> assets = getPairsToDownload();
         MyTime endtime = new MyTime(System.currentTimeMillis());
-        MyTime starttime = new MyTime(endtime.getTime()).setDays(-30);
+        MyTime starttime = new MyTime(lastentrydate);
         Log.d(TAG, "startTime:" + starttime.getString()+ " endTime:" + endtime.getString());
         Log.d(TAG,"download start priceHistory for " + assets.size());
-        getCandlestickRangeForAssets(client, assets, endtime.getTime(), starttime.getTime());
+        getCandlestickRangeForAssets(client, assets, endtime.getUtcTime(), starttime.getUtcTime());
 
         Log.d(TAG,"download priceHistory done ");
     }

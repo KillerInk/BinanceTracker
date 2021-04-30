@@ -1,6 +1,7 @@
 package com.binancetracker.ui.linechart;
 
 import android.graphics.Color;
+import android.util.Log;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -16,7 +17,9 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -24,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 public class LineChartModel extends BaseObservable
 {
+    private static final String TAG =  LineChartModel.class.getSimpleName();
     private LineData data;
     private float max = 170f;
     private float min = 0f;
@@ -151,12 +155,14 @@ public class LineChartModel extends BaseObservable
         HashMap<String, List<Entry>> entrysList = new HashMap<>();
         MyTime start = new MyTime().setDays(-days).setDayToBegin();
         MyTime end = new MyTime(start.getTime()).setDayToEnd();
-        long today = System.currentTimeMillis();
+        MyTime today = new MyTime().setDayToEnd();
+        Log.v(TAG, "getdayEntries:" + days + " start " + start.getString() + " today" + today.getString());
         List<Entry> totalValueEntries = new ArrayList<>();
-        while (end.getTime() < today)
+        while (end.getTime() <= today.getTime())
         {
-            long s = start.getTime();
-            long e = end.getTime();
+            Log.v(TAG,  "current day to get " + start.getString());
+            long s = start.getUtcTime();
+            long e = end.getUtcTime();
             List<PortofolioHistory> histories;
             if (asset == null)
                 histories = singletonDataBase.appDatabase.portofolioHistoryDao().getByTimeRange(s,e);
@@ -167,7 +173,8 @@ public class LineChartModel extends BaseObservable
             start.setDays(1);
         }
         max = (float) (max + ((float)max*0.3 ));
-        entrysList.put("TOTAL",totalValueEntries);
+        if (asset == null)
+            entrysList.put("TOTAL",totalValueEntries);
         return entrysList;
     }
 

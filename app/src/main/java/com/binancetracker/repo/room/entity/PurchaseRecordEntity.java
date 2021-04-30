@@ -4,13 +4,17 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.binance.api.client.domain.saving.PurchaseRecord;
+
 @Entity
 public class PurchaseRecordEntity {
+    @PrimaryKey
+    public long id;
     @ColumnInfo(name ="amount")
     public String amount;
     @ColumnInfo(name ="asset")
     public String asset;
-    @PrimaryKey
+    @ColumnInfo(name ="creatTime")
     public Long creatTime;
     @ColumnInfo(name ="lot")
     public Long lot;
@@ -20,4 +24,5 @@ public class PurchaseRecordEntity {
     public Long purchaseId;
     @ColumnInfo(name ="status")
     public String status;
+
 }

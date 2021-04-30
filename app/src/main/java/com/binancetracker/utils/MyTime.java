@@ -59,5 +59,10 @@ public class MyTime {
         return DateFormat.getDateTimeInstance().format(date);
     }
 
+    public long getUtcTime()
+    {
+        return date.getTime() - (date.getTimezoneOffset()*60*1000);
+    }
+
 
 }

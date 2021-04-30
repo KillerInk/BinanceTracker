@@ -6,7 +6,6 @@ import com.binance.api.client.domain.account.Account;
 import com.binance.api.client.factory.BinanceAbstractFactory;
 import com.binance.api.client.factory.BinanceSpotApiClientFactory;
 
-import com.binancetracker.repo.api.runnable.DownloadFuturesTransactionHistory;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.utils.Settings;
 
@@ -23,7 +22,7 @@ public class BinanceApi {
     private DownloadCandleStickHistory downloadCandleStickHistory;
     private DownloadFuturesHistory downloadFuturesHistory;
     private DownloadSwapHistory downloadSwapHistory;
-    private DownloadPurchaseHistory downloadPurchaseHistory;
+    private DownloadSavingHistory downloadSavingHistory;
     private Settings settings;
     private SingletonDataBase singletonDataBase;
 
@@ -44,7 +43,7 @@ public class BinanceApi {
         downloadCandleStickHistory = new DownloadCandleStickHistory(spotClientFactory,singletonDataBase,settings);
         downloadFuturesHistory = new DownloadFuturesHistory(spotClientFactory,singletonDataBase);
         downloadSwapHistory = new DownloadSwapHistory(BinanceAbstractFactory.createSwapFactory(key,secretKey),singletonDataBase);
-        downloadPurchaseHistory = new DownloadPurchaseHistory(BinanceAbstractFactory.createSavingFactory(key,secretKey),singletonDataBase);
+        downloadSavingHistory = new DownloadSavingHistory(BinanceAbstractFactory.createSavingFactory(key,secretKey),singletonDataBase);
     }
 
     public AccountBalance getAccountBalance() {
@@ -80,8 +79,8 @@ public class BinanceApi {
         return downloadSwapHistory;
     }
 
-    public DownloadPurchaseHistory getDownloadPurchaseHistory() {
-        return downloadPurchaseHistory;
+    public DownloadSavingHistory getDownloadSavingHistory() {
+        return downloadSavingHistory;
     }
 
     private Account account = null;

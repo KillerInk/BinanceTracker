@@ -7,7 +7,6 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
 import com.binancetracker.repo.api.BinanceApi;
-import com.binancetracker.repo.api.DownloadTradeHistory;
 import com.binancetracker.repo.api.runnable.ClientFactoryRunner;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.utils.CalcProfits;
@@ -78,8 +77,20 @@ public class DataBaseViewModel extends ViewModel
 
     public void startDownloadSavingPurchaseHistory()
     {
-        binanceApi.getDownloadPurchaseHistory().setMessageEventListner(messageEvent);
-        binanceApi.getDownloadPurchaseHistory().downloadPurchaseHistory();
+        binanceApi.getDownloadSavingHistory().setMessageEventListner(messageEvent);
+        binanceApi.getDownloadSavingHistory().downloadPurchaseHistory();
+    }
+
+    public void startDownloadSavingRedemptionHistory()
+    {
+        binanceApi.getDownloadSavingHistory().setMessageEventListner(messageEvent);
+        binanceApi.getDownloadSavingHistory().downloadRedemptionHistory();
+    }
+
+    public void startDownloadSavingInterestHistory()
+    {
+        binanceApi.getDownloadSavingHistory().setMessageEventListner(messageEvent);
+        binanceApi.getDownloadSavingHistory().downloadInterestHistory();
     }
 
     public void calcTrades()
@@ -107,7 +118,7 @@ public class DataBaseViewModel extends ViewModel
         binanceApi.getDownloadTradeHistory().setMessageEventListner(null);
         binanceApi.getDownloadFuturesHistory().setMessageEventListner(null);
         binanceApi.getDownloadSwapHistory().setMessageEventListner(null);
-        binanceApi.getDownloadPurchaseHistory().setMessageEventListner(null);
+        binanceApi.getDownloadSavingHistory().setMessageEventListner(null);
     }
 
     private ClientFactoryRunner.MessageEvent messageEvent = new ClientFactoryRunner.MessageEvent() {

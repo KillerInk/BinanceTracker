@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.binance.api.client.domain.market.Candlestick;
+
 @Entity
 public class CandleStickEntity {
     @PrimaryKey()
@@ -32,4 +34,5 @@ public class CandleStickEntity {
     public String takerBuyBaseAssetVolume;
     @ColumnInfo(name = "takerBuyQuoteAssetVolume")
     public String takerBuyQuoteAssetVolume;
+
 }

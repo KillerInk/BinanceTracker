@@ -4,8 +4,11 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.binance.api.client.domain.account.Trade;
+import com.binancetracker.repo.room.dao.HistoryTradeDao;
+
 @Entity
-public class HistoryTrade {
+public class HistoryTradeEntity {
 
     /**
      * Trade id.

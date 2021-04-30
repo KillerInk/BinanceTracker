@@ -4,7 +4,6 @@ import androidx.room.Dao;
 import androidx.room.Query;
 
 import com.binancetracker.repo.room.entity.FuturesTransactionHistoryEntity;
-import com.binancetracker.repo.room.entity.HistoryTrade;
 
 import java.util.List;
 
