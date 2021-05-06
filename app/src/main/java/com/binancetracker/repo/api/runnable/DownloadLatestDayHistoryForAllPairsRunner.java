@@ -25,7 +25,7 @@ public class DownloadLatestDayHistoryForAllPairsRunner extends DownloadFullDayHi
         MyTime starttime = new MyTime(lastentrydate);
         Log.d(TAG, "startTime:" + starttime.getString()+ " endTime:" + endtime.getString());
         Log.d(TAG,"download start priceHistory for " + assets.size());
-        getCandlestickRangeForAssets(client, assets, endtime.getUtcTime(), starttime.getUtcTime());
+        getCandlestickRangeForAssets(client, assets, null, null,100);
 
         Log.d(TAG,"download priceHistory done ");
     }

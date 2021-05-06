@@ -36,20 +36,20 @@ public class DownloadFullDayHistoryForAllPairsRunner extends DownloadDepositFull
         long starttime = endtime - (days30 * checkyears);
         Log.d(TAG,"download start priceHistory for " + assets.size());
         Log.d(TAG, "startTime:" + DateFormat.getDateTimeInstance().format(new Date(starttime)) + " endTime:" + DateFormat.getDateTimeInstance().format(new Date(endtime)));
-        getCandlestickRangeForAssets(client, assets, endtime, starttime);
+        getCandlestickRangeForAssets(client, assets, endtime, starttime,1000);
 
         fireOnSyncEnd();
         Log.d(TAG,"download priceHistory done ");
     }
 
-    protected void getCandlestickRangeForAssets(BinanceApiSpotRestClient client, List<String> assets, long endtime, long starttime) {
+    protected void getCandlestickRangeForAssets(BinanceApiSpotRestClient client, List<String> assets, Long endtime, Long starttime, int limit) {
         int i = 1;
         try {
             for (String asset : assets)
             {
                 fireOnSyncUpdate(i,"download priceHistory for " + asset);
                 Log.d(TAG,"download priceHistory for " + asset);
-                List<Candlestick> candlestickList = client.getCandlestickBars(asset, CandlestickInterval.DAILY,1000,starttime,endtime);
+                List<Candlestick> candlestickList = client.getCandlestickBars(asset, CandlestickInterval.DAILY,limit,starttime,endtime);
                 Log.d(TAG,"candle count: " + candlestickList.size());
                 addListToDb(candlestickList,asset);
                 if (candlestickList.size() == 1000)
