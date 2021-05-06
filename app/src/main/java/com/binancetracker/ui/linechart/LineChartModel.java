@@ -154,20 +154,26 @@ public class LineChartModel extends BaseObservable
         max = 0;
         HashMap<String, List<Entry>> entrysList = new HashMap<>();
         MyTime start = new MyTime().setDays(-days).setDayToBegin();
+
         MyTime end = new MyTime(start.getTime()).setDayToEnd();
         MyTime today = new MyTime().setDayToEnd();
         Log.v(TAG, "getdayEntries:" + days + " start " + start.getString() + " today" + today.getString());
         List<Entry> totalValueEntries = new ArrayList<>();
-        while (end.getTime() <= today.getTime())
+        while (start.getTime() <= today.getTime())
         {
-            Log.v(TAG,  "current day to get " + start.getString());
-            long s = start.getUtcTime();
-            long e = end.getUtcTime();
+
+            long s = start.getTime();
+            long e = end.getTime();
             List<PortofolioHistory> histories;
             if (asset == null)
                 histories = singletonDataBase.appDatabase.portofolioHistoryDao().getByTimeRange(s,e);
             else
                 histories = singletonDataBase.appDatabase.portofolioHistoryDao().getByTimeAndAsset(s,e,asset);
+
+            if (histories != null)
+                Log.v(TAG,  "current day to get " + start.getString() + " histories:" + histories.size());
+            else
+                Log.v(TAG,  "current day to get " + start.getString() + " histories:null");
             processHistory(entrysList, start, totalValueEntries, histories);
             end.setDays(1);
             start.setDays(1);
@@ -191,14 +197,14 @@ public class LineChartModel extends BaseObservable
 
             //if(pos > 10f) {
                 position += pos;
-                Entry entry = new Entry(start.getTime(), pos);
+                Entry entry = new Entry(start.getTime()/1000, pos);
                 entry.setData(portofolioHistory);
                 entrysList.get(portofolioHistory.asset).add(entry);
                 findMinMax(position,pos);
             //}
         }
 
-        Entry entry = new Entry(start.getTime(), (float) position);
+        Entry entry = new Entry(start.getTime()/1000, (float) position);
         entry.setData("Total");
         totalValueEntries.add(entry);
     }

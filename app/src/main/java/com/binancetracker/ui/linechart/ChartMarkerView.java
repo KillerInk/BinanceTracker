@@ -73,6 +73,6 @@ public class ChartMarkerView extends MarkerView {
 
     private String getTimeString(double time)
     {
-        return mFormat.format(new Date((long) time));
+        return mFormat.format(new Date((long) time*1000));
     }
 }

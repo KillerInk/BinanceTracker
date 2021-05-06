@@ -61,8 +61,13 @@ public class MyTime {
 
     public long getUtcTime()
     {
-        return date.getTime() - (date.getTimezoneOffset()*60*1000);
+        return date.getTime() - getTimeZoneOffestMS();
     }
+
+   public long getTimeZoneOffestMS()
+   {
+       return date.getTimezoneOffset()*60*1000;
+   }
 
 
 }

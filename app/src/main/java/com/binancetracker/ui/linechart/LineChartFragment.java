@@ -126,21 +126,20 @@ public class LineChartFragment extends Fragment {
 
         XAxis xAxis = fragmentBinding.chart2.getXAxis();
         //xAxis.setPosition(XAxis.XAxisPosition.TOP);
-        xAxis.setAvoidFirstLastClipping(true);
+        //xAxis.setAvoidFirstLastClipping(true);
         xAxis.setTextSize(5f);
         xAxis.setTextColor(Color.WHITE);
-        xAxis.setDrawAxisLine(true);
+        xAxis.setCenterAxisLabels(true);
+        //xAxis.setDrawAxisLine(true);
         //xAxis.setDrawGridLines(true);
         xAxis.setTextColor(Color.rgb(255, 192, 56));
-        xAxis.setCenterAxisLabels(true);
-        xAxis.setGranularity(1f); // one hour
+        //xAxis.setCenterAxisLabels(true);
+        //xAxis.setGranularity(0.5f); // one hour
         xAxis.setValueFormatter(new IAxisValueFormatter() {
-
+            private final SimpleDateFormat mFormat = new SimpleDateFormat("dd-MM-yy", Locale.ENGLISH);
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-
-                //long millis = TimeUnit.HOURS.toMillis((long) value);
-                return new MyTime((long)value).getString();
+                return mFormat.format(new Date((long) value *1000));
             }
         });
 
