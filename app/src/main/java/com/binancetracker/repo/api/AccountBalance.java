@@ -47,7 +47,7 @@ public class AccountBalance {
         this.accountBalanceEventListner = accountBalanceEventListner;
     }
 
-    public void startListenToAssetBalance() {
+    public void  startListenToAssetBalance() {
         this.listenKey = initializeAssetBalanceCacheAndStreamSession();
         startAccountBalanceEventStreaming(listenKey);
     }

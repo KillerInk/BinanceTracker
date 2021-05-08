@@ -92,11 +92,16 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
             }).start();
             MyTime lastSync = new MyTime(settings.getLastSync()).setMinutes(5);
             if (lastSync.getTime() < System.currentTimeMillis()) {
-                RestExecuter.addTask(updateHistoryRunner);
-                settings.setLastSync(System.currentTimeMillis());
+                updateHistory();
             }
         }
     };
+
+    public void updateHistory()
+    {
+        RestExecuter.addTask(updateHistoryRunner);
+        settings.setLastSync(System.currentTimeMillis());
+    }
 
     private Runnable updateHistoryRunner = new Runnable() {
         @Override
@@ -198,6 +203,7 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
             assetModel.setAssetName(symbol);
             assetModel.setChoosenAsset(settings.getDefaultAsset());
             assetModelHashMap.put(symbol,assetModel);
+            singletonDataBase.appDatabase.assetModelDao().insert(assetModel);
         }
         return assetModel;
     }

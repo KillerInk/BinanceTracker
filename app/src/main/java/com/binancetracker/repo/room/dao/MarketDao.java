@@ -16,4 +16,8 @@ public abstract class MarketDao extends BaseDao<Market> {
     @Query("SELECT * FROM market WHERE baseAsset LIKE :first AND " +
             "quoteAsset LIKE :last LIMIT 1")
     public abstract Market findByName(String first, String last);
+
+
+    @Query("SELECT * FROM market WHERE baseAsset LIKE :first")
+    public abstract List<Market> findByAsset(String first);
 }
