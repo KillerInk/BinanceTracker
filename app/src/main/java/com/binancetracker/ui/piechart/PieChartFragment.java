@@ -16,14 +16,13 @@ import androidx.lifecycle.ViewModelProvider;
 import com.binancetracker.BR;
 import com.binancetracker.R;
 import com.binancetracker.databinding.PiechartFragmentBinding;
-import com.binancetracker.ui.main.MainViewModel;
 import com.github.mikephil.charting.components.Legend;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class PieChartFragment extends Fragment {
-
+    private final String TAG = PieChartFragment.class.getSimpleName();
     private PiechartFragmentBinding fragmentBinding;
     private PieChartViewModel viewModel;
 
@@ -82,6 +81,7 @@ public class PieChartFragment extends Fragment {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 if (propertyId == BR.pieData) {
+                    //Log.v(TAG,"update piechart");
                     fragmentBinding.chart1.post(() -> {
                         fragmentBinding.chart1.setData(viewModel.pieChartModel.getPieData());
                         fragmentBinding.chart1.setCenterText(viewModel.pieChartModel.getPiechartMidString());

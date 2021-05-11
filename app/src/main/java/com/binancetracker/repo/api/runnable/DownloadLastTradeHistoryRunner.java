@@ -4,13 +4,11 @@ package com.binancetracker.repo.api.runnable;
 import com.binance.api.client.api.sync.BinanceApiSpotRestClient;
 import com.binance.api.client.domain.account.Trade;
 import com.binance.api.client.factory.BinanceSpotApiClientFactory;
-import com.binancetracker.repo.AssetRepo;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.room.entity.HistoryTradeEntity;
 import com.binancetracker.repo.room.entity.Market;
 import com.binancetracker.ui.main.AssetModel;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 

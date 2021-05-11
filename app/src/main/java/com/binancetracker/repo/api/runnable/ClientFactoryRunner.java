@@ -2,7 +2,6 @@ package com.binancetracker.repo.api.runnable;
 
 import com.binance.api.client.exception.BinanceApiException;
 import com.binance.api.client.factory.BinanceFactory;
-import com.binance.api.client.factory.BinanceSpotApiClientFactory;
 import com.binancetracker.repo.room.SingletonDataBase;
 
 public abstract class ClientFactoryRunner<T extends BinanceFactory> implements Runnable {

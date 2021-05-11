@@ -2,10 +2,9 @@ package com.binancetracker.ui.linechart;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.View;
 import android.widget.TextView;
-import com.binancetracker.R;
 
+import com.binancetracker.R;
 import com.binancetracker.repo.room.entity.PortofolioHistory;
 import com.binancetracker.utils.ConvertingUtil;
 import com.github.mikephil.charting.components.MarkerView;

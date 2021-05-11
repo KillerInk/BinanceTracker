@@ -2,8 +2,27 @@ package com.binancetracker.hilt;
 
 import android.content.Context;
 
-import com.binancetracker.repo.api.BinanceApi;
+import com.binance.api.client.factory.BinanceAbstractFactory;
+import com.binance.api.client.factory.BinanceSavingApiClientFactory;
+import com.binance.api.client.factory.BinanceSpotApiClientFactory;
+import com.binance.api.client.factory.BinanceSwapApiClientFactory;
 import com.binancetracker.repo.AssetRepo;
+import com.binancetracker.repo.api.AccountBalance;
+import com.binancetracker.repo.api.Ticker;
+import com.binancetracker.repo.api.runnable.Download30DaysDepositHistoryRunner;
+import com.binancetracker.repo.api.runnable.Download30DaysWithdrawHistoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadDepositFullHistoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadFullDayHistoryForAllPairsRunner;
+import com.binancetracker.repo.api.runnable.DownloadFuturesTransactionHistory;
+import com.binancetracker.repo.api.runnable.DownloadLastTradeHistoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadLatestDayHistoryForAllPairsRunner;
+import com.binancetracker.repo.api.runnable.DownloadLiquidSwapHistoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadSavingInterestHistoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadSavingPurchaseHistoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadSavingRedemptionHistoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadSwapHistoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadTradeFullHistoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadWithdrawFullHistory;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.utils.Settings;
 
@@ -22,17 +41,25 @@ public class RepoModule
 
     @Provides
     @Singleton
-    public static AssetRepo assetRepo( BinanceApi binanceApi,  Settings settings,  SingletonDataBase singletonDataBase)
+    public static AssetRepo assetRepo(Settings settings,
+                                      SingletonDataBase singletonDataBase,
+                                      AccountBalance accountBalance,
+                                      DownloadLastTradeHistoryRunner downloadLastTradeHistoryRunner,
+                                      Download30DaysDepositHistoryRunner download30DaysDepositHistoryRunner,
+                                      Download30DaysWithdrawHistoryRunner download30DaysWithdrawHistoryRunner,
+                                      DownloadLatestDayHistoryForAllPairsRunner downloadLatestDayHistoryForAllPairsRunner,
+                                      Ticker ticker)
     {
-        return new AssetRepo(binanceApi,settings,singletonDataBase);
+        return new AssetRepo(settings,
+                singletonDataBase,
+                accountBalance,
+                downloadLastTradeHistoryRunner,
+                download30DaysDepositHistoryRunner,
+                download30DaysWithdrawHistoryRunner,
+                downloadLatestDayHistoryForAllPairsRunner,
+                ticker);
     }
 
-    @Provides
-    @Singleton
-    public static BinanceApi binanceApi( Settings settings, SingletonDataBase singletonDataBase)
-    {
-        return new BinanceApi(settings,singletonDataBase);
-    }
 
 
     @Provides
@@ -49,4 +76,120 @@ public class RepoModule
     {
         return new SingletonDataBase(context);
     }
+
+    @Provides
+    public static BinanceSpotApiClientFactory spotApiClientFactory(Settings settings)
+    {
+        return BinanceAbstractFactory.createSpotFactory(settings.getKEY(), settings.getSECRETKEY());
+    }
+
+    @Provides
+    public static BinanceSwapApiClientFactory swapApiClientFactory(Settings settings)
+    {
+        return BinanceAbstractFactory.createSwapFactory(settings.getKEY(), settings.getSECRETKEY());
+    }
+
+    @Provides
+    public static BinanceSavingApiClientFactory savingApiClientFactory(Settings settings)
+    {
+        return BinanceAbstractFactory.createSavingFactory(settings.getKEY(), settings.getSECRETKEY());
+    }
+
+    @Provides
+    public static DownloadWithdrawFullHistory downloadWithdrawFullHistory(BinanceSpotApiClientFactory clientFactory,SingletonDataBase singletonDataBase)
+    {
+        return new DownloadWithdrawFullHistory(clientFactory,singletonDataBase);
+    }
+
+    @Provides
+    public static Download30DaysWithdrawHistoryRunner downloadWithdraw30DayHistory(BinanceSpotApiClientFactory clientFactory,SingletonDataBase singletonDataBase)
+    {
+        return new Download30DaysWithdrawHistoryRunner(clientFactory,singletonDataBase);
+    }
+
+
+    @Provides
+    public static DownloadTradeFullHistoryRunner downloadTradeFullHistoryRunner(BinanceSpotApiClientFactory clientFactory, SingletonDataBase singletonDataBase)
+    {
+        return new DownloadTradeFullHistoryRunner(clientFactory,singletonDataBase);
+    }
+
+    @Provides
+    public static DownloadLastTradeHistoryRunner downloadLastTradeHistoryRunner(BinanceSpotApiClientFactory clientFactory, SingletonDataBase singletonDataBase)
+    {
+        return new DownloadLastTradeHistoryRunner(clientFactory,singletonDataBase);
+    }
+
+    @Provides
+    public static DownloadDepositFullHistoryRunner downloadDepositFullHistoryRunner(BinanceSpotApiClientFactory clientFactory, SingletonDataBase singletonDataBase)
+    {
+        return new DownloadDepositFullHistoryRunner(clientFactory,singletonDataBase);
+    }
+
+    @Provides
+    public static Download30DaysDepositHistoryRunner download30DaysDepositHistoryRunner(BinanceSpotApiClientFactory clientFactory, SingletonDataBase singletonDataBase)
+    {
+        return new Download30DaysDepositHistoryRunner(clientFactory,singletonDataBase);
+    }
+
+    @Provides
+    public static DownloadFullDayHistoryForAllPairsRunner downloadFullDayHistoryForAllPairsRunner(BinanceSpotApiClientFactory clientFactory, SingletonDataBase singletonDataBase,Settings settings)
+    {
+        return new DownloadFullDayHistoryForAllPairsRunner(clientFactory,singletonDataBase,settings);
+    }
+
+    @Provides
+    public static DownloadLatestDayHistoryForAllPairsRunner downloadLatestDayHistoryForAllPairsRunner(BinanceSpotApiClientFactory clientFactory, SingletonDataBase singletonDataBase,Settings settings)
+    {
+        return new DownloadLatestDayHistoryForAllPairsRunner(clientFactory,singletonDataBase,settings);
+    }
+
+    @Provides
+    public static DownloadFuturesTransactionHistory downloadFuturesTransactionHistory(BinanceSpotApiClientFactory clientFactory, SingletonDataBase singletonDataBase)
+    {
+        return new DownloadFuturesTransactionHistory(clientFactory,singletonDataBase);
+    }
+
+    @Provides
+    public static DownloadSwapHistoryRunner downloadSwapHistoryRunner(BinanceSwapApiClientFactory clientFactory, SingletonDataBase singletonDataBase)
+    {
+        return new DownloadSwapHistoryRunner(clientFactory,singletonDataBase);
+    }
+
+    @Provides
+    public static DownloadLiquidSwapHistoryRunner downloadLiquidSwapHistoryRunner(BinanceSwapApiClientFactory clientFactory, SingletonDataBase singletonDataBase)
+    {
+        return new DownloadLiquidSwapHistoryRunner(clientFactory,singletonDataBase);
+    }
+
+    @Provides
+    public static DownloadSavingRedemptionHistoryRunner downloadSavingRedemptionHistoryRunner(BinanceSavingApiClientFactory clientFactory, SingletonDataBase singletonDataBase)
+    {
+        return new DownloadSavingRedemptionHistoryRunner(clientFactory,singletonDataBase);
+    }
+
+    @Provides
+    public static DownloadSavingPurchaseHistoryRunner downloadSavingPurchaseHistoryRunner(BinanceSavingApiClientFactory clientFactory, SingletonDataBase singletonDataBase)
+    {
+        return new DownloadSavingPurchaseHistoryRunner(clientFactory,singletonDataBase);
+    }
+
+    @Provides
+    public static DownloadSavingInterestHistoryRunner downloadSavingInterestHistoryRunner(BinanceSavingApiClientFactory clientFactory, SingletonDataBase singletonDataBase)
+    {
+        return new DownloadSavingInterestHistoryRunner(clientFactory,singletonDataBase);
+    }
+
+    @Provides
+    public static AccountBalance accountBalance(BinanceSpotApiClientFactory clientFactory)
+    {
+        return new AccountBalance(clientFactory);
+    }
+
+    @Provides
+    public static Ticker ticker(BinanceSpotApiClientFactory clientFactory)
+    {
+        return new Ticker(clientFactory);
+    }
+    
 }

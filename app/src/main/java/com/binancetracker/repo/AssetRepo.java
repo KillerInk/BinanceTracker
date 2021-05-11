@@ -4,8 +4,11 @@ import android.util.Log;
 
 import com.binance.api.client.domain.account.AssetBalance;
 import com.binancetracker.repo.api.AccountBalance;
-import com.binancetracker.repo.api.BinanceApi;
 import com.binancetracker.repo.api.Ticker;
+import com.binancetracker.repo.api.runnable.Download30DaysDepositHistoryRunner;
+import com.binancetracker.repo.api.runnable.Download30DaysWithdrawHistoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadLastTradeHistoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadLatestDayHistoryForAllPairsRunner;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.room.entity.Profit;
 import com.binancetracker.repo.thread.RestExecuter;
@@ -15,6 +18,7 @@ import com.binancetracker.utils.MarketPair;
 import com.binancetracker.utils.MyTime;
 import com.binancetracker.utils.Settings;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,26 +37,36 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
     private final String base = "USDT";
     private String choosenAsset;
     private AssetEvent assetEventListner;
-    private BinanceApi binanceApi;
+    //private BinanceApi binanceApi;
     private Settings settings;
     private SingletonDataBase singletonDataBase;
+    private AccountBalance accountBalance;
+    private DownloadLastTradeHistoryRunner downloadLastTradeHistoryRunner;
+    private Download30DaysDepositHistoryRunner download30DaysDepositHistoryRunner;
+    private Download30DaysWithdrawHistoryRunner download30DaysWithdrawHistoryRunner;
+    private DownloadLatestDayHistoryForAllPairsRunner downloadLatestDayHistoryForAllPairsRunner;
+    private Ticker ticker;
 
     @Inject
-    public AssetRepo( BinanceApi binanceApi,  Settings settings,  SingletonDataBase singletonDataBase)
+    public AssetRepo(
+                     Settings settings,
+                     SingletonDataBase singletonDataBase,
+                     AccountBalance accountBalance,
+                     DownloadLastTradeHistoryRunner downloadLastTradeHistoryRunner,
+                     Download30DaysDepositHistoryRunner download30DaysDepositHistoryRunner,
+                     Download30DaysWithdrawHistoryRunner download30DaysWithdrawHistoryRunner,
+                     DownloadLatestDayHistoryForAllPairsRunner downloadLatestDayHistoryForAllPairsRunner,
+                     Ticker ticker)
     {
-        this.binanceApi = binanceApi;
         this.settings = settings;
         this.singletonDataBase = singletonDataBase;
+        this.accountBalance = accountBalance;
+        this.downloadLastTradeHistoryRunner = downloadLastTradeHistoryRunner;
+        this.download30DaysDepositHistoryRunner = download30DaysDepositHistoryRunner;
+        this.download30DaysWithdrawHistoryRunner = download30DaysWithdrawHistoryRunner;
+        this.downloadLatestDayHistoryForAllPairsRunner = downloadLatestDayHistoryForAllPairsRunner;
+        this.ticker = ticker;
         assetModelHashMap = new HashMap<>();
-
-    }
-
-    public Settings getSettings() {
-        return settings;
-    }
-
-    public BinanceApi getBinanceApi() {
-        return binanceApi;
     }
 
     public HashMap<String, AssetModel> getAssetModelHashMap() {
@@ -65,12 +79,12 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
 
     public void onResume()
     {
+        Log.v(TAG, "onResume");
         if (settings.getSECRETKEY().equals("") || settings.getKEY().equals(""))
             return;
-        binanceApi.setKeys(settings.getKEY(),settings.getSECRETKEY());
         choosenAsset = settings.getDefaultAsset();
 
-        binanceApi.getAccountBalance().setAccountBalanceEventListner(this::onBalanceChanged);
+        accountBalance.setAccountBalanceEventListner(this::onBalanceChanged);
 
         RestExecuter.addTask(onResumeRunner);
     }
@@ -82,7 +96,7 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
             fireAssetChangedEvent();
             getProfitsFromDb();
             fireAssetChangedEvent();
-            binanceApi.getAccountBalance().startListenToAssetBalance();
+            accountBalance.startListenToAssetBalance();
             fireAssetChangedEvent();
             new Thread(new Runnable() {
                 @Override
@@ -106,10 +120,10 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
     private Runnable updateHistoryRunner = new Runnable() {
         @Override
         public void run() {
-            binanceApi.getDownloadTradeHistory().updateHistoryTrades(false);
-            binanceApi.getDownloadDespositHistory().downloadLast30days(false);
-            binanceApi.getDownloadWithdrawHistory().downloadLast30days(false);
-            binanceApi.getDownloadCandleStickHistory().downloadLatestHistory(false);
+            downloadLastTradeHistoryRunner.run();
+            download30DaysDepositHistoryRunner.run();
+            download30DaysWithdrawHistoryRunner.run();
+            downloadLatestDayHistoryForAllPairsRunner.run();
             new CalcProfits().calcProfits(singletonDataBase);
             getProfitsFromDb();
         }
@@ -117,10 +131,10 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
 
     public void onPause()
     {
-        binanceApi.getAccountBalance().setAccountBalanceEventListner(null);
-        binanceApi.getAccountBalance().stopListenToAssetBalance();
-        binanceApi.getTicker().setPriceChangedEvent(null);
-        binanceApi.getTicker().stop();
+        accountBalance.setAccountBalanceEventListner(null);
+        accountBalance.stopListenToAssetBalance();
+        ticker.setPriceChangedEvent(null);
+        ticker.stop();
         saveAssetModelsToDB();
     }
 
@@ -132,15 +146,22 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
 
     @Override
     public void onBalanceChanged() {
-        for (AssetBalance assetBalance : binanceApi.getAccountBalance().getAccountBalanceCache().values()) {
+
+        List<String> savingassets = new ArrayList<>();
+        for (AssetBalance assetBalance : accountBalance.getAccountBalanceCache().values()) {
             String assetname = assetBalance.getAsset();
             if (assetname.startsWith("LD"))
             {
                 assetname = assetname.replace("LD","");
+                savingassets.add(assetname);
                 AssetModel a = getAssetModel(assetname);
                 a.setSavedValue(Double.parseDouble(assetBalance.getFree()));
             }
             else {
+                if (!savingassets.contains(assetname)) {
+                    AssetModel a = getAssetModel(assetname);
+                    a.setSavedValue(0);
+                }
                 AssetModel a = getAssetModel(assetBalance.getAsset());
                 a.setAccountBalance(assetBalance);
             }
@@ -223,8 +244,8 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
             if (markets.endsWith(","))
                 markets = markets.substring(0, markets.length() - 1);
             Log.d(TAG,"subscribe to markets:" + markets);
-            binanceApi.getTicker().setMarketsToListen(markets);
-            binanceApi.getTicker().setPriceChangedEvent(new Ticker.PriceChangedEvent() {
+            ticker.setMarketsToListen(markets);
+            ticker.setPriceChangedEvent(new Ticker.PriceChangedEvent() {
                 @Override
                 public void onPriceChanged(String symbol,final double price,String priceChang) {
                     //Log.d(TAG,"onPriceChanged:" + symbol + " " + price);
@@ -241,7 +262,7 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
                     }
                 }
             });
-            binanceApi.getTicker().start();
+            ticker.start();
         }
     }
 }

@@ -7,6 +7,7 @@ import com.binance.api.client.domain.account.Withdraw;
 import com.binance.api.client.factory.BinanceSpotApiClientFactory;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.utils.MyTime;
+
 import java.util.List;
 
 public class Download30DaysWithdrawHistoryRunner extends DownloadWithdrawFullHistory {

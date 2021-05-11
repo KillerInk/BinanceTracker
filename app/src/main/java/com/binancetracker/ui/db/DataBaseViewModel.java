@@ -6,9 +6,19 @@ import android.os.Looper;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
-import com.binancetracker.repo.api.BinanceApi;
 import com.binancetracker.repo.api.runnable.ClientFactoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadDepositFullHistoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadFullDayHistoryForAllPairsRunner;
+import com.binancetracker.repo.api.runnable.DownloadFuturesTransactionHistory;
+import com.binancetracker.repo.api.runnable.DownloadLiquidSwapHistoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadSavingInterestHistoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadSavingPurchaseHistoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadSavingRedemptionHistoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadSwapHistoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadTradeFullHistoryRunner;
+import com.binancetracker.repo.api.runnable.DownloadWithdrawFullHistory;
 import com.binancetracker.repo.room.SingletonDataBase;
+import com.binancetracker.repo.thread.RestExecuter;
 import com.binancetracker.utils.CalcProfits;
 
 import javax.inject.Inject;
@@ -21,76 +31,105 @@ public class DataBaseViewModel extends ViewModel
     public ObservableField<String> dbstatus = new ObservableField<>();
     public ObservableField<String> errorMSG = new ObservableField<>();
     private int max;
-    private BinanceApi binanceApi;
+
     private SingletonDataBase singletonDataBase;
+    private DownloadWithdrawFullHistory downloadWithdrawFullHistory;
+    private DownloadTradeFullHistoryRunner downloadTradeFullHistoryRunner;
+    private DownloadDepositFullHistoryRunner downloadDepositFullHistoryRunner;
+    private DownloadFullDayHistoryForAllPairsRunner downloadFullDayHistoryForAllPairsRunner;
+    private DownloadFuturesTransactionHistory downloadFuturesTransactionHistory;
+    private DownloadSwapHistoryRunner downloadSwapHistoryRunner;
+    private DownloadLiquidSwapHistoryRunner downloadLiquidSwapHistoryRunner;
+    private DownloadSavingRedemptionHistoryRunner downloadSavingRedemptionHistoryRunner;
+    private DownloadSavingPurchaseHistoryRunner downloadSavingPurchaseHistoryRunner;
+    private DownloadSavingInterestHistoryRunner downloadSavingInterestHistoryRunner;
 
     @Inject
-    public DataBaseViewModel(BinanceApi binanceApi,SingletonDataBase singletonDataBase)
+    public DataBaseViewModel(
+                             SingletonDataBase singletonDataBase,
+                             DownloadWithdrawFullHistory downloadWithdrawFullHistory,
+                             DownloadTradeFullHistoryRunner downloadTradeFullHistoryRunner,
+                             DownloadDepositFullHistoryRunner downloadDepositFullHistoryRunner,
+                             DownloadFullDayHistoryForAllPairsRunner downloadFullDayHistoryForAllPairsRunner,
+                             DownloadFuturesTransactionHistory downloadFuturesTransactionHistory,
+                             DownloadSwapHistoryRunner downloadSwapHistoryRunner,
+                             DownloadLiquidSwapHistoryRunner downloadLiquidSwapHistoryRunner,
+                             DownloadSavingRedemptionHistoryRunner downloadSavingRedemptionHistoryRunner,
+                             DownloadSavingPurchaseHistoryRunner downloadSavingPurchaseHistoryRunner,
+                             DownloadSavingInterestHistoryRunner downloadSavingInterestHistoryRunner)
     {
-        this.binanceApi = binanceApi;
         this.singletonDataBase = singletonDataBase;
+        this.downloadWithdrawFullHistory = downloadWithdrawFullHistory;
+        this.downloadTradeFullHistoryRunner = downloadTradeFullHistoryRunner;
+        this.downloadDepositFullHistoryRunner = downloadDepositFullHistoryRunner;
+        this.downloadFullDayHistoryForAllPairsRunner = downloadFullDayHistoryForAllPairsRunner;
+        this.downloadFuturesTransactionHistory = downloadFuturesTransactionHistory;
+        this.downloadSwapHistoryRunner = downloadSwapHistoryRunner;
+        this.downloadLiquidSwapHistoryRunner = downloadLiquidSwapHistoryRunner;
+        this.downloadSavingInterestHistoryRunner = downloadSavingInterestHistoryRunner;
+        this.downloadSavingPurchaseHistoryRunner = downloadSavingPurchaseHistoryRunner;
+        this.downloadSavingRedemptionHistoryRunner = downloadSavingRedemptionHistoryRunner;
     }
 
     public void startSyncTradeHistory()
     {
         dbstatus.set("StartSync");
-        binanceApi.getDownloadTradeHistory().setMessageEventListner(messageEvent);
-        //start downloading the trade history
-        binanceApi.getDownloadTradeHistory().getFullHistory();
+        downloadTradeFullHistoryRunner.setMessageEventListner(messageEvent);
+        RestExecuter.addTask(downloadTradeFullHistoryRunner);
     }
 
     public void startSyncDeposits()
     {
-        binanceApi.getDownloadDespositHistory().setMessageEventListner(messageEvent);
-        binanceApi.getDownloadDespositHistory().downloadFullHistory();
+        downloadDepositFullHistoryRunner.setMessageEventListner(messageEvent);
+        RestExecuter.addTask(downloadDepositFullHistoryRunner);
     }
 
     public void startSyncWithdraws()
     {
-        binanceApi.getDownloadWithdrawHistory().setMessageEventListner(messageEvent);
-        binanceApi.getDownloadWithdrawHistory().downloadFullHistory();
+        downloadWithdrawFullHistory.setMessageEventListner(messageEvent);
+        RestExecuter.addTask(downloadWithdrawFullHistory);
     }
 
     public void startDownloadPriceHistoryDayFull()
     {
-        binanceApi.getDownloadCandleStickHistory().setMessageEventListner(messageEvent);
-        binanceApi.getDownloadCandleStickHistory().downloadFullHistory();
+        downloadFullDayHistoryForAllPairsRunner.setMessageEventListner(messageEvent);
+        RestExecuter.addTask(downloadFullDayHistoryForAllPairsRunner);
     }
 
     public void startDownloadFuturesTransactionHistory()
     {
-        binanceApi.getDownloadFuturesHistory().setMessageEventListner(messageEvent);
-        binanceApi.getDownloadFuturesHistory().downloadFullHistory();
+        downloadFuturesTransactionHistory.setMessageEventListner(messageEvent);
+        RestExecuter.addTask(downloadFuturesTransactionHistory);
     }
 
     public void startDownloadSwapHistory()
     {
-        binanceApi.getDownloadSwapHistory().setMessageEventListner(messageEvent);
-        binanceApi.getDownloadSwapHistory().downloadSwapHistory();
+        downloadSwapHistoryRunner.setMessageEventListner(messageEvent);
+        RestExecuter.addTask(downloadSwapHistoryRunner);
     }
 
     public void startDownloadLiquidSwapHistory()
     {
-        binanceApi.getDownloadSwapHistory().setMessageEventListner(messageEvent);
-        binanceApi.getDownloadSwapHistory().downloadLiquidSwapHistory();
+        downloadLiquidSwapHistoryRunner.setMessageEventListner(messageEvent);
+        RestExecuter.addTask(downloadLiquidSwapHistoryRunner);
     }
 
     public void startDownloadSavingPurchaseHistory()
     {
-        binanceApi.getDownloadSavingHistory().setMessageEventListner(messageEvent);
-        binanceApi.getDownloadSavingHistory().downloadPurchaseHistory();
+        downloadSavingPurchaseHistoryRunner.setMessageEventListner(messageEvent);
+        RestExecuter.addTask(downloadSavingPurchaseHistoryRunner);
     }
 
     public void startDownloadSavingRedemptionHistory()
     {
-        binanceApi.getDownloadSavingHistory().setMessageEventListner(messageEvent);
-        binanceApi.getDownloadSavingHistory().downloadRedemptionHistory();
+        downloadSavingRedemptionHistoryRunner.setMessageEventListner(messageEvent);
+        RestExecuter.addTask(downloadSavingRedemptionHistoryRunner);
     }
 
     public void startDownloadSavingInterestHistory()
     {
-        binanceApi.getDownloadSavingHistory().setMessageEventListner(messageEvent);
-        binanceApi.getDownloadSavingHistory().downloadInterestHistory();
+        downloadSavingInterestHistoryRunner.setMessageEventListner(messageEvent);
+        RestExecuter.addTask(downloadSavingInterestHistoryRunner);
     }
 
     public void calcTrades()
@@ -112,13 +151,16 @@ public class DataBaseViewModel extends ViewModel
 
     private void resetMessageEvent()
     {
-        binanceApi.getDownloadCandleStickHistory().setMessageEventListner(null);
-        binanceApi.getDownloadWithdrawHistory().setMessageEventListner(null);
-        binanceApi.getDownloadDespositHistory().setMessageEventListner(null);
-        binanceApi.getDownloadTradeHistory().setMessageEventListner(null);
-        binanceApi.getDownloadFuturesHistory().setMessageEventListner(null);
-        binanceApi.getDownloadSwapHistory().setMessageEventListner(null);
-        binanceApi.getDownloadSavingHistory().setMessageEventListner(null);
+        this.downloadWithdrawFullHistory.setMessageEventListner(null);
+        this.downloadTradeFullHistoryRunner.setMessageEventListner(null);
+        this.downloadDepositFullHistoryRunner.setMessageEventListner(null);
+        this.downloadFullDayHistoryForAllPairsRunner.setMessageEventListner(null);
+        this.downloadFuturesTransactionHistory.setMessageEventListner(null);
+        this.downloadSwapHistoryRunner.setMessageEventListner(null);
+        this.downloadLiquidSwapHistoryRunner.setMessageEventListner(null);
+        this.downloadSavingInterestHistoryRunner.setMessageEventListner(null);
+        this.downloadSavingPurchaseHistoryRunner.setMessageEventListner(null);
+        this.downloadSavingRedemptionHistoryRunner.setMessageEventListner(null);
     }
 
     private ClientFactoryRunner.MessageEvent messageEvent = new ClientFactoryRunner.MessageEvent() {

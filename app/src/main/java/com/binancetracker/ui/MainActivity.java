@@ -6,7 +6,6 @@ import androidx.databinding.DataBindingUtil;
 
 import com.binancetracker.R;
 import com.binancetracker.databinding.MainActivityBinding;
-import com.binancetracker.ui.FullScreenActivity;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

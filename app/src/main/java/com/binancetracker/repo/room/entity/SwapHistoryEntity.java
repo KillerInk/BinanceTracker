@@ -4,8 +4,6 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.binance.api.client.domain.account.SwapHistory;
-
 @Entity
 public class SwapHistoryEntity {
     @PrimaryKey

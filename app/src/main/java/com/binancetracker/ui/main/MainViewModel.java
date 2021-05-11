@@ -2,6 +2,7 @@ package com.binancetracker.ui.main;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -17,6 +18,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class MainViewModel extends ViewModel {
 
+    private final String TAG = MainViewModel.class.getSimpleName();
     private AssetRepo assetRepo;
     public MutableLiveData<Collection<AssetModel>> balances;
     private Handler handler;
@@ -31,14 +33,14 @@ public class MainViewModel extends ViewModel {
 
     public void onResume()
     {
-        if (assetRepo.getSettings().getSECRETKEY().equals("") || assetRepo.getSettings().getKEY().equals(""))
-            return;
+        Log.v(TAG, "onResume");
         assetRepo.setAssetEventListner(assetEvent);
         assetRepo.onResume();
     }
 
     public void onPause()
     {
+        Log.v(TAG, "onPause");
         assetRepo.setAssetEventListner(null);
         assetRepo.onPause();
     }

@@ -31,6 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class MainFragment extends Fragment {
 
+    private final String TAG = MainFragment.class.getSimpleName();
     private MainViewModel mViewModel;
     private CustomAdapter customAdapter;
     private MainFragmentBinding mainFragmentBinding;

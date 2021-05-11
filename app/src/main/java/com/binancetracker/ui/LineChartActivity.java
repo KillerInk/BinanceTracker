@@ -2,12 +2,10 @@ package com.binancetracker.ui;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.binancetracker.R;
 import com.binancetracker.databinding.LinechartActivityBinding;
-import com.binancetracker.ui.FullScreenActivity;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

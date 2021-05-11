@@ -12,7 +12,6 @@ import com.binancetracker.repo.room.entity.PortofolioHistory;
 import com.binancetracker.repo.room.entity.Profit;
 import com.binancetracker.repo.room.entity.WithdrawHistoryEntity;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 

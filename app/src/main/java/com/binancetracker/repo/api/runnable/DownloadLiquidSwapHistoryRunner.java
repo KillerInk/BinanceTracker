@@ -3,7 +3,6 @@ package com.binancetracker.repo.api.runnable;
 import com.binance.api.client.api.sync.BinanceApiSwapRestClient;
 import com.binance.api.client.domain.account.LiquidityOperationRecord;
 import com.binance.api.client.factory.BinanceSwapApiClientFactory;
-import com.binancetracker.repo.api.DownloadSwapHistory;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.room.entity.LiquidityOperationRecordEntity;
 import com.binancetracker.utils.MyTime;

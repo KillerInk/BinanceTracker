@@ -7,6 +7,7 @@ import com.binance.api.client.factory.BinanceSpotApiClientFactory;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.utils.MyTime;
 import com.binancetracker.utils.Settings;
+
 import java.util.List;
 
 public class DownloadLatestDayHistoryForAllPairsRunner extends DownloadFullDayHistoryForAllPairsRunner {

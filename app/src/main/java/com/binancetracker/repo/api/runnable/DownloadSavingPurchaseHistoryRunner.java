@@ -1,7 +1,6 @@
 package com.binancetracker.repo.api.runnable;
 
 import com.binance.api.client.api.sync.BinanceApiSavingRestClient;
-import com.binance.api.client.domain.saving.InterestHistory;
 import com.binance.api.client.domain.saving.PurchaseRecord;
 import com.binance.api.client.factory.BinanceSavingApiClientFactory;
 import com.binancetracker.repo.room.SingletonDataBase;

@@ -3,6 +3,7 @@ package com.binancetracker.ui.piechart;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PieChartModel extends BaseObservable {
+    private final String TAG = PieChartModel.class.getSimpleName();
     private ArrayList<PieEntry> entries;
     private ArrayList<Integer> colors;
     private PieData pieData;
@@ -71,17 +73,21 @@ public class PieChartModel extends BaseObservable {
 
     public void onResume()
     {
+        Log.v(TAG,"onResume");
         piechartUpdateHandler.postDelayed(updatePieChart,1000);
     }
 
     public void onPause()
     {
+        Log.v(TAG,"onPause");
         piechartUpdateHandler.removeCallbacks(updatePieChart);
     }
 
     private Runnable updatePieChart = new Runnable() {
         @Override
         public void run() {
+
+            //Log.v(TAG,"updatePieChart");
             setPieChartData(assetRepo.getAssetModelHashMap());
             piechartUpdateHandler.postDelayed(updatePieChart,1000);
         }

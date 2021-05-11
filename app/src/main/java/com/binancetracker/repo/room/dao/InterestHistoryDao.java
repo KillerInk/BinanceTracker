@@ -3,9 +3,6 @@ package com.binancetracker.repo.room.dao;
 import androidx.room.Dao;
 import androidx.room.Query;
 
-import com.binance.api.client.domain.saving.InterestHistory;
-import com.binancetracker.repo.room.entity.CandleStickEntity;
-import com.binancetracker.repo.room.entity.FuturesTransactionHistoryEntity;
 import com.binancetracker.repo.room.entity.InterestHistoryEntity;
 
 import java.util.List;

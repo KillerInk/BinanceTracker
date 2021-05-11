@@ -1,19 +1,17 @@
 package com.binancetracker.repo.api.runnable;
 
 import android.util.Log;
-;
+
 import com.binance.api.client.api.sync.BinanceApiSpotRestClient;
 import com.binance.api.client.domain.account.Withdraw;
-import com.binance.api.client.exception.BinanceApiException;
 import com.binance.api.client.factory.BinanceSpotApiClientFactory;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.room.entity.WithdrawHistoryEntity;
 import com.binancetracker.utils.MyTime;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
+
+;
 
 public class DownloadWithdrawFullHistory extends DownloadDepositFullHistoryRunner {
 
