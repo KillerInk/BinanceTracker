@@ -32,7 +32,7 @@
         android:text="Sync Withdraw History"
         android:onClick="@{()->viewmodel.startSyncWithdraws()}"/>
 
-    <!--<Button
+    <Button
         android:id="@+id/button_startSyncSwapHistory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sync Liquid Swap History"
-        android:onClick="@{()->viewmodel.startDownloadLiquidSwapHistory()}"/>-->
+        android:onClick="@{()->viewmodel.startDownloadLiquidSwapHistory()}"/>
 
     <Button
         android:id="@+id/button_startSyncSavingPurchaseHistory"
@@ -64,7 +64,7 @@
         android:id="@+id/button_startSyncSavingInterestHistory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sync Saving Redemption History"
+        android:text="Sync Saving Interest History"
         android:onClick="@{()->viewmodel.startDownloadSavingInterestHistory()}"/>
 
 

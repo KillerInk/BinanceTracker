@@ -247,7 +247,10 @@ public class CalcProfits
                 {
                     if (trade.buyer)
                     {
-                        quote.amount += Double.parseDouble(trade.qty) -Double.parseDouble(trade.commission);
+                        if (!trade.commissionAsset.equals("BNB"))
+                            quote.amount += Double.parseDouble(trade.qty) -Double.parseDouble(trade.commission);
+                        else
+                            quote.amount += Double.parseDouble(trade.qty);
                         base.amount -= Double.parseDouble(trade.quoteQty);
                         if(base.amount < 0)
                         {
@@ -258,7 +261,10 @@ public class CalcProfits
                     else
                     {
                         quote.amount -= Double.parseDouble(trade.qty);
-                        base.amount += Double.parseDouble(trade.quoteQty)-Double.parseDouble(trade.commission);
+                        if (!trade.commissionAsset.equals("BNB"))
+                            base.amount += Double.parseDouble(trade.quoteQty)-Double.parseDouble(trade.commission);
+                        else
+                            base.amount += Double.parseDouble(trade.quoteQty);
                         if (quote.amount < 0)
                         {
                             base.amount += quote.amount * Double.parseDouble(trade.price);

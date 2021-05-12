@@ -191,5 +191,5 @@ public class RepoModule
     {
         return new Ticker(clientFactory);
     }
-    
+
 }

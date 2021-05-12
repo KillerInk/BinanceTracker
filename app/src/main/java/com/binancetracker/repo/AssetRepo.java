@@ -37,7 +37,6 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
     private final String base = "USDT";
     private String choosenAsset;
     private AssetEvent assetEventListner;
-    //private BinanceApi binanceApi;
     private Settings settings;
     private SingletonDataBase singletonDataBase;
     private AccountBalance accountBalance;
