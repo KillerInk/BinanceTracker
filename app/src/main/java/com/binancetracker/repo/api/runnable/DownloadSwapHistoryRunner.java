@@ -1,7 +1,7 @@
 package com.binancetracker.repo.api.runnable;
 
 import com.binance.api.client.api.sync.BinanceApiSwapRestClient;
-import com.binance.api.client.domain.account.SwapHistory;
+import com.binance.api.client.domain.swap.SwapHistory;
 import com.binance.api.client.factory.BinanceSwapApiClientFactory;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.room.entity.SwapHistoryEntity;

@@ -2,8 +2,8 @@ package com.binancetracker.repo.api.runnable;
 
 import com.binance.api.client.domain.account.Deposit;
 import com.binance.api.client.domain.account.FuturesTransactionHistory;
-import com.binance.api.client.domain.account.LiquidityOperationRecord;
-import com.binance.api.client.domain.account.SwapHistory;
+import com.binance.api.client.domain.swap.LiquidityOperationRecord;
+import com.binance.api.client.domain.swap.SwapHistory;
 import com.binance.api.client.domain.account.Withdraw;
 import com.binance.api.client.domain.general.SymbolInfo;
 import com.binance.api.client.domain.market.Candlestick;
