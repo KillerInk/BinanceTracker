@@ -1,4 +1,4 @@
-package com.binancetracker.repo.api.runnable;
+package com.binancetracker.repo.api.runnable.market;
 
 import android.util.Log;
 
@@ -6,6 +6,8 @@ import com.binance.api.client.api.sync.BinanceApiSpotRestClient;
 import com.binance.api.client.domain.account.Trade;
 import com.binance.api.client.domain.general.SymbolInfo;
 import com.binance.api.client.factory.BinanceSpotApiClientFactory;
+import com.binancetracker.repo.api.runnable.ClientFactoryRunner;
+import com.binancetracker.repo.api.runnable.JsonToDBConverter;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.room.dao.HistoryTradeDao;
 import com.binancetracker.repo.room.dao.MarketDao;

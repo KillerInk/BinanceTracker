@@ -1,10 +1,12 @@
-package com.binancetracker.repo.api.runnable;
+package com.binancetracker.repo.api.runnable.account;
 
 import android.util.Log;
 
 import com.binance.api.client.api.sync.BinanceApiSpotRestClient;
 import com.binance.api.client.domain.account.Deposit;
 import com.binance.api.client.factory.BinanceSpotApiClientFactory;
+import com.binancetracker.repo.api.runnable.ClientFactoryRunner;
+import com.binancetracker.repo.api.runnable.JsonToDBConverter;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.room.entity.DepositHistoryEntity;
 import com.binancetracker.utils.MyTime;

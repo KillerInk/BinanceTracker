@@ -1,4 +1,4 @@
-package com.binancetracker.repo.api.runnable;
+package com.binancetracker.repo.api.runnable.market;
 
 
 import com.binance.api.client.api.sync.BinanceApiSpotRestClient;

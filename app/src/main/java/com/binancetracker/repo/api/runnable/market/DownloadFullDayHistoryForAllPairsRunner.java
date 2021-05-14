@@ -1,4 +1,4 @@
-package com.binancetracker.repo.api.runnable;
+package com.binancetracker.repo.api.runnable.market;
 
 import android.util.Log;
 
@@ -7,6 +7,8 @@ import com.binance.api.client.domain.market.Candlestick;
 import com.binance.api.client.domain.market.CandlestickInterval;
 import com.binance.api.client.exception.BinanceApiException;
 import com.binance.api.client.factory.BinanceSpotApiClientFactory;
+import com.binancetracker.repo.api.runnable.JsonToDBConverter;
+import com.binancetracker.repo.api.runnable.account.DownloadDepositFullHistoryRunner;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.room.entity.CandleStickEntity;
 import com.binancetracker.utils.Settings;
@@ -16,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class DownloadFullDayHistoryForAllPairsRunner extends DownloadDepositFullHistoryRunner{
+public class DownloadFullDayHistoryForAllPairsRunner extends DownloadDepositFullHistoryRunner {
 
     private final String TAG = DownloadFullDayHistoryForAllPairsRunner.class.getSimpleName();
     private Settings settings;

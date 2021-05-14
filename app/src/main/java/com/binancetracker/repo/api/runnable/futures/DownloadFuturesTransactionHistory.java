@@ -1,4 +1,4 @@
-package com.binancetracker.repo.api.runnable;
+package com.binancetracker.repo.api.runnable.futures;
 
 import com.binance.api.client.api.sync.BinanceApiSpotRestClient;
 import com.binance.api.client.domain.account.FuturesTransactionHistory;
@@ -6,6 +6,8 @@ import com.binance.api.client.domain.account.FuturesTransactionList;
 import com.binance.api.client.factory.BinanceSpotApiClientFactory;
 import com.binancetracker.MyApplication;
 import com.binancetracker.R;
+import com.binancetracker.repo.api.runnable.ClientFactoryRunner;
+import com.binancetracker.repo.api.runnable.JsonToDBConverter;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.room.entity.FuturesTransactionHistoryEntity;
 
