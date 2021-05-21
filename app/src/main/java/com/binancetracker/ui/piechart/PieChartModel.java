@@ -10,7 +10,7 @@ import androidx.databinding.Bindable;
 
 import com.binancetracker.BR;
 import com.binancetracker.repo.AssetRepo;
-import com.binancetracker.ui.main.AssetModel;
+import com.binancetracker.repo.room.entity.AssetModel;
 import com.binancetracker.utils.ConvertingUtil;
 import com.binancetracker.utils.Settings;
 import com.github.mikephil.charting.data.PieData;

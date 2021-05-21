@@ -28,4 +28,10 @@ public class SingletonDataBase {
         binanceDatabase.close();
         appDatabase.close();
     }
+
+    public void clearDBs()
+    {
+        appDatabase.clearDBs();
+        binanceDatabase.clearDBs();
+    }
 }

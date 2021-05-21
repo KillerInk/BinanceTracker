@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.room.entity.CandleStickEntity;
+import com.binancetracker.repo.room.entity.DailyAccountSnapshotEntity;
 import com.binancetracker.repo.room.entity.DepositHistoryEntity;
 import com.binancetracker.repo.room.entity.FuturesTransactionHistoryEntity;
 import com.binancetracker.repo.room.entity.HistoryTradeEntity;
@@ -12,6 +13,7 @@ import com.binancetracker.repo.room.entity.PortofolioHistory;
 import com.binancetracker.repo.room.entity.Profit;
 import com.binancetracker.repo.room.entity.WithdrawHistoryEntity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -311,6 +313,29 @@ public class CalcProfits
             PortofolioHistory portofolioHistory = getPortofolio(entity.asset,startTime,endtime,historyHashMap);
             portofolioHistory.amount += entity.interest;
         }
-
     }
+
+   /* public void calcAssetLifetimeAccountSnapShot(SingletonDataBase singletonDataBase)
+    {
+        singletonDataBase.appDatabase.portofolioHistoryDao().deleteAll();
+        long firstDepositTime = singletonDataBase.binanceDatabase.dailyAccountSnapshotDao().getOldestTime();
+        MyTime startday = new MyTime(firstDepositTime).setDayToBegin();
+        MyTime endday = new MyTime(firstDepositTime).setDayToEnd();
+        MyTime finalDay = new MyTime().setDayToEnd();
+        while (startday.getTime() <= finalDay.getTime()) {
+
+            List<DailyAccountSnapshotEntity> dailyAccountSnapshotEntities = singletonDataBase.binanceDatabase.dailyAccountSnapshotDao().getByTime(startday.getUtcTime(),endday.getUtcTime());
+            List<PortofolioHistory> portofolioHistories = new ArrayList<>();
+            for (DailyAccountSnapshotEntity entity : dailyAccountSnapshotEntities)
+            {
+                PortofolioHistory portofolioHistory = new PortofolioHistory();
+                portofolioHistory.amount =
+            }
+
+
+            Log.d(TAG,"Finished Day: " + startday.getString());
+            startday.setDays(1).setDayToBegin();
+            endday.setDays(1).setDayToEnd();
+        }
+    }*/
 }

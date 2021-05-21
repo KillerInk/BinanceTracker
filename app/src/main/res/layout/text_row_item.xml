@@ -5,7 +5,7 @@
     <data>
         <variable
             name="assetmodel"
-            type="com.binancetracker.ui.main.AssetModel" />
+            type="com.binancetracker.repo.room.entity.AssetModel" />
     </data>
 
 

@@ -12,7 +12,7 @@ import com.binancetracker.repo.api.runnable.market.DownloadLatestDayHistoryForAl
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.room.entity.Profit;
 import com.binancetracker.repo.thread.RestExecuter;
-import com.binancetracker.ui.main.AssetModel;
+import com.binancetracker.repo.room.entity.AssetModel;
 import com.binancetracker.utils.CalcProfits;
 import com.binancetracker.utils.MarketPair;
 import com.binancetracker.utils.MyTime;
@@ -95,6 +95,7 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
             fireAssetChangedEvent();
             getProfitsFromDb();
             fireAssetChangedEvent();
+            accountBalance.initBalanceCache();
             accountBalance.startListenToAssetBalance();
             fireAssetChangedEvent();
             new Thread(new Runnable() {
@@ -152,6 +153,8 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
             if (assetname.startsWith("LD"))
             {
                 assetname = assetname.replace("LD","");
+                if (assetname.equals("BAKET"))
+                    assetname = "BAKE";
                 savingassets.add(assetname);
                 AssetModel a = getAssetModel(assetname);
                 a.setSavedValue(Double.parseDouble(assetBalance.getFree()));

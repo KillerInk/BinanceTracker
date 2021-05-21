@@ -1,7 +1,10 @@
 package com.binancetracker.repo.api.runnable;
 
+import com.binance.api.client.domain.account.AssetBalance;
 import com.binance.api.client.domain.account.Deposit;
 import com.binance.api.client.domain.account.FuturesTransactionHistory;
+import com.binance.api.client.domain.account.MarginAssetBalance;
+import com.binance.api.client.domain.account.snapshot.FuturesSnapshotAsset;
 import com.binance.api.client.domain.swap.LiquidityOperationRecord;
 import com.binance.api.client.domain.swap.SwapHistory;
 import com.binance.api.client.domain.account.Withdraw;
@@ -11,6 +14,7 @@ import com.binance.api.client.domain.saving.InterestHistory;
 import com.binance.api.client.domain.saving.PurchaseRecord;
 import com.binance.api.client.domain.saving.RedemptionRecord;
 import com.binancetracker.repo.room.entity.CandleStickEntity;
+import com.binancetracker.repo.room.entity.DailyAccountSnapshotEntity;
 import com.binancetracker.repo.room.entity.DepositHistoryEntity;
 import com.binancetracker.repo.room.entity.FuturesTransactionHistoryEntity;
 import com.binancetracker.repo.room.entity.InterestHistoryEntity;
@@ -20,6 +24,8 @@ import com.binancetracker.repo.room.entity.PurchaseRecordEntity;
 import com.binancetracker.repo.room.entity.RedemptionRecordEntity;
 import com.binancetracker.repo.room.entity.SwapHistoryEntity;
 import com.binancetracker.repo.room.entity.WithdrawHistoryEntity;
+
+import org.w3c.dom.Entity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -173,6 +179,46 @@ public class JsonToDBConverter {
         entity.lendingType = history.getLendingType();
         entity.productName = history.getProductName();
         entity.time = history.getTime();
+        return entity;
+    }
+
+    public static DailyAccountSnapshotEntity getDailyAccountSnapshotEntity(AssetBalance assetBalance, long time)
+    {
+        DailyAccountSnapshotEntity dailyAccountSnapshotEntity = getNewEntity(assetBalance.getAsset(),time);
+        dailyAccountSnapshotEntity.spot_free = Double.parseDouble(assetBalance.getFree());
+        dailyAccountSnapshotEntity.spot_locked = Double.parseDouble(assetBalance.getLocked());
+        return dailyAccountSnapshotEntity;
+    }
+
+    public static DailyAccountSnapshotEntity applyMarginData(DailyAccountSnapshotEntity entity, MarginAssetBalance assetBalance, long time)
+    {
+        if (entity == null) {
+            entity = getNewEntity(assetBalance.getAsset(), time);
+        }
+        entity.margin_borrowed = Double.parseDouble(assetBalance.getBorrowed());
+        entity.margin_free = Double.parseDouble(assetBalance.getFree());
+        entity.margin_interest = Double.parseDouble(assetBalance.getInterest());
+        entity.margin_locked = Double.parseDouble(assetBalance.getLocked());
+        entity.margin_netAsset = Double.parseDouble(assetBalance.getNetAsset());
+        return entity;
+    }
+
+    public static DailyAccountSnapshotEntity applyFuturesData(DailyAccountSnapshotEntity entity, FuturesSnapshotAsset snapshotAsset, long time)
+    {
+        if (entity == null) {
+            entity = getNewEntity(snapshotAsset.asset,time);
+        }
+        entity.futures_marginBalance = Double.parseDouble(snapshotAsset.marginBalance);
+        entity.futures_walletBalance = Double.parseDouble(snapshotAsset.walletBalance);
+        return entity;
+    }
+
+    public static DailyAccountSnapshotEntity getNewEntity(String asset, long time)
+    {
+        DailyAccountSnapshotEntity entity = new DailyAccountSnapshotEntity();
+        entity.id= time + asset.hashCode();
+        entity.time = time;
+        entity.asset = asset;
         return entity;
     }
 }

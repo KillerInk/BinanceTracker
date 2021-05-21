@@ -29,11 +29,29 @@ public class MyTime {
         return this;
     }
 
+    public MyTime setDayToBeginUTC()
+    {
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMinutes(date.getTimezoneOffset());
+        return this;
+    }
+
     public MyTime setDayToEnd()
     {
         date.setHours(23);
         date.setMinutes(59);
         date.setSeconds(59);
+        return this;
+    }
+
+    public MyTime setDayToEndUTC()
+    {
+        date.setHours(23);
+        date.setMinutes(59);
+        date.setSeconds(59);
+        date.setMinutes(date.getTimezoneOffset());
         return this;
     }
 

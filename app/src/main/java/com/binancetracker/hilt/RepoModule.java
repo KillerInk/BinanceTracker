@@ -11,6 +11,7 @@ import com.binancetracker.repo.api.AccountBalance;
 import com.binancetracker.repo.api.Ticker;
 import com.binancetracker.repo.api.runnable.account.Download30DaysDepositHistoryRunner;
 import com.binancetracker.repo.api.runnable.account.Download30DaysWithdrawHistoryRunner;
+import com.binancetracker.repo.api.runnable.account.DownloadDailyAccountSnapshotSpot;
 import com.binancetracker.repo.api.runnable.account.DownloadDepositFullHistoryRunner;
 import com.binancetracker.repo.api.runnable.market.DownloadFullDayHistoryForAllPairsRunner;
 import com.binancetracker.repo.api.runnable.futures.DownloadFuturesTransactionHistory;
@@ -148,6 +149,12 @@ public class RepoModule
     public static DownloadFuturesTransactionHistory downloadFuturesTransactionHistory(BinanceSpotApiClientFactory clientFactory, SingletonDataBase singletonDataBase)
     {
         return new DownloadFuturesTransactionHistory(clientFactory,singletonDataBase);
+    }
+
+    @Provides
+    public static DownloadDailyAccountSnapshotSpot downloadDailyAccountSnapshotSpot(BinanceSpotApiClientFactory clientFactory, SingletonDataBase singletonDataBase)
+    {
+        return new DownloadDailyAccountSnapshotSpot(clientFactory,singletonDataBase);
     }
 
     @Provides

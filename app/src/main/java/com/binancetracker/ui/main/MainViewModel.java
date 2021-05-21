@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.binancetracker.repo.AssetRepo;
+import com.binancetracker.repo.room.entity.AssetModel;
 
 import java.util.Collection;
 

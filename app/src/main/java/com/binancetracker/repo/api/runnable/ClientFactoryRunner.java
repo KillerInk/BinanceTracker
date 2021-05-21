@@ -59,6 +59,7 @@ public abstract class ClientFactoryRunner<T extends BinanceFactory> implements R
         }
         catch (BinanceApiException e)
         {
+            e.printStackTrace();
             fireOnError(e.getMessage());
         }
     }

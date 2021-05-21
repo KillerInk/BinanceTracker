@@ -12,6 +12,13 @@
     android:orientation="vertical">
 
     <Button
+        android:id="@+id/button_cleardbs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Clear Database"
+        android:onClick="@{()->viewmodel.clearDBs()}"/>
+
+    <Button
         android:id="@+id/button_startSyncHistorOrders"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -102,5 +109,12 @@
         android:layout_height="wrap_content"
         android:text="Calc Portofolio History"
         android:onClick="@{()->viewmodel.calcLifeTimeHistory()}"/>
+
+    <Button
+        android:id="@+id/button_dlDailySnapSpot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sync Daily Account Snapshot"
+        android:onClick="@{()->viewmodel.startDownloadDailyAccountSnapshotSpot()}"/>
 </LinearLayout>
 </layout>

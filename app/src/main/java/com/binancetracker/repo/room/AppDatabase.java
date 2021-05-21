@@ -8,7 +8,7 @@ import com.binancetracker.repo.room.dao.PortofolioHistoryDao;
 import com.binancetracker.repo.room.dao.ProfitDao;
 import com.binancetracker.repo.room.entity.PortofolioHistory;
 import com.binancetracker.repo.room.entity.Profit;
-import com.binancetracker.ui.main.AssetModel;
+import com.binancetracker.repo.room.entity.AssetModel;
 
 @Database(entities =
         {
@@ -16,9 +16,16 @@ import com.binancetracker.ui.main.AssetModel;
                 AssetModel.class,
                 PortofolioHistory.class
         },
-        version = 7)
+        version = 9)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract ProfitDao profitDao();
     public abstract AssetModelDao assetModelDao();
     public abstract PortofolioHistoryDao portofolioHistoryDao();
+
+    public void clearDBs()
+    {
+        profitDao().deleteAll();
+        assetModelDao().deleteAll();
+        portofolioHistoryDao().deleteAll();
+    }
 }

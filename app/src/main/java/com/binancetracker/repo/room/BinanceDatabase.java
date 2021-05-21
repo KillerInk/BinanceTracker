@@ -4,6 +4,7 @@ import androidx.room.Database;
 import androidx.room.RoomDatabase;
 
 import com.binancetracker.repo.room.dao.CandelStickDayDao;
+import com.binancetracker.repo.room.dao.DailyAccountSnapshotDao;
 import com.binancetracker.repo.room.dao.DepositHistoryDao;
 import com.binancetracker.repo.room.dao.FuturesTransactionHistoryDao;
 import com.binancetracker.repo.room.dao.HistoryTradeDao;
@@ -15,6 +16,7 @@ import com.binancetracker.repo.room.dao.RedemptionRecordDao;
 import com.binancetracker.repo.room.dao.SwapHistoryDao;
 import com.binancetracker.repo.room.dao.WithdrawHistoryDao;
 import com.binancetracker.repo.room.entity.CandleStickEntity;
+import com.binancetracker.repo.room.entity.DailyAccountSnapshotEntity;
 import com.binancetracker.repo.room.entity.DepositHistoryEntity;
 import com.binancetracker.repo.room.entity.FuturesTransactionHistoryEntity;
 import com.binancetracker.repo.room.entity.HistoryTradeEntity;
@@ -38,9 +40,10 @@ import com.binancetracker.repo.room.entity.WithdrawHistoryEntity;
                 LiquidityOperationRecordEntity.class,
                 RedemptionRecordEntity.class,
                 PurchaseRecordEntity.class,
-                InterestHistoryEntity.class
+                InterestHistoryEntity.class,
+                DailyAccountSnapshotEntity.class
         },
-        version = 7)
+        version = 9)
 public abstract class BinanceDatabase extends RoomDatabase {
     public abstract MarketDao marketDao();
     public abstract HistoryTradeDao historyTradeDao();
@@ -53,5 +56,22 @@ public abstract class BinanceDatabase extends RoomDatabase {
     public abstract RedemptionRecordDao redemptionRecordDao();
     public abstract PurchaseRecordDao purchaseRecordDao();
     public abstract InterestHistoryDao interestHistoryDao();
+    public abstract DailyAccountSnapshotDao dailyAccountSnapshotDao();
+
+    public void clearDBs()
+    {
+        marketDao().deleteAll();
+        historyTradeDao().deleteAll();
+        depositHistoryDao().deleteAll();
+        withdrawHistoryDao().deleteAll();
+        candelStickDayDao().deleteAll();
+        futuresTransactionHistoryDao().deleteAll();
+        swapHistoryDao().deleteAll();
+        liquidityOperationRecordDao().deleteAll();
+        redemptionRecordDao().deleteAll();
+        purchaseRecordDao().deleteAll();
+        interestHistoryDao().deleteAll();
+        dailyAccountSnapshotDao().deleteAll();
+    }
 }
 

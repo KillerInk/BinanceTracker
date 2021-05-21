@@ -1,8 +1,9 @@
-package com.binancetracker.ui.main;
+package com.binancetracker.repo.room.entity;
 
 
 import android.graphics.Color;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.room.ColumnInfo;
@@ -10,15 +11,15 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.binance.api.client.domain.account.AssetBalance;
+import com.binance.api.client.domain.account.snapshot.data.SpotData;
 import com.binancetracker.BR;
 import com.binancetracker.utils.ConvertingUtil;
 
 @Entity
 public class AssetModel extends BaseObservable {
-    @PrimaryKey(autoGenerate = true)
-    public Long id;
-
+    @PrimaryKey
     @ColumnInfo(name = "asset")
+    @NonNull
     public String assetName;
     @ColumnInfo(name = "freeValue")
     public double freeValue;
@@ -28,17 +29,29 @@ public class AssetModel extends BaseObservable {
     public double savedValue;
     @ColumnInfo(name = "price")
     public double price = 0;
-    private int priceColor = Color.WHITE;
     @ColumnInfo(name = "choosenAssetPrice")
     public double choosenAssetPrice = 0;
     @ColumnInfo(name = "choosenAsset")
     public String choosenAsset;
+
+    @ColumnInfo(name = "margin_freeValue")
+    public double margin_freeValue;
+    @ColumnInfo(name = "margin_lockedValue")
+    public double margin_lockedValue;
+
+    @ColumnInfo(name = "futures_marginBalance")
+    public double futures_marginBalance;
+
+    @ColumnInfo(name = "futures_walletBalance")
+    public double futures_walletBalance;
 
     private double profit;
     private long tradescount;
     private double deposits;
     private double withdraws;
     private String changed24hpercentage = "";
+
+    private int priceColor = Color.WHITE;
 
     public AssetModel()
     {}

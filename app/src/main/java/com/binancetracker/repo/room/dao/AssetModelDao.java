@@ -3,7 +3,7 @@ package com.binancetracker.repo.room.dao;
 import androidx.room.Dao;
 import androidx.room.Query;
 
-import com.binancetracker.ui.main.AssetModel;
+import com.binancetracker.repo.room.entity.AssetModel;
 
 import java.util.List;
 

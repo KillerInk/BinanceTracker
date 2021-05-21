@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.binancetracker.R;
 import com.binancetracker.databinding.TextRowItemBinding;
+import com.binancetracker.repo.room.entity.AssetModel;
 
 import java.util.ArrayList;
 import java.util.Collection;

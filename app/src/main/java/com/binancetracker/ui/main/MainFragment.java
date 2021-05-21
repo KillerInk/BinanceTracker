@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.binancetracker.R;
 import com.binancetracker.databinding.MainFragmentBinding;
+import com.binancetracker.repo.room.entity.AssetModel;
 import com.binancetracker.ui.LineChartActivity;
 import com.binancetracker.ui.linechart.LineChartFragment;
 import com.binancetracker.ui.piechart.PieChartFragment;
