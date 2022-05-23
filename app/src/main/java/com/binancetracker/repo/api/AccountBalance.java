@@ -91,8 +91,9 @@ public class AccountBalance {
         Account account = client.getAccount();
         accountBalanceCache.clear();
         for (AssetBalance assetBalance : account.getBalances()) {
-            if (haveBalance(assetBalance))
+            if (haveBalance(assetBalance)) {
                 accountBalanceCache.put(assetBalance.getAsset(), assetBalance);
+            }
         }
         if (accountBalanceEventListner != null)
             accountBalanceEventListner.onBalanceChanged();

@@ -1,5 +1,7 @@
 package com.binancetracker.repo.api.runnable.saving;
 
+import static com.binance.api.client.impl.BinanceApiServiceGenerator.getTime;
+
 import com.binance.api.client.api.sync.BinanceApiSavingRestClient;
 import com.binance.api.client.domain.saving.InterestHistory;
 import com.binance.api.client.factory.BinanceSavingApiClientFactory;
@@ -34,12 +36,12 @@ public class DownloadSavingInterestHistoryRunner extends ClientFactoryRunner<Bin
 
     private List<InterestHistory> getInterestHistory(BinanceApiSavingRestClient client,String lendingType, MyTime starttime, MyTime endtime)
     {
-        return client.getInterestHistory(lendingType,null,starttime.getUtcTime(),endtime.getUtcTime(),null,100L,5000L,System.currentTimeMillis());
+        return client.getInterestHistory(lendingType,null,starttime.getUtcTime(),endtime.getUtcTime(),null,100L,5000L);
     }
 
     private List<InterestHistory> getInterestHistory(BinanceApiSavingRestClient client,String lendingType,int page)
     {
-        return client.getInterestHistory(lendingType,null,null,null , (long) page,100L,5000L,System.currentTimeMillis());
+        return client.getInterestHistory(lendingType,null,null,null , (long) page,100L,5000L);
     }
 
     private void downloadPerPage(BinanceApiSavingRestClient client)

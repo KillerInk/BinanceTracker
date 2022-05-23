@@ -9,6 +9,7 @@ import com.binancetracker.repo.api.runnable.account.Download30DaysDepositHistory
 import com.binancetracker.repo.api.runnable.account.Download30DaysWithdrawHistoryRunner;
 import com.binancetracker.repo.api.runnable.market.DownloadLastTradeHistoryRunner;
 import com.binancetracker.repo.api.runnable.market.DownloadLatestDayHistoryForAllPairsRunner;
+import com.binancetracker.repo.api.runnable.time.SyncTimeRunner;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.room.entity.Profit;
 import com.binancetracker.repo.thread.RestExecuter;
@@ -45,6 +46,7 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
     private Download30DaysWithdrawHistoryRunner download30DaysWithdrawHistoryRunner;
     private DownloadLatestDayHistoryForAllPairsRunner downloadLatestDayHistoryForAllPairsRunner;
     private Ticker ticker;
+    private SyncTimeRunner syncTimeRunner;
 
     @Inject
     public AssetRepo(
@@ -55,7 +57,8 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
                      Download30DaysDepositHistoryRunner download30DaysDepositHistoryRunner,
                      Download30DaysWithdrawHistoryRunner download30DaysWithdrawHistoryRunner,
                      DownloadLatestDayHistoryForAllPairsRunner downloadLatestDayHistoryForAllPairsRunner,
-                     Ticker ticker)
+                     Ticker ticker,
+                     SyncTimeRunner syncTimeRunner)
     {
         this.settings = settings;
         this.singletonDataBase = singletonDataBase;
@@ -65,6 +68,7 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
         this.download30DaysWithdrawHistoryRunner = download30DaysWithdrawHistoryRunner;
         this.downloadLatestDayHistoryForAllPairsRunner = downloadLatestDayHistoryForAllPairsRunner;
         this.ticker = ticker;
+        this.syncTimeRunner = syncTimeRunner;
         assetModelHashMap = new HashMap<>();
     }
 
@@ -91,6 +95,7 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
     private Runnable onResumeRunner = new Runnable() {
         @Override
         public void run() {
+            syncTimeRunner.run();
             getAssetModelsFromDB();
             fireAssetChangedEvent();
             getProfitsFromDb();
@@ -150,11 +155,13 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
         List<String> savingassets = new ArrayList<>();
         for (AssetBalance assetBalance : accountBalance.getAccountBalanceCache().values()) {
             String assetname = assetBalance.getAsset();
-            if (assetname.startsWith("LD"))
+            if (assetname.startsWith("LD") || assetname.equals("BETH"))
             {
                 assetname = assetname.replace("LD","");
                 if (assetname.equals("BAKET"))
                     assetname = "BAKE";
+                if (assetname.equals("BETH"))
+                    assetname = "ETH";
                 savingassets.add(assetname);
                 AssetModel a = getAssetModel(assetname);
                 a.setSavedValue(Double.parseDouble(assetBalance.getFree()));
@@ -236,13 +243,19 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
         Log.d(TAG,"updatedPrices");
         if (assetModelHashMap.values().size() > 0)
         {
+            String baseas = base;
             String markets ="";
             for (AssetModel assetModel:assetModelHashMap.values()) {
-                if (!assetModel.getAssetName().equals(base))
-                    markets += assetModel.getAssetName()+base+",";
+                if (!assetModel.getAssetName().equals(baseas))
+                    markets += assetModel.getAssetName()+baseas+",";
             }
-            if (!markets.contains(choosenAsset+base))
-                markets += choosenAsset+base;
+
+            if (singletonDataBase.binanceDatabase.marketDao().findByName(choosenAsset,baseas) == null)
+            {
+                baseas = "BUSD";
+            }
+            if (!markets.contains(choosenAsset+baseas))
+                markets += choosenAsset+baseas;
             if (markets.endsWith(","))
                 markets = markets.substring(0, markets.length() - 1);
             Log.d(TAG,"subscribe to markets:" + markets);

@@ -37,7 +37,7 @@ public class DownloadSavingPurchaseHistoryRunner extends ClientFactoryRunner<Bin
 
     private List<PurchaseRecord> getPurchaseHistory(BinanceApiSavingRestClient client, String lendingType, int page)
     {
-        return client.getPurchaseRecord(lendingType,null,null,null , (long) page,100L,5000L,System.currentTimeMillis());
+        return client.getPurchaseRecord(lendingType,null,null,null , (long) page,100L,5000L);
     }
 
     private void downloadPerPage(BinanceApiSavingRestClient client)

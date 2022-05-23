@@ -25,7 +25,7 @@ public class DownloadSavingRedemptionHistoryRunner extends ClientFactoryRunner<B
 
     private List<RedemptionRecord> getRedemptionHistory(BinanceApiSavingRestClient client, String lendingType, int page)
     {
-        return client.getRedemptionRecord(lendingType,null,null,null , (long) page,100L,5000L,System.currentTimeMillis());
+        return client.getRedemptionRecord(lendingType,null,null,null , (long) page,100L,5000L);
     }
 
     private void downloadPerPage(BinanceApiSavingRestClient client)

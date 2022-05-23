@@ -5,6 +5,7 @@ import android.content.Context;
 import com.binance.api.client.factory.BinanceAbstractFactory;
 import com.binance.api.client.factory.BinanceSavingApiClientFactory;
 import com.binance.api.client.factory.BinanceSpotApiClientFactory;
+import com.binance.api.client.factory.BinanceStakingApiClientFactory;
 import com.binance.api.client.factory.BinanceSwapApiClientFactory;
 import com.binancetracker.repo.AssetRepo;
 import com.binancetracker.repo.api.AccountBalance;
@@ -24,6 +25,7 @@ import com.binancetracker.repo.api.runnable.saving.DownloadSavingRedemptionHisto
 import com.binancetracker.repo.api.runnable.swap.DownloadSwapHistoryRunner;
 import com.binancetracker.repo.api.runnable.market.DownloadTradeFullHistoryRunner;
 import com.binancetracker.repo.api.runnable.account.DownloadWithdrawFullHistory;
+import com.binancetracker.repo.api.runnable.time.SyncTimeRunner;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.utils.Settings;
 
@@ -49,7 +51,8 @@ public class RepoModule
                                       Download30DaysDepositHistoryRunner download30DaysDepositHistoryRunner,
                                       Download30DaysWithdrawHistoryRunner download30DaysWithdrawHistoryRunner,
                                       DownloadLatestDayHistoryForAllPairsRunner downloadLatestDayHistoryForAllPairsRunner,
-                                      Ticker ticker)
+                                      Ticker ticker,
+                                      SyncTimeRunner syncTimeRunner)
     {
         return new AssetRepo(settings,
                 singletonDataBase,
@@ -58,7 +61,8 @@ public class RepoModule
                 download30DaysDepositHistoryRunner,
                 download30DaysWithdrawHistoryRunner,
                 downloadLatestDayHistoryForAllPairsRunner,
-                ticker);
+                ticker,
+                syncTimeRunner);
     }
 
 
@@ -94,6 +98,12 @@ public class RepoModule
     public static BinanceSavingApiClientFactory savingApiClientFactory(Settings settings)
     {
         return BinanceAbstractFactory.createSavingFactory(settings.getKEY(), settings.getSECRETKEY());
+    }
+
+    @Provides
+    public static BinanceStakingApiClientFactory stakingApiClientFactory(Settings settings)
+    {
+        return BinanceAbstractFactory.createStakingFactory(settings.getKEY(), settings.getSECRETKEY());
     }
 
     @Provides
@@ -197,6 +207,12 @@ public class RepoModule
     public static Ticker ticker(BinanceSpotApiClientFactory clientFactory)
     {
         return new Ticker(clientFactory);
+    }
+
+    @Provides
+    public static SyncTimeRunner syncTimeRunner(BinanceSpotApiClientFactory spotApiClientFactory, SingletonDataBase dataBase)
+    {
+        return new SyncTimeRunner(spotApiClientFactory,dataBase);
     }
 
 }
