@@ -188,6 +188,33 @@
                     android:textSize="@dimen/text_normal"
                     tools:text="0.12345678" />
 
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="@dimen/textrowitem_weight"
+                    android:background="@color/teal_700">
+
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="@dimen/textrowitem_weight"
+                    android:text="Staking:"
+                    android:textSize="@dimen/text_normal" />
+
+                <TextView
+                    android:id="@+id/textView_staking"
+                    setDoubleToTextview="@{assetmodel.stakedValue}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="@dimen/textrowitem_weight"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_normal"
+                    tools:text="0.12345678" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -273,6 +300,27 @@
                     android:textSize="@dimen/text_normal"
                     setDoubleToTextview="@{assetmodel.savingValueUsdtPrice}"/>
 
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:background="@color/teal_700" />
+
+                <TextView
+                    android:id="@+id/textView17"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_normal" />
+
+                <TextView
+                    android:id="@+id/textView_staking_usdt"
+                    setDoubleToTextview="@{assetmodel.stakingValueUsdtPrice}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1000"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_normal" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -357,6 +405,27 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_normal"
                     setDoubleToTextview="@{assetmodel.savingValueChoosenAssetPrice}"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:background="@color/teal_700" />
+
+                <TextView
+                    android:id="@+id/textView18"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_normal" />
+
+                <TextView
+                    android:id="@+id/textView_staking_choosenasset"
+                    setDoubleToTextview="@{assetmodel.stakingValueChoosenAssetPrice}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1000"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_normal" />
 
             </LinearLayout>
 

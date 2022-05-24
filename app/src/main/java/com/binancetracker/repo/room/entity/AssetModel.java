@@ -27,6 +27,8 @@ public class AssetModel extends BaseObservable {
     public double lockedValue;
     @ColumnInfo(name = "savedValue")
     public double savedValue;
+    @ColumnInfo(name = "stakedValue")
+    public double stakedValue;
     @ColumnInfo(name = "price")
     public double price = 0;
     @ColumnInfo(name = "choosenAssetPrice")
@@ -100,7 +102,7 @@ public class AssetModel extends BaseObservable {
     }
 
     @Bindable
-    public double getTotalValue(){ return trim(freeValue + lockedValue + savedValue); }
+    public double getTotalValue(){ return trim(freeValue + lockedValue + savedValue + stakedValue); }
 
     public void setTotalValue(double val){}
 
@@ -154,7 +156,7 @@ public class AssetModel extends BaseObservable {
     }
 
     @Bindable
-    public double getTotalValuePrice(){ return trim((freeValue + lockedValue + savedValue) * price); }
+    public double getTotalValuePrice(){ return trim((freeValue + lockedValue + savedValue + stakedValue) * price); }
 
     public void setTotalValuePrice(double val){}
 
@@ -162,7 +164,7 @@ public class AssetModel extends BaseObservable {
     @Bindable
     public double getTotalValueChoosenAssetPrice(){
         if (price > 0)
-            return trim(((freeValue + lockedValue + savedValue) * (price/choosenAssetPrice)));
+            return trim(((freeValue + lockedValue + savedValue + stakedValue) * (price/choosenAssetPrice)));
         else  return 0;
     }
 
@@ -193,6 +195,16 @@ public class AssetModel extends BaseObservable {
         else  return 0;
     }
 
+    public void setStakingValueChoosenAssetPrice(double value){}
+
+    @Bindable
+    public double getStakingValueChoosenAssetPrice(){
+        if (price > 0)
+            return trim(((stakedValue) * (price/choosenAssetPrice)));
+        else  return 0;
+    }
+
+
     public void setFreeValueUsdtPrice(double val){}
 
     @Bindable
@@ -217,6 +229,15 @@ public class AssetModel extends BaseObservable {
     public double getSavingValueUsdtPrice(){
         if (price > 0)
             return trim(((savedValue) * (price)));
+        else  return 0;
+    }
+
+    public void setStakingValueUsdtPrice(double val){}
+
+    @Bindable
+    public double getStakingValueUsdtPrice(){
+        if (price > 0)
+            return trim(((stakedValue) * (price)));
         else  return 0;
     }
 
@@ -269,6 +290,17 @@ public class AssetModel extends BaseObservable {
     public void setSavedValue(double savedValue) {
         this.savedValue = savedValue;
         notifyPropertyChanged(BR.savedValue);
+        notifyPropertyChanged(BR.totalValue);
+    }
+
+    @Bindable
+    public double getStakedValue() {
+        return stakedValue;
+    }
+
+    public void setStakedValue(double savedValue) {
+        this.stakedValue = savedValue;
+        notifyPropertyChanged(BR.stakedValue);
         notifyPropertyChanged(BR.totalValue);
     }
 

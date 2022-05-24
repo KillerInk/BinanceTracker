@@ -6,115 +6,116 @@
         type="com.binancetracker.ui.db.DataBaseViewModel" />
 </data>
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <Button
-        android:id="@+id/button_cleardbs"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Clear Database"
-        android:onClick="@{()->viewmodel.clearDBs()}"/>
+        android:layout_height="match_parent"
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        android:scrollbars="vertical">
 
-    <Button
-        android:id="@+id/button_startSyncHistorOrders"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sync History Orders"
-        android:onClick="@{()->viewmodel.startSyncTradeHistory()}"/>
+        <Button
+            android:id="@+id/button_cleardbs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->viewmodel.clearDBs()}"
+            android:text="Clear Database" />
 
-    <Button
-        android:id="@+id/button_startSyncDeposit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sync Deposit History"
-        android:onClick="@{()->viewmodel.startSyncDeposits()}"/>
+        <Button
+            android:id="@+id/button_startSyncHistorOrders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->viewmodel.startSyncTradeHistory()}"
+            android:text="Sync History Orders" />
 
-    <Button
-        android:id="@+id/button_startSyncWithdraw"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sync Withdraw History"
-        android:onClick="@{()->viewmodel.startSyncWithdraws()}"/>
+        <Button
+            android:id="@+id/button_startSyncDeposit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->viewmodel.startSyncDeposits()}"
+            android:text="Sync Deposit History" />
 
-    <Button
-        android:id="@+id/button_startSyncSwapHistory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sync Swap History"
-        android:onClick="@{()->viewmodel.startDownloadSwapHistory()}"/>
+        <Button
+            android:id="@+id/button_startSyncWithdraw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->viewmodel.startSyncWithdraws()}"
+            android:text="Sync Withdraw History" />
 
-    <Button
-        android:id="@+id/button_startSyncLiquidSwapHistory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sync Liquid Swap History"
-        android:onClick="@{()->viewmodel.startDownloadLiquidSwapHistory()}"/>
+        <Button
+            android:id="@+id/button_startSyncSwapHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->viewmodel.startDownloadSwapHistory()}"
+            android:text="Sync Swap History" />
 
-    <Button
-        android:id="@+id/button_startSyncSavingPurchaseHistory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sync Saving Purchase History"
-        android:onClick="@{()->viewmodel.startDownloadSavingPurchaseHistory()}"/>
+        <Button
+            android:id="@+id/button_startSyncLiquidSwapHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->viewmodel.startDownloadLiquidSwapHistory()}"
+            android:text="Sync Liquid Swap History" />
 
-    <Button
-        android:id="@+id/button_startSyncSavingRedemptionHistory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sync Saving Redemption History"
-        android:onClick="@{()->viewmodel.startDownloadSavingRedemptionHistory()}"/>
+        <Button
+            android:id="@+id/button_startSyncSavingPurchaseHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->viewmodel.startDownloadSavingPurchaseHistory()}"
+            android:text="Sync Saving Purchase History" />
 
-    <Button
-        android:id="@+id/button_startSyncSavingInterestHistory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sync Saving Interest History"
-        android:onClick="@{()->viewmodel.startDownloadSavingInterestHistory()}"/>
+        <Button
+            android:id="@+id/button_startSyncSavingRedemptionHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->viewmodel.startDownloadSavingRedemptionHistory()}"
+            android:text="Sync Saving Redemption History" />
+
+        <Button
+            android:id="@+id/button_startSyncSavingInterestHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->viewmodel.startDownloadSavingInterestHistory()}"
+            android:text="Sync Saving Interest History" />
 
 
+        <TextView
+            android:id="@+id/textView_syncstate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{viewmodel.dbstatus}" />
 
-    <TextView
-        android:id="@+id/textView_syncstate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@{viewmodel.dbstatus}" />
+        <Button
+            android:id="@+id/button_calctrades"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->viewmodel.calcTrades()}"
+            android:text="calc trades" />
 
-    <Button
-        android:id="@+id/button_calctrades"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="calc trades"
-        android:onClick="@{()->viewmodel.calcTrades()}"/>
+        <Button
+            android:id="@+id/button_startSyncPairFullHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->viewmodel.startDownloadPriceHistoryDayFull()}"
+            android:text="Sync traded Pairs Price History" />
 
-    <Button
-        android:id="@+id/button_startSyncPairFullHistory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sync traded Pairs Price History"
-        android:onClick="@{()->viewmodel.startDownloadPriceHistoryDayFull()}"/>
+        <Button
+            android:id="@+id/button_startSyncFuturesTransactionHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->viewmodel.startDownloadFuturesTransactionHistory()}"
+            android:text="Sync Futures TransactionHistory" />
 
-    <Button
-        android:id="@+id/button_startSyncFuturesTransactionHistory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sync Futures TransactionHistory"
-        android:onClick="@{()->viewmodel.startDownloadFuturesTransactionHistory()}"/>
+        <Button
+            android:id="@+id/button_calcPortofolioHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->viewmodel.calcLifeTimeHistory()}"
+            android:text="Calc Portofolio History" />
 
-    <Button
-        android:id="@+id/button_calcPortofolioHistory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Calc Portofolio History"
-        android:onClick="@{()->viewmodel.calcLifeTimeHistory()}"/>
-
-    <Button
-        android:id="@+id/button_dlDailySnapSpot"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sync Daily Account Snapshot"
-        android:onClick="@{()->viewmodel.startDownloadDailyAccountSnapshotSpot()}"/>
-</LinearLayout>
+        <Button
+            android:id="@+id/button_dlDailySnapSpot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->viewmodel.startDownloadDailyAccountSnapshotSpot()}"
+            android:text="Sync Daily Account Snapshot" />
+    </LinearLayout>
 </layout>

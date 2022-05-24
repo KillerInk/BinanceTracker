@@ -98,69 +98,62 @@ public class PieChartModel extends BaseObservable {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                double smallvaluescount = 0;
-                double totalval = 0d;
-                double usdt = 0d;
-                double choosenCurency = 0d;
-                if (entries.size() == 0) {
-                    for (AssetModel a : strings.values()) {
-                        try {
-                            totalval = a.getTotalValuePrice();
-                            usdt += a.getTotalValuePrice();
-                            choosenCurency += a.getTotalValueChoosenAssetPrice();
-                        }catch (NullPointerException ex)
-                        {
-                            ex.printStackTrace();
-                            totalval = 0;
-                        }
-                        if (totalval > 10d) {
-                            PieEntry entry = new PieEntry((float) totalval, a.getAssetName());
-                            entries.add(entry);
-                        } else if (totalval > 0d) {
-                            smallvaluescount += totalval;
-                        }
-                    }
-                    if (smallvaluescount > 1d)
-                    {
-                        PieEntry small = new PieEntry((float) smallvaluescount, "Small");
-                        entries.add(small);
-                    }
-                }
-                else
-                {
-                    PieEntry small = null;
-                    for (PieEntry entry : entries)
-                    {
-                        AssetModel asset = strings.get(entry.getLabel());
-                        if (asset != null)
-                        {
+                synchronized (strings) {
+                    double smallvaluescount = 0;
+                    double totalval = 0d;
+                    double usdt = 0d;
+                    double choosenCurency = 0d;
+                    if (entries.size() == 0) {
+                        for (AssetModel a : strings.values()) {
                             try {
-                                totalval = asset.getTotalValuePrice();
-                                usdt += asset.getTotalValuePrice();
-                                choosenCurency += asset.getTotalValueChoosenAssetPrice();
-                            }catch (NullPointerException ex)
-                            {
+                                totalval = a.getTotalValuePrice();
+                                usdt += a.getTotalValuePrice();
+                                choosenCurency += a.getTotalValueChoosenAssetPrice();
+                            } catch (NullPointerException ex) {
                                 ex.printStackTrace();
                                 totalval = 0;
                             }
-                            if (totalval > 10d)
-                                entry.setY((float)totalval);
-                            else if (totalval > 0d) {
+                            if (totalval > 10d) {
+                                PieEntry entry = new PieEntry((float) totalval, a.getAssetName());
+                                entries.add(entry);
+                            } else if (totalval > 0d) {
                                 smallvaluescount += totalval;
                             }
-                            if (entry.getLabel().equals("Small"))
-                                small = entry;
                         }
+                        if (smallvaluescount > 1d) {
+                            PieEntry small = new PieEntry((float) smallvaluescount, "Small");
+                            entries.add(small);
+                        }
+                    } else {
+                        PieEntry small = null;
+                        for (PieEntry entry : entries) {
+                            AssetModel asset = strings.get(entry.getLabel());
+                            if (asset != null) {
+                                try {
+                                    totalval = asset.getTotalValuePrice();
+                                    usdt += asset.getTotalValuePrice();
+                                    choosenCurency += asset.getTotalValueChoosenAssetPrice();
+                                } catch (NullPointerException ex) {
+                                    ex.printStackTrace();
+                                    totalval = 0;
+                                }
+                                if (totalval > 10d)
+                                    entry.setY((float) totalval);
+                                else if (totalval > 0d) {
+                                    smallvaluescount += totalval;
+                                }
+                                if (entry.getLabel().equals("Small"))
+                                    small = entry;
+                            }
+                        }
+                        if (smallvaluescount > 0d && small != null) {
+                            small.setY((float) smallvaluescount);
+                        } else if (smallvaluescount < 1 && small != null)
+                            entries.remove(small);
                     }
-                    if (smallvaluescount > 0d && small != null)
-                    {
-                        small.setY((float) smallvaluescount);
-                    }
-                    else if(smallvaluescount < 1 && small != null)
-                        entries.remove(small);
+                    piechartMidString = "USDT:" + ConvertingUtil.getDoubleString2F(usdt) + "\n" + settings.getDefaultAsset() + ":" + ConvertingUtil.getDoubleString2F(choosenCurency);
+                    setPieData(pieData);
                 }
-                piechartMidString = "USDT:"+ ConvertingUtil.getDoubleString2F(usdt) + "\n" + settings.getDefaultAsset()+":"+ConvertingUtil.getDoubleString2F(choosenCurency);
-                setPieData(pieData);
             }
         }).start();
 

@@ -3,12 +3,14 @@ package com.binancetracker.repo;
 import android.util.Log;
 
 import com.binance.api.client.domain.account.AssetBalance;
+import com.binance.api.client.domain.staking.StakingPosition;
 import com.binancetracker.repo.api.AccountBalance;
 import com.binancetracker.repo.api.Ticker;
 import com.binancetracker.repo.api.runnable.account.Download30DaysDepositHistoryRunner;
 import com.binancetracker.repo.api.runnable.account.Download30DaysWithdrawHistoryRunner;
 import com.binancetracker.repo.api.runnable.market.DownloadLastTradeHistoryRunner;
 import com.binancetracker.repo.api.runnable.market.DownloadLatestDayHistoryForAllPairsRunner;
+import com.binancetracker.repo.api.runnable.staking.DownloadStakingPositionsRunner;
 import com.binancetracker.repo.api.runnable.time.SyncTimeRunner;
 import com.binancetracker.repo.room.SingletonDataBase;
 import com.binancetracker.repo.room.entity.Profit;
@@ -47,6 +49,7 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
     private DownloadLatestDayHistoryForAllPairsRunner downloadLatestDayHistoryForAllPairsRunner;
     private Ticker ticker;
     private SyncTimeRunner syncTimeRunner;
+    private DownloadStakingPositionsRunner downloadStakingPositionsRunner;
 
     @Inject
     public AssetRepo(
@@ -58,7 +61,8 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
                      Download30DaysWithdrawHistoryRunner download30DaysWithdrawHistoryRunner,
                      DownloadLatestDayHistoryForAllPairsRunner downloadLatestDayHistoryForAllPairsRunner,
                      Ticker ticker,
-                     SyncTimeRunner syncTimeRunner)
+                     SyncTimeRunner syncTimeRunner,
+                     DownloadStakingPositionsRunner downloadStakingPositionsRunner)
     {
         this.settings = settings;
         this.singletonDataBase = singletonDataBase;
@@ -70,6 +74,7 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
         this.ticker = ticker;
         this.syncTimeRunner = syncTimeRunner;
         assetModelHashMap = new HashMap<>();
+        this.downloadStakingPositionsRunner = downloadStakingPositionsRunner;
     }
 
     public HashMap<String, AssetModel> getAssetModelHashMap() {
@@ -102,6 +107,19 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
             fireAssetChangedEvent();
             accountBalance.initBalanceCache();
             accountBalance.startListenToAssetBalance();
+            fireAssetChangedEvent();
+            downloadStakingPositionsRunner.setDownloadEventListner(new DownloadStakingPositionsRunner.DownloadEvent() {
+                @Override
+                public void downloadFinished(List<StakingPosition> positionList) {
+                    for (StakingPosition position: positionList)
+                    {
+                        AssetModel assetModel = getAssetModel(position.asset);
+                        assetModel.stakedValue = Double.parseDouble(position.amount);
+                    }
+                    downloadStakingPositionsRunner.setDownloadEventListner(null);
+                }
+            });
+            downloadStakingPositionsRunner.run();
             fireAssetChangedEvent();
             new Thread(new Runnable() {
                 @Override
@@ -155,13 +173,15 @@ public class  AssetRepo implements AccountBalance.AccountBalanceEvent {
         List<String> savingassets = new ArrayList<>();
         for (AssetBalance assetBalance : accountBalance.getAccountBalanceCache().values()) {
             String assetname = assetBalance.getAsset();
-            if (assetname.startsWith("LD") || assetname.equals("BETH"))
+            if (assetname.startsWith("LD") || assetname.equals("BETH") || assetname.equals("BDOT"))
             {
                 assetname = assetname.replace("LD","");
                 if (assetname.equals("BAKET"))
                     assetname = "BAKE";
                 if (assetname.equals("BETH"))
                     assetname = "ETH";
+                if (assetname.equals("BDOT"))
+                    assetname = "DOT";
                 savingassets.add(assetname);
                 AssetModel a = getAssetModel(assetname);
                 a.setSavedValue(Double.parseDouble(assetBalance.getFree()));

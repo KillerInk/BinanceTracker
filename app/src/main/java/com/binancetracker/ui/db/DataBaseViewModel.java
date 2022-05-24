@@ -11,6 +11,7 @@ import com.binancetracker.repo.api.runnable.account.DownloadDailyAccountSnapshot
 import com.binancetracker.repo.api.runnable.account.DownloadDepositFullHistoryRunner;
 import com.binancetracker.repo.api.runnable.market.DownloadFullDayHistoryForAllPairsRunner;
 import com.binancetracker.repo.api.runnable.futures.DownloadFuturesTransactionHistory;
+import com.binancetracker.repo.api.runnable.staking.DownloadStakingPositionsRunner;
 import com.binancetracker.repo.api.runnable.swap.DownloadLiquidSwapHistoryRunner;
 import com.binancetracker.repo.api.runnable.saving.DownloadSavingInterestHistoryRunner;
 import com.binancetracker.repo.api.runnable.saving.DownloadSavingPurchaseHistoryRunner;
@@ -45,6 +46,7 @@ public class DataBaseViewModel extends ViewModel
     private DownloadSavingPurchaseHistoryRunner downloadSavingPurchaseHistoryRunner;
     private DownloadSavingInterestHistoryRunner downloadSavingInterestHistoryRunner;
     private DownloadDailyAccountSnapshotSpot downloadDailyAccountSnapshotSpot;
+    private DownloadStakingPositionsRunner downloadStakingPositionsRunner;
 
     @Inject
     public DataBaseViewModel(
@@ -59,7 +61,8 @@ public class DataBaseViewModel extends ViewModel
                              DownloadSavingRedemptionHistoryRunner downloadSavingRedemptionHistoryRunner,
                              DownloadSavingPurchaseHistoryRunner downloadSavingPurchaseHistoryRunner,
                              DownloadSavingInterestHistoryRunner downloadSavingInterestHistoryRunner,
-                             DownloadDailyAccountSnapshotSpot downloadDailyAccountSnapshotSpot)
+                             DownloadDailyAccountSnapshotSpot downloadDailyAccountSnapshotSpot,
+                             DownloadStakingPositionsRunner downloadStakingPositionsRunner)
     {
         this.singletonDataBase = singletonDataBase;
         this.downloadWithdrawFullHistory = downloadWithdrawFullHistory;
@@ -73,6 +76,7 @@ public class DataBaseViewModel extends ViewModel
         this.downloadSavingPurchaseHistoryRunner = downloadSavingPurchaseHistoryRunner;
         this.downloadSavingRedemptionHistoryRunner = downloadSavingRedemptionHistoryRunner;
         this.downloadDailyAccountSnapshotSpot = downloadDailyAccountSnapshotSpot;
+        this.downloadStakingPositionsRunner = downloadStakingPositionsRunner;
     }
 
     public void clearDBs()
@@ -153,6 +157,12 @@ public class DataBaseViewModel extends ViewModel
         RestExecuter.addTask(downloadDailyAccountSnapshotSpot);
     }
 
+    public void startDownloadStakingPositions()
+    {
+        downloadStakingPositionsRunner.setMessageEventListner(messageEvent);
+        RestExecuter.addTask(downloadStakingPositionsRunner);
+    }
+
     public void calcTrades()
     {
         CalcProfits profits = new CalcProfits();
@@ -182,6 +192,7 @@ public class DataBaseViewModel extends ViewModel
         this.downloadSavingInterestHistoryRunner.setMessageEventListner(null);
         this.downloadSavingPurchaseHistoryRunner.setMessageEventListner(null);
         this.downloadSavingRedemptionHistoryRunner.setMessageEventListner(null);
+        this.downloadStakingPositionsRunner.setMessageEventListner(null);
     }
 
     private ClientFactoryRunner.MessageEvent messageEvent = new ClientFactoryRunner.MessageEvent() {

@@ -46,9 +46,9 @@ public class DownloadFullDayHistoryForAllPairsRunner extends DownloadDepositFull
 
     protected void getCandlestickRangeForAssets(BinanceApiSpotRestClient client, List<String> assets, Long endtime, Long starttime, int limit) {
         int i = 1;
-        try {
-            for (String asset : assets)
-            {
+        for (String asset : assets)
+        {
+            try {
                 fireOnSyncUpdate(i,"download priceHistory for " + asset);
                 Log.d(TAG,"download priceHistory for " + asset);
                 List<Candlestick> candlestickList = client.getCandlestickBars(asset, CandlestickInterval.DAILY,limit,starttime,endtime);
@@ -62,11 +62,12 @@ public class DownloadFullDayHistoryForAllPairsRunner extends DownloadDepositFull
                     addListToDb(candlestickList,asset);
                 }
                 Log.d(TAG,"download priceHistory for " + asset + " done " + i++ + "/" + assets.size());
+
             }
-        }
-        catch (BinanceApiException ex)
-        {
-            ex.printStackTrace();
+            catch (BinanceApiException ex)
+            {
+                ex.printStackTrace();
+            }
         }
     }
 

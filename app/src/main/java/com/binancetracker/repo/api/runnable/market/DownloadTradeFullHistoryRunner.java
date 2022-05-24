@@ -62,7 +62,7 @@ public class DownloadTradeFullHistoryRunner extends ClientFactoryRunner<BinanceS
             getAllHistoryforPair(client,historyTradeDao,pair,0);
             Log.d(this.getClass().getSimpleName(),"download done for: " + pair + " found trades:" + tradescounter);
             try {
-                Thread.sleep(50);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

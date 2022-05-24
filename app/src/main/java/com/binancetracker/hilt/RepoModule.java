@@ -2,6 +2,7 @@ package com.binancetracker.hilt;
 
 import android.content.Context;
 
+import com.binance.api.client.api.sync.BinanceApiStakingRestClient;
 import com.binance.api.client.factory.BinanceAbstractFactory;
 import com.binance.api.client.factory.BinanceSavingApiClientFactory;
 import com.binance.api.client.factory.BinanceSpotApiClientFactory;
@@ -18,6 +19,7 @@ import com.binancetracker.repo.api.runnable.market.DownloadFullDayHistoryForAllP
 import com.binancetracker.repo.api.runnable.futures.DownloadFuturesTransactionHistory;
 import com.binancetracker.repo.api.runnable.market.DownloadLastTradeHistoryRunner;
 import com.binancetracker.repo.api.runnable.market.DownloadLatestDayHistoryForAllPairsRunner;
+import com.binancetracker.repo.api.runnable.staking.DownloadStakingPositionsRunner;
 import com.binancetracker.repo.api.runnable.swap.DownloadLiquidSwapHistoryRunner;
 import com.binancetracker.repo.api.runnable.saving.DownloadSavingInterestHistoryRunner;
 import com.binancetracker.repo.api.runnable.saving.DownloadSavingPurchaseHistoryRunner;
@@ -52,7 +54,8 @@ public class RepoModule
                                       Download30DaysWithdrawHistoryRunner download30DaysWithdrawHistoryRunner,
                                       DownloadLatestDayHistoryForAllPairsRunner downloadLatestDayHistoryForAllPairsRunner,
                                       Ticker ticker,
-                                      SyncTimeRunner syncTimeRunner)
+                                      SyncTimeRunner syncTimeRunner,
+                                      DownloadStakingPositionsRunner downloadStakingPositionsRunner)
     {
         return new AssetRepo(settings,
                 singletonDataBase,
@@ -62,7 +65,8 @@ public class RepoModule
                 download30DaysWithdrawHistoryRunner,
                 downloadLatestDayHistoryForAllPairsRunner,
                 ticker,
-                syncTimeRunner);
+                syncTimeRunner,
+                downloadStakingPositionsRunner);
     }
 
 
@@ -215,4 +219,9 @@ public class RepoModule
         return new SyncTimeRunner(spotApiClientFactory,dataBase);
     }
 
+    @Provides
+    public static DownloadStakingPositionsRunner downloadStakingPositionsRunner(BinanceStakingApiClientFactory stakingRestClient, SingletonDataBase singletonDataBase)
+    {
+        return new DownloadStakingPositionsRunner(stakingRestClient,singletonDataBase);
+    }
 }
